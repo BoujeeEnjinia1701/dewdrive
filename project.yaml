@@ -1,0 +1,17 @@
+# Card metadata consumed by https://amishchadha.com
+name: DewDrive
+slug: dewdrive
+area: Water Security
+status: concept          # concept | design | prototype | tested | released
+shortlisted: false
+pitch: >-
+  Solar-regenerated desiccant harvester that adsorbs moisture from air overnight and releases it into a passive condenser during the day.
+problem: >-
+  Arid communities with no surface water or groundwater have no water source at all.
+budget_usd: 400
+difficulty: 4  # 1 easiest, 5 hardest
+hero_image: media/hero.png
+licenses:
+  hardware: CERN-OHL-S-2.0
+  software: MIT
+tags: [water-security, open-hardware, cern-ohl-s]
