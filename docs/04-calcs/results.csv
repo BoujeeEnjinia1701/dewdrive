@@ -1,0 +1,14 @@
+id,requirement,value,target,status
+R1,Water at the design point,"0.20 L/day as drawn (B5, C3); 0.53 L/day with through-flow (C5)",>= 0.5 L/day,not met
+R2,Water in dry nights,"0.09 L/day as drawn; 0.35 L/day with through-flow (C4, C5)",>= 0.25 L/day at 25 % RH,not met
+R3,Sun-only regeneration,bed 104 C at noon (C2),>= 75 C by midday,met
+R4,Own electrical loads,"23.6 Wh/day against 35 Wh/day PV; 2.6 days autonomy (F1, F2)",<= 30 Wh/day; >= 2 days,met
+R5,Condenser rise,"13.1 K as drawn; 13.3 K with through-flow (C2, C5)",<= 15 K,met
+R6,Water quality,materials food-grade by selection; chloride carry-over needs a water test,food-grade; Cl < 250 mg/L,not verifiable at TRL 3
+R7,Salt containment,"pores fill at 51 % RH; 46 % of pore volume after one 90 % RH night (E2, E3)",no liquid leaves trays after a 90 % RH night,at risk
+R8,Two actions per day,"open flaps at dusk, close at dawn; fan on a timer","2 actions, <= 5 min",met
+R9,Portable,"box 30.9 kg with sorbent; 24.0 kg with trays out; total 51.4 kg (G1, G2)",box <= 35 kg; stand separable,met
+R10,Survive the site,ballast 49 kg or anchors for 20 m/s (H2 to H4); UV and 300 cycles need supplier data and test,stable at 20 m/s; UV; 300 cycles,not verifiable at TRL 3
+R11,Cost,$488 (J1),<= $500 (D1),met
+R12,Record performance,"8640 records, 0.41 MB (I1)",5 min for 30 days,met
+R13,Protect users,glazing outer about 53 C at stagnation; fins up to 48 C; 12.8 V DC (D1 to D3),touched surfaces <= 60 C; < 60 V DC,met

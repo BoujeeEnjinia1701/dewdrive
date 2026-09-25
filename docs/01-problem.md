@@ -3,7 +3,7 @@ doc_id: DWD-PRB-001
 title: DewDrive problem statement
 project: DewDrive
 doc_type: Problem statement
-version: "0.2"
+version: "0.3"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -17,11 +17,15 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Populate to TRL 2 (problem, users, context, constraints, out of scope, prior work with sources, open questions)
+- version: "0.3"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: TRL 3 update (budget and problem wording decided by Amish in DWD-DDR-001; yield figures from DWD-CAL-001; partner question still open)
 ---
 
 # DewDrive problem statement
 
-Households in arid places without surface water or usable groundwater still have one water source overhead: the moisture in the air. A small, open, solar-powered harvester could turn that into a daily supplement of drinking water, but the physics limits it to about half a litre per square metre per day in dry air, so the honest aim is a supplementary drinking-water source that a household or school can build and repair, not a replacement for a well or a water truck. Design with, not for: requirements must come from co-design sessions and field trials with the intended users through a local partner.
+Arid households without surface water or groundwater within reach depend on carried or trucked water; the air above them is an untapped supplementary source. A small, open, solar-powered harvester could turn that moisture into a daily supplement of drinking water, but the physics limits it to well under a litre per square metre per day in dry air (DWD-CAL-001 estimates about 0.2 L per day for the design as drawn, and about 0.5 L with the proposed through-flow trays), so the realistic aim is a supplementary drinking-water source that a household or school can build and repair, not a replacement for a well or a water truck. Design with, not for: requirements must come from co-design sessions and field trials with the intended users through a local partner.
 
 ## The problem
 
@@ -55,7 +59,7 @@ Operating environment (proposed design envelope):
 
 ## Constraints
 
-- Garage-buildable prototype, about $400 USD in parts (`project.yaml`).
+- Garage-buildable research prototype, $500 USD or less in parts (`project.yaml`; budget raised from $400 by Amish on 2026-09-25, DWD-DDR-001, D1). The TRL 3 BOM totals $488.
 - Regeneration heat from the sun only. Any electricity (fan, logger) comes from the device's own small solar panel.
 - Common, low-cost sorbents: silica gel and calcium chloride, both sold as desiccants and food-grade chemicals.
 - Everything in contact with the water must be food-grade.
@@ -81,8 +85,8 @@ The gap DewDrive targets is an open, documented and locally buildable device usi
 
 ## Open questions
 
-- [ ] Which partner and region for co-design, and what are the real night humidity and solar figures there?
-- [ ] Is about 0.5 L per day per unit worth a household's time and money, compared with carrying or buying water?
+- [ ] Which partner and region for co-design, and what are the real night humidity and solar figures there? (Proposed, awaiting Amish: DWD-DDR-001, O1. Portfolio rule: partners are picked per area later.)
+- [ ] Is about 0.2 to 0.5 L per day per unit worth a household's time and money, compared with carrying or buying water? DWD-CAL-001 puts the parts cost at about $0.51 to $1.34 per litre over five years.
 - [ ] How will households test and treat the water, and who pays for the tests?
 - [ ] Would a school or clinic, with staff on site twice a day, be a better first user than a household?
 

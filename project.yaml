@@ -2,18 +2,25 @@
 name: DewDrive
 slug: dewdrive
 area: Water Security
-trl: 2                   # Technology Readiness Level, see .kit/STANDARDS.md section 9
-trl_target: 3
+trl: 3                   # Technology Readiness Level, see .kit/STANDARDS.md section 9
+trl_target: 3            # TRL 4 on hold by Amish's instruction (2026-09-25)
 trl_evidence:
   - docs/01-problem.md
   - docs/02-concept.md
   - docs/03-requirements.md
+  - docs/decisions/0001-trl2-review-decisions.md
+  - docs/04-calcs/01-sizing.md
+  - docs/04-calcs/sizing.py
+  - cad/src/model.py
+  - cad/step/dewdrive-assembly.step
+  - cad/drawings/DWD-DWG-001.pdf
+  - bom/bom.csv
 shortlisted: false
 pitch: >-
   Solar-regenerated desiccant harvester that adsorbs moisture from air overnight and releases it into a passive condenser during the day.
 problem: >-
-  Arid communities with no surface water or groundwater have no water source at all.
-budget_usd: 400
+  Arid households without surface water or groundwater within reach depend on carried or trucked water; the air above them is an untapped supplementary source.
+budget_usd: 500             # raised from 400 by Amish, 2026-09-25 (DWD-DDR-001, D1)
 difficulty: 4  # 1 easiest, 5 hardest
 hero_image: media/hero.png
 licenses:
