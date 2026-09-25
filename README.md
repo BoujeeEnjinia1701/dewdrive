@@ -6,29 +6,44 @@
 
 Solar-regenerated desiccant harvester that adsorbs moisture from air overnight and releases it into a passive condenser during the day.
 
+![DewDrive concept](media/hero.png)
+
+[Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [Review note](docs/REVIEW.md)
+
 ## Problem
 
-Arid communities with no surface water or groundwater have no water source at all.
+Arid communities with no surface water or groundwater have no water source at all, yet even desert air holds about 7 g of water per cubic metre on a 40 % RH night. Commercial solar hydropanels cost about $2,000 each and cannot be built or repaired locally. Design with, not for: requirements must come from co-design sessions and field trials with the intended users through a local partner.
+
+Problem statement: [docs/01-problem.md](docs/01-problem.md)
 
 ## Concept
 
-Solar-regenerated desiccant harvester that adsorbs moisture from air overnight and releases it into a passive condenser during the day.
+A glazed, insulated box about 1.1 x 1.0 m, tilted 20° toward the sun, holds about 4 kg of silica gel impregnated with calcium chloride. At night the vent flaps are opened and a small solar-powered fan draws air through the box; by day the flaps are shut, the sun heats the sorbent to about 85 °C, and the vapour condenses on the shaded, finned floor of the box and drains into a bottle. First-order estimates (to be checked at TRL 3):
+
+| Quantity | Estimate |
+| --- | --- |
+| Water at 40 % night RH | about 0.5 L per day |
+| Water at 25 % night RH | about 0.25 L per day |
+| Mass | about 45 kg dry; box about 30 kg |
+| Parts cost | about $475 (over the $400 budget; see the review note) |
+
+One unit is a supplement: about one fifth of one person's survival drinking need.
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md)
 
 ## Key components
 
-- Silica gel and calcium chloride composite beds
-- Glazed solar box
-- Fan
-- Condenser fins
+- Silica gel and calcium chloride composite sorbent in four black trays
+- Glazed, insulated solar box on a tilted steel stand
+- Finned aluminium condenser forming the shaded floor of the box
+- Night fan with a 10 W PV panel and a small LiFePO4 battery
 - Humidity and temperature logging
 
 The working bill of materials is in [bom/bom.csv](bom/bom.csv).
 
 ## Safety
 
-> Harvested water must be tested and treated before drinking.
+> **Safety:** Harvested water must be tested and treated before drinking. The box interior and glazing get hot enough to burn, calcium chloride irritates eyes and skin, the small lithium iron phosphate battery must be fused, and the tilted panel must be anchored against wind. See the safety section of the [design precis](docs/02-concept.md).
 
 ## Repository layout
 
