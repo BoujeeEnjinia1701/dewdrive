@@ -1,6 +1,7 @@
 # Card metadata consumed by https://designmolecule.com
 name: DewDrive
 slug: dewdrive
+repo: BoujeeEnjinia1701/dewdrive         # GitHub repository, shown on every drawing and render
 area: Water Security
 trl: 3                   # Technology Readiness Level, see .kit/STANDARDS.md section 9
 trl_target: 3            # TRL 4 on hold by Amish's instruction (2026-09-25)
