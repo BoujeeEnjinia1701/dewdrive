@@ -4,12 +4,14 @@ Prices are TRL 3 estimates in USD, built up from typical small-quantity prices f
 
 | Group | Items | Cost |
 | --- | --- | --- |
-| Collector: stand, box, glazing, trays, sorbent, condenser, water path | 1 to 9, 14 | $360 |
+| Collector: stand, box, glazing, trays, sorbent, condenser, water path, drip screens | 1 to 9, 14, 15 | $387 |
 | Night fan, power and logging | 10 to 13 | $128 |
-| **Total parts cost** | 1 to 14 | **$488** |
+| **Total parts cost** | 1 to 15 | **$515** |
 
-The total of $488 is inside the $500 `budget_usd` that Amish set on 2026-09-25 (DWD-DDR-001, D1), with a margin of $12 (2.4 %). The margin is thin: the condenser (line 6) and the glazing (line 3) are the lines most likely to move. DWD-CAL-001 (J1) reads this file and checks the total.
+The total of $515 is **over** the $500 `budget_usd` that Amish set on 2026-09-25 (DWD-DDR-001, D1) and kept the same day (DWD-DDR-002, D14), by $15 (3 %). R11 is not met. The options (raise the budget to $520, cut the drip screens to drip gutters, or evaluate a lighter condenser on paper) are proposed, awaiting Amish (DWD-DDR-002, O3). DWD-CAL-001 (J1) reads this file and checks the total.
 
-Changes from TRL 2 ($475): line 1 rose by $10 to include two auger ground anchors, because DWD-CAL-001 (H2 to H4) shows the stand tips at 20 m/s without about 50 kg of ballast or anchors; line 6 rose by $3 after a material build-up. The other lines keep their price and now name a supplier type.
+Changes for DWD-DDR-002 (from $488): line 4 rose from $10.00 to $11.50 per tray for the EPDM edge gasket and a share of the sealing baffle that makes the night air pass through the beds (D9); line 5 rose from $28 to $29 for the new mix of 3.0 kg gel and 1.0 kg CaCl₂ (D10); new line 15 adds four black drip screens with brine sumps at $5 each (D11). The anchors in line 1 are now the default wind restraint (D13).
 
-Every part that touches the water (items 5 to 8 and the sealant in item 14) must be food-grade or food-contact rated. The sorbent is the part most likely to change: DWD-CAL-001 (E4 to E6) proposes cutting the salt loading to about 25 wt % to keep the solution inside the pores. That change would not change the cost noticeably. The through-flow tray option proposed in `docs/REVIEW.md` is not in this BOM; it is awaiting Amish.
+Changes at TRL 3 from TRL 2 ($475): line 1 rose by $10 to include two auger ground anchors; line 6 rose by $3 after a material build-up.
+
+Every part that touches the water (items 5 to 8 and the sealant in item 14) must be food-grade or food-contact rated. The drip screens (item 15) hold brine and must be kept apart from the water path.

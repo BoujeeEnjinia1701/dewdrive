@@ -1,4 +1,4 @@
-"""DewDrive parametric model (build123d), TRL 3 massing-plus level.
+"""DewDrive parametric model (build123d), TRL 3 massing-plus level (DWD-DDR-002 revision).
 
 Run from the repo root:  python cad/src/model.py
 Exports STEP files to cad/step and STL files to cad/stl.
@@ -19,7 +19,7 @@ from pathlib import Path
 # ---------------------------------------------------------------------------------------------
 # Top-level parameters (mm unless noted). Edit these, not the geometry below.
 PARAMS = {
-    "tilt": 20.0,            # collector tilt from horizontal, degrees (DDR-001, D5)
+    "tilt": 20.0,            # collector tilt from horizontal, degrees (DDR-001, D7)
     "box_x": 1100.0,         # outer box size east-west
     "box_y": 1000.0,         # outer box size along the slope (south-north)
     "wall_t": 40.0,          # insulated wall: 6 mm plywood + 25 mm PIR + 6 mm plywood + paint, rounded
@@ -37,9 +37,18 @@ PARAMS = {
     "tray_h": 25.0,          # tray depth
     "tray_z0": 110.0,        # local height of the tray mesh floor
     "tray_rim": 8.0,         # tray side flange width (sets the bed area)
-    "bed_depth": 8.3,        # sorbent bed depth; checked against the sorbent volume in DWD-CAL-001
+    "bed_depth": 9.3,        # sorbent bed depth, 3.0 kg gel + 1.0 kg CaCl2 (DDR-002); checked in DWD-CAL-001 A5
+    "baffle_t": 1.0,         # sealing baffle between trays and walls, top at the tray floor (DDR-002, through-flow)
+    "scr_w": 20.0,           # drip screen channel width (DDR-002): two staggered layers of U-channels
+    "scr_lip": 6.0,          # channel lip height
+    "scr_t": 1.0,            # channel sheet thickness (massing; 0.5 mm flashing in the BOM)
+    "scr_pitch": 30.0,       # channel pitch in each layer; layers offset by half a pitch, no line of sight
+    "scr_z_hi": 92.0,        # local height of the upper channel layer bottom
+    "scr_z_lo": 80.0,        # local height of the lower channel layer bottom
+    "sump": (30.0, 12.0),    # brine sump at the low end of each drip screen, width along slope x depth
     "gutter_w": 30.0,        # gutter width along the low edge
-    "flap_in": (800.0, 70.0),   # south inlet flap, width x height
+    "flap_in": (800.0, 40.0),   # south inlet flap, width x height; above the trays (through-flow, DDR-002)
+    "flap_in_z": 158.0,         # local height of the inlet flap centre (tray tops at 135, glazing at 180)
     "flap_out": (560.0, 70.0),  # north outlet flap beside the fan hood
     "fan_hood": (160.0, 64.0, 140.0),
     "z0": 680.0,             # height of the local box origin above the ground at the box centre
@@ -57,7 +66,7 @@ BOM_NAMES = {
     1: "Stand, galvanized steel angle",
     2: "Insulated box walls",
     3: "Glazing lid, twin-wall polycarbonate",
-    4: "Sorbent trays (4), black aluminium mesh",
+    4: "Sorbent trays (4), sealed edges and baffle",
     5: "Composite sorbent, silica gel and CaCl2",
     6: "Condenser plate with fins",
     7: "Condensate gutter and drain tube",
@@ -67,6 +76,7 @@ BOM_NAMES = {
     11: "PV panel, 10 W, on pole",
     12: "Electronics box (charger, LiFePO4, logger)",
     13: "Air temperature and RH sensor shield",
+    15: "Drip screens (4) with brine sumps",
 }
 
 
@@ -117,6 +127,10 @@ def derived(P=PARAMS):
         "leg_span_x_m": (P["box_x"] - 40) / 1e3,
         "box_air_m3": ix * iy * P["wall_h"] / 1e9,
         "wall_area_m2": 2 * (P["box_x"] + P["box_y"]) * P["wall_h"] / 1e6,
+        "baffle_m2": (ix * iy - 4 * P["tray_x"] * P["tray_y"]) / 1e6,
+        "screen_open": (P["scr_pitch"] - P["scr_w"]) / P["scr_pitch"],   # open share of each channel layer
+        "screen_t_m": (P["scr_z_hi"] + P["scr_lip"] - P["scr_z_lo"]) / 1e3,  # depth of the two layers
+        "sump_l": 4 * (P["tray_x"] - 20) * (P["sump"][0] - 2) * (P["sump"][1] - 1) / 1e6,  # brine sump volume, L
     }
 
 
@@ -161,6 +175,30 @@ def build_parts(P=PARAMS):
         bed = cake if bed is None else bed + cake
     rail_z = P["tray_z0"] - 5
     trays = trays + Pos(-(ix / 2 - 8), 0, rail_z) * Box(16, iy, 10) + Pos(ix / 2 - 8, 0, rail_z) * Box(16, iy, 10)
+    # sealing baffle: fills the gaps between the trays and the walls so the night air must pass down
+    # through the beds (DDR-002); the trays sit on it on an EPDM edge gasket
+    baffle = Pos(0, 0, P["tray_z0"] - P["baffle_t"] / 2) * Box(ix, iy, P["baffle_t"])
+    for (x, y) in tray_centres(P):
+        baffle = baffle - Pos(x, y, P["tray_z0"]) * Box(P["tray_x"] - 2 * rim, P["tray_y"] - 2 * rim, 10)
+    trays = trays + baffle
+    # 15 drip screens: two staggered layers of U-channels running down the slope under each tray, draining
+    # into a closed sump at the low (south) end; no straight line of sight from bed to condenser
+    from build123d import Compound
+    sw, lip, st, sp = P["scr_w"], P["scr_lip"], P["scr_t"], P["scr_pitch"]
+    sl = P["tray_y"] - 2 * rim
+    chan = Box(sw, sl, lip) - Pos(0, 0, st) * Box(sw - 2 * st, sl + 2, lip)
+    swp, sdp = P["sump"]
+    screens = []
+    for (x, y) in tray_centres(P):
+        n = int((P["tray_x"] - 2 * rim - sw) // sp) + 1
+        x0 = x - (n - 1) * sp / 2
+        for i in range(n):
+            screens.append(Pos(x0 + i * sp, y, P["scr_z_hi"] + lip / 2) * chan)
+            if i < n - 1:
+                screens.append(Pos(x0 + (i + 0.5) * sp, y, P["scr_z_lo"] + lip / 2) * chan)
+        sump = Box(P["tray_x"] - 20, swp, sdp) - Pos(0, 0, st) * Box(P["tray_x"] - 22, swp - 2, sdp)
+        screens.append(Pos(x, y - sl / 2 - swp / 2 + 4, P["scr_z_lo"] - sdp / 2 + 4) * sump)
+    screens = Compound(children=screens)
     # 6 Condenser plate and fins
     pt = P["plate_top"]
     condenser = Pos(0, 0, pt - P["plate_t"] / 2) * Box(LX - 20, LY - 20, P["plate_t"])
@@ -176,7 +214,7 @@ def build_parts(P=PARAMS):
     drain = bar(world(bx, -LY / 2 + WT, pt + 8, P), g_out, 16) + bar(g_out, (bx, by + 40, P["bottle"][2] + 60), 16)
     # 9 South inlet flap; 10 fan hood and north outlet flap
     fw, fh = P["flap_in"]
-    flap = Pos(-100, -LY / 2 - 5, zw0 + fh / 2) * Box(fw, 10, fh)
+    flap = Pos(-100, -LY / 2 - 5, P["flap_in_z"]) * Box(fw, 10, fh)
     ow, oh = P["flap_out"]
     hx, hy, hz = P["fan_hood"]
     fan = Pos(-230, LY / 2 + 5, zw0 + oh / 2) * Box(ow, 10, oh) + Pos(330, LY / 2 + hy / 2, zw0 + hz / 2) * Box(hx, hy, hz)
@@ -216,6 +254,7 @@ def build_parts(P=PARAMS):
         ("glazing", BOM_NAMES[3], W * glazing, 3),
         ("trays", BOM_NAMES[4], W * trays, 4),
         ("bed", BOM_NAMES[5], W * bed, 5),
+        ("screens", BOM_NAMES[15], W * screens, 15),
         ("condenser", BOM_NAMES[6], W * condenser, 6),
         ("gutter", BOM_NAMES[7], W * gutter + drain, 7),
         ("bottle", BOM_NAMES[8], bottle, 8),
@@ -246,9 +285,9 @@ if __name__ == "__main__":
     parts = {k: shape for k, _, shape, _ in build_parts()}
     groups = {
         "dewdrive-assembly": list(parts),
-        "collector-box": ["walls", "glazing", "trays", "bed", "condenser", "gutter", "flap", "fan"],
+        "collector-box": ["walls", "glazing", "trays", "bed", "screens", "condenser", "gutter", "flap", "fan"],
         "condenser": ["condenser"],
-        "sorbent-trays": ["trays", "bed"],
+        "sorbent-trays": ["trays", "bed", "screens"],
         "stand": ["stand"],
         "power-and-logging": ["pv", "ebox", "shield"],
     }

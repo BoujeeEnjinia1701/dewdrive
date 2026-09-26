@@ -1,4 +1,4 @@
-"""DewDrive general arrangement sheet DWD-DWG-001, Rev P1 (TRL 3).
+"""DewDrive general arrangement sheet DWD-DWG-001, Rev P2 (TRL 3, DWD-DDR-002 revision).
 
 Run from the repo root:  python cad/src/sheets.py
 Writes cad/drawings/DWD-DWG-001.svg, .pdf and .png from the parametric model in
@@ -61,10 +61,11 @@ def main():
     asm = build()
     views = project_views(asm, work)
     bb = asm.bounding_box()
-    s = Sheet(project="DewDrive", title="General arrangement", dwg_no="DWD-DWG-001", rev="P1",
+    s = Sheet(project="DewDrive", title="General arrangement", dwg_no="DWD-DWG-001", rev="P2",
               author="Amish Chadha", date=DATE, scale=None, theme="technical",
               material="Plywood and PIR box, twin-wall PC lid, Al trays and finned condenser, galv. steel stand; see bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
-              revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC")])
+              revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC"),
+                         ("P2", "Through-flow trays, baffle, raised inlet, drip screens (DDR-002)", DATE, "AC")])
     s.add_ortho(views)
     k = s.scale
     c = ortho_cells(s, views)
@@ -99,12 +100,13 @@ def main():
     s.add_notes("Main dimensions and interfaces (mm)", [
         f"Box {LX:.0f} x {LY:.0f} x {P['wall_h']:.0f}; walls {P['wall_t']:.0f} (ply, 25 PIR, ply)",
         f"Lid {P['glaz_t']:.0f} twin-wall PC, hinged north edge; inner {D['inner_x_m'] * 1e3:.0f} x {D['inner_y_m'] * 1e3:.0f}",
-        f"Trays 4 x {P['tray_x']:.0f} x {P['tray_y']:.0f} x {P['tray_h']:.0f}; bed {P['bed_depth']:.1f} deep, {D['bed_m2']:.3f} m2",
+        f"Trays 4 x {P['tray_x']:.0f} x {P['tray_y']:.0f} x {P['tray_h']:.0f}, sealed on a baffle; bed {P['bed_depth']:.1f} deep, {D['bed_m2']:.3f} m2",
+        f"Drip screens: 2 layers of {P['scr_w']:.0f} x {P['scr_lip']:.0f} channels at {P['scr_pitch']:.0f} pitch; sumps {D['sump_l']:.2f} L",
         f"Gaps: {gap_o:.0f} tray rim to lid, {gap_u:.0f} tray floor to condenser",
         f"Condenser {P['plate_t']:.0f} Al plate, {P['fin_n']} fins {P['fin_t']:.0f} x {P['fin_h']:.0f} at {P['fin_pitch']:.0f} pitch",
-        f"Inlet flap {P['flap_in'][0]:.0f} x {P['flap_in'][1]:.0f} (S); outlet {P['flap_out'][0]:.0f} x {P['flap_out'][1]:.0f} and fan (N)",
-        f"Stand 4 legs, L{P['leg']:.0f} x {P['leg_t']:.0f} galv.; feet {P['foot']:.0f} sq; anchors or ballast",
-        "Mass about 51 kg dry; box about 31 kg (DWD-CAL-001, G1)",
+        f"Inlet {P['flap_in'][0]:.0f} x {P['flap_in'][1]:.0f} (S, above trays); outlet {P['flap_out'][0]:.0f} x {P['flap_out'][1]:.0f} and fan (N, below)",
+        f"Stand 4 legs, L{P['leg']:.0f} x {P['leg_t']:.0f} galv.; feet {P['foot']:.0f} sq; 2 ground anchors",
+        "Mass about 54 kg dry; box about 33 kg (DWD-CAL-001 v0.2, G1)",
         "Third-angle; front view from south (-Y), right from +X",
     ], x=276, y=158, width=140)
     path = s.save(ROOT / "cad" / "drawings" / "DWD-DWG-001")

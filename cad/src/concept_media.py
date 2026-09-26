@@ -1,4 +1,4 @@
-"""DewDrive concept media (TRL 3), generated from the parametric model in cad/src/model.py.
+"""DewDrive concept media (TRL 3, DWD-DDR-002 revision), generated from the parametric model in cad/src/model.py.
 
 Run from the repo root:  python cad/src/concept_media.py
 Massing-plus model: main dimensions and interfaces; not for fabrication.
@@ -32,9 +32,10 @@ def along_n(d, extra=(0.0, 0.0, 0.0)):
 
 COLORS = {"stand": "#6B7280", "walls": "#C8A165", "glazing": "#9CC9D6", "trays": "#1F2937", "bed": "#E8E2C8",
           "condenser": "#9CA3AF", "gutter": "#0F766E", "bottle": "#E5E7EB", "flap": "#B45309", "fan": "#2563EB",
-          "pv": "#1E3A8A", "ebox": "#15803D", "shield": "#F3F4F6"}
+          "pv": "#1E3A8A", "ebox": "#15803D", "shield": "#F3F4F6", "screens": "#4B5563"}
 EXPLODE = {"stand": (0, 0, -450), "walls": along_n(120), "glazing": along_n(1850, (1300, 0, 0)),
            "trays": along_n(350, (1350, 0, 0)), "bed": along_n(1100, (500, 0, 0)), "condenser": along_n(-260),
+           "screens": along_n(700, (2300, 700, 900)),
            "gutter": (0, -420, -120), "bottle": (250, -520, -80), "flap": (-150, -700, 150),
            "fan": (1300, 900, -700), "pv": (1400, 900, -900), "ebox": (2300, -700, -150), "shield": (2300, -700, 0)}
 parts = [Part(name, shape, COLORS[k], bom, EXPLODE[k]) for k, name, shape, bom in build_parts()]
@@ -101,10 +102,11 @@ def cutaway(out="media/cutaway.png"):
         (3, world(X, 250, 190), (60, -90)),
         (5, world(X, 100, 116), (-90, -170)),
         (4, world(X, -300, 111), (-40, 130)),
+        (15, world(X, 200, 86), (-70, 170)),
         (2, world(X, L_Y / 2 - 20, 150), (70, -40)),
         (10, world(X, L_Y / 2 + 50, 100), (70, 20)),
         (6, world(X, 150, 0), (60, 110)),
-        (9, world(X, -L_Y / 2 - 8, 80), (-70, -40)),
+        (9, world(X, -L_Y / 2 - 8, PARAMS["flap_in_z"]), (-10, -75)),
         (7, world(X, -L_Y / 2 + WALL + 15, 55), (-90, 30)),
         (8, (BOTTLE[0], BOTTLE[1], 250), (-80, 0)),
         (1, (lx[0], lx[1], 300), (70, 60)),
@@ -120,14 +122,16 @@ def cutaway(out="media/cutaway.png"):
     def arrow(p0, p1, col):
         ax.add_patch(FancyArrowPatch((px(p0), py(p0)), (px(p1), py(p1)), arrowstyle="-|>", mutation_scale=12,
                                      lw=1.6, color=col, alpha=0.85))
-    arrow(world(X, -L_Y / 2 - 150, 80), world(X, -150, 80), "#2563EB")
-    arrow(world(X, 150, 80), world(X, L_Y / 2 + 150, 100), "#2563EB")
-    arrow(world(X, -350, 155), world(X, 350, 155), "#2563EB")
-    for yy in (-300, 0, 300):
-        arrow(world(X, yy + 40, 112), world(X, yy + 40, 52), "#C2410C")
+    # night: in above the trays at the south, down through the beds, out below them at the north fan
+    arrow(world(X, -L_Y / 2 - 70, PARAMS["flap_in_z"]), world(X, -330, 160), "#2563EB")
+    for yy in (-250, 50):
+        arrow(world(X, yy, 168), world(X, yy, 72), "#2563EB")
+    arrow(world(X, 250, 62), world(X, L_Y / 2 + 150, 75), "#2563EB")
+    for yy in (-150, 150, 380):
+        arrow(world(X, yy, 108), world(X, yy, 52), "#C2410C")
     handles = [plt.Line2D([], [], marker="o", ls="", mfc=names[b].color, mec="#111827", ms=7,
                           label=f"{b}  {names[b].name}") for b in sorted(b for b, _, _ in callouts)]
-    handles += [plt.Line2D([], [], color="#2563EB", lw=1.6, label="Night: air drawn through the box"),
+    handles += [plt.Line2D([], [], color="#2563EB", lw=1.6, label="Night: air drawn down through the beds"),
                 plt.Line2D([], [], color="#C2410C", lw=1.6, label="Day: vapour from bed to condenser")]
     ax.legend(handles=handles, loc="upper left", frameon=False, fontsize=7.5, bbox_to_anchor=(0.0, 0.9))
     fig.text(0.02, 0.97, "DewDrive: cutaway (north-south section through the drain, looking west)", fontsize=9,
@@ -140,22 +144,22 @@ def cutaway(out="media/cutaway.png"):
 
 
 if __name__ == "__main__":
-    A = C.cA40
+    A = C.cD40
     render_all(
         parts, project="DewDrive", title="Solar desiccant water harvester concept", dwg_no="DWD-DWG-010",
         key_figures=[f"{derived()['aperture_m2']:.1f} m2 glazed lid, tilted {TILT:.0f} deg to the sun",
-                     "4 kg composite sorbent (silica gel with about 33 % CaCl2)",
-                     f"About {A['collected']:.2f} L/day at 40 % night RH as drawn (estimate)",
+                     "4 kg composite sorbent (silica gel with 25 % CaCl2)",
+                     f"About {A['collected']:.2f} L/day at 40 % night RH, air drawn through the beds (estimate)",
                      f"Bed about {A['Tb_noon']:.0f} C at noon by sun only; fan {C.P_FAN * C.H_NIGHT:.0f} Wh/night",
                      f"Collector 1.1 x 1.0 m, top edge {derived()['top_edge_m']:.2f} m high",
                      f"About {sum(C.mass.values()):.0f} kg dry; box about {C.box:.0f} kg (estimate)",
-                     f"Parts ${C.cost:.0f}, within the $500 budget"],
+                     f"Parts ${C.cost:.0f} (budget $500)"],
         cut=False, scale_figure=False, context=[person],
-        flow={"title": "water per day at the design point as drawn, g (estimates; 40 % night RH, 20 C)",
+        flow={"title": "water per day at the design point, g (estimates; 40 % night RH, 20 C)",
               "unit": "g",
               "stages": [("Vapour in night air", round(1e3 * C.supply)), ("Adsorbed overnight", round(1e3 * A["uptake"])),
                          ("Condensed by day", round(1e3 * A["condensed"])), ("In the bottle", round(1e3 * A["collected"]))],
-              "losses": [(0, "Passes the bed", round(1e3 * (C.supply - A["uptake"]))),
+              "losses": [(0, "Leaves in the outlet air", round(1e3 * (C.supply - A["uptake"]))),
                          (2, "Films and drops", round(1e3 * (A["condensed"] - A["collected"])))]},
     )
     cutaway()

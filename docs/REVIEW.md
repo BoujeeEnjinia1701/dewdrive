@@ -102,6 +102,8 @@ Decided by Amish, 2026-09-25, going with the recommendation: D1 `budget_usd` rai
 
 ### Proposed, awaiting Amish
 
+Status update, 2026-09-25: items 2 to 7 below are now **Decided by Amish, 2026-09-25: go with recommendation** (DWD-DDR-002, D9 to D14; see the session "recommendations accepted" below). Item 1 stays Proposed, awaiting Amish.
+
 Still open from TRL 2 (no recommendation was made):
 
 1. First partner and region for co-design, which also supplies the site climate data (O1). Portfolio rule: partners are picked per area later.
@@ -134,3 +136,56 @@ None found. `build-log/README.md` is the empty scaffold and was not extended; `e
 ### Recommended next step
 
 Review this note and decide items 2 to 4, which decide whether DewDrive can meet its water targets at all. Those decisions can be written into the precis, model and calculation as a paper revision at TRL 3. **TRL 4 is on hold by Amish's instruction** and no TRL 4 work was started. For reference only, TRL 4 would need: measured sorption isotherms and uptake rates of the chosen composite (including the salt loading); a lab test article of one tray with through-flow; a test plan and report (TST, `environment: lab`) covering yield, condenser temperature, salt carry-over and brine containment; a laboratory water test; and build log entries.
+
+## Session 2026-09-25: recommendations accepted
+
+Amish wrote on 2026-09-25: "i accept all your recommendations, go with them across all repos." Every open item with a recommendation is now **Decided by Amish, 2026-09-25: go with recommendation**, recorded in `docs/decisions/0002-recommendations-accepted.md` (DWD-DDR-002 v0.1). TRL stays 3 (`trl: 3`, `trl_target: 3`).
+
+### Decisions applied and what changed
+
+| # | Decision | Before | After |
+| --- | --- | --- | --- |
+| D9 | Night air drawn down through the sealed, mesh-floored trays | Air past the trays; 0.20 L/day at 40 % RH, 0.09 L at 25 % | Baffle and EPDM tray gasket; inlet flap moved above the trays (800 x 70 to 800 x 40 mm); 0.57 and 0.45 L/day |
+| D10 | Salt loading 25 wt % (amends D3) | 1.3 kg CaCl₂ in 2.7 kg gel; pores fill at 51 % RH; bed 8.3 mm | 1.0 kg in 3.0 kg; pores fill at 71 % RH; bed 9.3 mm |
+| D11 | Drip tray under each tray and fan stop above 70 % RH | None | New BOM line 15: four black drip screens (two staggered layers of channels, sumps 0.58 L in all); fan rule in DWD-PRC-001. R7 restated to the tray and drip-screen assembly |
+| D12 | Evaluate a low-emissivity screen on paper | Not evaluated | Done: 0.82 L/day but 166 °C dry-bed stagnation; not adopted (see O4) |
+| D13 | Ground anchors as the default wind restraint | Anchors or ballast | Two anchors of 114 N default; 46 kg ballast the alternative |
+| D14 | Keep `budget_usd` at $500 | $500; BOM $488 | $500 unchanged; BOM $515 |
+
+Other changes: `cad/src/model.py` (baffle, drip screens, raised inlet, bed depth), STEP and STL re-exported; drawing DWD-DWG-001 re-run at Rev P2; `docs/04-calcs/sizing.py` and DWD-CAL-001 v0.2 now model the decided design (results.csv regenerated); `bom/bom.csv` and `bom-notes.md`; DWD-PRB-001, DWD-PRC-001 and DWD-REQ-001 to v0.4; DWD-DDR-001 to v0.2 (O2 marked decided); all media regenerated from the model and checked by eye (`_views` folders removed); PDFs re-rendered; README given the concept rationale, burning platform, where-used and inspiration sections, with the concept figures updated.
+
+Other key numbers: bed 112 °C at noon (was 104 °C), stagnation 122 °C (was 105 °C), condenser rise 12.1 K (was 13.1 K), solar-to-water efficiency 7.1 % (was 2.5 %), mass 53.9 kg and box 33.4 kg (were 51.4 and 30.9 kg), water cost $0.49 per litre over 5 years (was $1.34). If grain kinetics cut the night NTU to 1, the yield is still 0.53 L/day (C9).
+
+### Requirement status (DWD-CAL-001 v0.2, Table 4)
+
+10 met, 1 not met, 2 not verifiable at TRL 3.
+
+| ID | Status | Value against target |
+| --- | --- | --- |
+| R11 | **Not met** | $515 against $500 |
+| R6 | Not verifiable at TRL 3 | Water quality needs a laboratory test |
+| R10 | Not verifiable at TRL 3 | Two 114 N anchors or 46 kg ballast at 20 m/s; UV and cycling need supplier data and test |
+| R1, R2 | Met | 0.57 L/day against 0.5; 0.45 L/day against 0.25 |
+| R7 | Met on paper | Pores 43 % full after one 90 % RH night; 50 % after three with the fan rule (63 % without); sumps 0.58 L |
+| R3, R4, R5, R8, R9, R12, R13 | Met | Bed 112 °C; 23.6 Wh/day against 35; 12.1 K; two actions; box 33.4 kg; 0.41 MB; glazing 57 °C, fins 47 °C |
+
+### Still awaiting Amish
+
+1. **O1.** First partner and region for co-design (no recommendation made).
+2. **O3, budget (new).** BOM $515 against $500. Options: (a) raise `budget_usd` to $520; (b) cut the drip screens to drip gutters under the low edge of each tray (weaker protection); (c) evaluate a lighter condenser on paper, since the black screens cut its peak load from 333 W to 299 W. Recommendation: (c) first, then (a) if it does not close the gap.
+3. **O4, low-emissivity screen (new).** 0.82 L/day but a 166 °C dry-bed stagnation. Recommendation: evaluate a stagnation vent or higher-rated glazing on paper at TRL 3.
+4. **O5, glazing rating (new).** Dry-bed stagnation is 122 °C, near the usual 120 °C service rating of twin-wall polycarbonate. Recommendation: specify a sheet rated 130 °C or more, or confirm from supplier data that the inner skin stays inside the rating.
+
+### Cross-repo actions
+
+None. DewDrive has its own battery and uses no shared interface, so no decision here needs another repo to change.
+
+### Safety concerns
+
+- The bed now reaches about 112 °C at noon and 122 °C dry (was 104 and 105 °C); the glazing rating must be confirmed (O5). Low-emissivity screens are not to be fitted.
+- Brine in the drip-screen sumps is corrosive; emptying them needs gloves and eye protection, and they must be kept apart from the water path.
+- Untreated water, the LiFePO4 battery and wind loads are as before; the documents keep all safety sections.
+
+### TRL 4
+
+**TRL 4 remains on hold by Amish's instruction.** No build, test, purchase, PCB or firmware beyond a sketch was started. The fan rule is a design rule only; measured isotherms, a through-flow tray test article, a drip-screen chamber test and a water test remain for TRL 4.
