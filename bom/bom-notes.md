@@ -8,7 +8,7 @@ Prices are TRL 3 estimates in USD, built up from typical small-quantity prices f
 | Night fan, power and logging | 10 to 13 | $128 |
 | **Total parts cost** | 1 to 15 | **$515** |
 
-The total of $515 is **over** the $500 `budget_usd` that Amish set on 2026-09-25 (DWD-DDR-001, D1) and kept the same day (DWD-DDR-002, D14), by $15 (3 %). R11 is not met. The options (raise the budget to $520, cut the drip screens to drip gutters, or evaluate a lighter condenser on paper) are proposed, awaiting Amish (DWD-DDR-002, O3). DWD-CAL-001 (J1) reads this file and checks the total.
+The total of $515 is within the $520 `budget_usd`: the budget of $500 set by Amish on 2026-09-25 (DWD-DDR-001, D1) was topped up to $520 by Amish on 2026-09-26 (DWD-DDR-002, D15), closing O3. R11 is met, with $5 to spare. DWD-CAL-001 (J1) reads this file and checks the total.
 
 Changes for DWD-DDR-002 (from $488): line 4 rose from $10.00 to $11.50 per tray for the EPDM edge gasket and a share of the sealing baffle that makes the night air pass through the beds (D9); line 5 rose from $28 to $29 for the new mix of 3.0 kg gel and 1.0 kg CaCl₂ (D10); new line 15 adds four black drip screens with brine sumps at $5 each (D11). The anchors in line 1 are now the default wind restraint (D13).
 

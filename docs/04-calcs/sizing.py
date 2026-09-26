@@ -632,7 +632,7 @@ say("I1", f"{chans} channels every 5 min for 30 days: {n_rec} records, about {n_
 print("\nJ. Cost (R11)")
 bom = list(csv.DictReader((ROOT / "bom" / "bom.csv").open()))
 cost = sum(float(r["qty"]) * float(r["unit_cost_usd"]) for r in bom)
-say("J1", f"BOM: {len(bom)} lines, total ${cost:.2f}; budget $500 (DDR-001, D1; kept by DDR-002)", cost)
+say("J1", f"BOM: {len(bom)} lines, total ${cost:.2f}; budget $520 (top-up approved by Amish, 2026-09-26)", cost)
 life_l = cD40["collected"] * 365 * 5
 say("J2", f"Water cost over 5 years at the design point: {life_l:.0f} L, ${cost / life_l:.2f} per litre", cost / life_l)
 
@@ -666,7 +666,7 @@ req("R9", "Portable", f"box {box:.1f} kg with sorbent; {box_no_trays:.1f} kg wit
     "box <= 35 kg; stand separable", "met" if box <= 35 else "not met")
 req("R10", "Survive the site", f"two anchors of {anchor:.0f} N (default) or {ballast:.0f} kg ballast for 20 m/s (H2 to H4); UV and 300 cycles need supplier data and test",
     "stable at 20 m/s; UV; 300 cycles", "not verifiable at TRL 3")
-req("R11", "Cost", f"${cost:.0f} (J1)", "<= $500 (D1)", "met" if cost <= 500 else "not met")
+req("R11", "Cost", f"${cost:.0f} (J1)", "<= $520 (top-up, 2026-09-26)", "met" if cost <= 520 else "not met")
 req("R12", "Record performance", f"{n_rec} records, {n_rec * rec_bytes / 1e6:.2f} MB (I1)", "5 min for 30 days", "met")
 req("R13", "Protect users", f"glazing outer about {T_out:.0f} C at stagnation; fins up to {T_cond_touch:.0f} C; 12.8 V DC (D1 to D3)",
     "touched surfaces <= 60 C; < 60 V DC", "met" if T_out <= 60 and T_cond_touch <= 60 else "not met")

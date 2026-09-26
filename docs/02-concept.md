@@ -3,9 +3,9 @@ doc_id: DWD-PRC-001
 title: DewDrive design precis
 project: DewDrive
 doc_type: Design precis
-version: "0.4"
+version: "0.5"
 status: Draft
-date: '2026-09-25'
+date: '2026-09-26'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,11 +25,15 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002); through-flow trays, 25 wt % salt, drip screens, fan humidity cut-out, anchors as default; numbers from DWD-CAL-001 v0.2
+- version: "0.5"
+  date: '2026-09-26'
+  author: Amish Chadha
+  change: Budget top-up approved by Amish
 ---
 
 # DewDrive design precis
 
-DewDrive is a glazed, insulated box 1.1 x 1.0 m, tilted 20° toward the sun on a steel stand. Inside, four black trays hold 4 kg of silica gel impregnated with 25 wt % calcium chloride. At night the vent flaps are opened and a 2 W fan draws air in above the trays and down through their mesh floors, and the sorbent takes up water. In the morning the flaps are shut; the sun heats the bed to about 112 °C by noon and drives the vapour down past a black drip screen onto a finned aluminium floor that forms the condenser, shaded by the box itself. The condensate runs down the slope into a gutter and a 10 L bottle. The TRL 3 calculation (DWD-CAL-001 v0.2) gives about 0.57 L per day at 40 % night RH and 0.45 L at 25 %, meeting the 0.5 and 0.25 L targets. The design follows Amish's decisions of 2026-09-25 (DWD-DDR-002), which replaced the v0.1 layout that made only 0.20 L per day. Parts cost $515 against the $500 budget, which is not met. One unit supplements drinking water; it does not replace a water supply.
+DewDrive is a glazed, insulated box 1.1 x 1.0 m, tilted 20° toward the sun on a steel stand. Inside, four black trays hold 4 kg of silica gel impregnated with 25 wt % calcium chloride. At night the vent flaps are opened and a 2 W fan draws air in above the trays and down through their mesh floors, and the sorbent takes up water. In the morning the flaps are shut; the sun heats the bed to about 112 °C by noon and drives the vapour down past a black drip screen onto a finned aluminium floor that forms the condenser, shaded by the box itself. The condensate runs down the slope into a gutter and a 10 L bottle. The TRL 3 calculation (DWD-CAL-001 v0.2) gives about 0.57 L per day at 40 % night RH and 0.45 L at 25 %, meeting the 0.5 and 0.25 L targets. The design follows Amish's decisions of 2026-09-25 (DWD-DDR-002), which replaced the v0.1 layout that made only 0.20 L per day. Parts cost $515 against the $520 budget (topped up by Amish on 2026-09-26), which is met. One unit supplements drinking water; it does not replace a water supply.
 
 ![Hero render](../media/hero.png)
 
@@ -102,7 +106,7 @@ Table 2. Water, energy, size and cost.
 | Salt containment | Pores fill above 71 % RH (E2); 43 % full after one 90 % RH night (E3) | Sumps 0.58 L (E6) | R7 met on paper |
 | Mass | 53.9 kg (119 lb) dry; box 33.4 kg, 24.0 kg with trays, sorbent and screens out (G1, G2) | Model volumes | R9 met |
 | Wind at 20 m/s | 317 N normal to the lid; tips without two anchors or 46 kg of ballast (H1 to H4) | Force coefficient 1.2 on 1.1 m² | R10 not verifiable at TRL 3 |
-| Parts cost | $515 (J1) | `bom/bom.csv` | **R11 not met** ($500) |
+| Parts cost | $515 (J1) | `bom/bom.csv` | R11 met ($520) |
 | Water per dollar over 5 years | about $0.49 per litre (J2) | Parts only | For comparison |
 
 What the numbers say:
@@ -111,7 +115,7 @@ What the numbers say:
 - **The drip screens help the yield.** Black channels under the trays catch brine and also cut the radiation from the hot beads to the condenser by about 40 %: 0.57 L per day with them against 0.51 L without (C6).
 - **A low-emissivity screen would do more, but overheats the box.** Bare aluminium channels would give 0.82 L per day, but a dry bed would stagnate at about 166 °C, beyond the rating of polycarbonate glazing (C10, D1). That option is proposed for further paper work (DWD-DDR-002, O4), not adopted.
 - **The lower salt loading contains the brine.** At 25 wt % the solution fills the pores only above 71 % RH, against 51 % RH at the v0.1 loading (E2).
-- **Cost is the one miss.** The gasket, baffle and drip screens add $27; the total is $515 against $500 (O3).
+- **Cost is within the topped-up budget.** The gasket, baffle and drip screens add $27; the total is $515 against the $520 budget that Amish approved on 2026-09-26 (D15, closing O3).
 - **Yield is still modest.** About 0.57 L per day is about one fifth of one person's survival drinking need.
 
 ## Key design choices
@@ -128,7 +132,7 @@ Choices 1 to 7 were decided by Amish on 2026-09-25 (DWD-DDR-001, going with the 
 8. **Night air drawn down through the sealed trays** (D9), with the inlet flap above the trays and the fan below them.
 9. **Drip screens and a fan humidity cut-out** for wet spells (D11). The screens are black, not low-emissivity, after the paper evaluation of D12.
 10. **Two ground anchors by default**, ballast as the alternative (D13).
-11. **Budget kept at $500** (D14); the BOM now exceeds it (O3, awaiting Amish).
+11. **Budget kept at $500** (D14), then topped up to $520 by Amish on 2026-09-26 (D15) once the BOM reached $515.
 12. **Built-in logging** so that each prototype yields comparable data.
 
 ## Safety
@@ -146,7 +150,7 @@ Choices 1 to 7 were decided by Amish on 2026-09-25 (DWD-DDR-001, going with the 
 ## Open questions
 
 - [ ] What are the measured uptake isotherms and rates of the 25 wt % composite at 20 °C and at 80 to 120 °C? These set every yield number.
-- [ ] How can the parts cost come back to $500, or should the budget rise (DWD-DDR-002, O3, awaiting Amish)?
+- [x] How can the parts cost come back to $500, or should the budget rise? Decided by Amish, 2026-09-26: budget top-up to $520 (DWD-DDR-002, D15).
 - [ ] Is a low-emissivity screen worth pursuing with a stagnation vent or a higher-rated glazing (O4, awaiting Amish)?
 - [ ] Does the polycarbonate stay inside its rating with a 122 °C dry bed (O5, awaiting Amish)?
 - [ ] How much salt carries over into the condensate, and does the aluminium condenser need a coating or a stainless replacement?

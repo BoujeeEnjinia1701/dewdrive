@@ -21,7 +21,7 @@ pitch: >-
   Solar-regenerated desiccant harvester that adsorbs moisture from air overnight and releases it into a passive condenser during the day.
 problem: >-
   Arid households without surface water or groundwater within reach depend on carried or trucked water; the air above them is an untapped supplementary source.
-budget_usd: 500             # raised from 400 by Amish, 2026-09-25 (DWD-DDR-001, D1); kept at 500 (DWD-DDR-002, D14)
+budget_usd: 520             # raised from 400 to 500 by Amish, 2026-09-25 (DWD-DDR-001, D1); top-up to 520 approved by Amish, 2026-09-26 (DWD-DDR-002, D15)
 difficulty: 4  # 1 easiest, 5 hardest
 hero_image: media/hero.png
 licenses:

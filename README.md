@@ -2,7 +2,7 @@
 
 ![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827)
 
-**Area:** Water Security · **TRL:** 3 of 9 (proof of concept on paper) · **Prototype budget:** $500 USD · **Difficulty:** 4 of 5
+**Area:** Water Security · **TRL:** 3 of 9 (proof of concept on paper) · **Prototype budget:** $520 USD · **Difficulty:** 4 of 5
 
 Solar-regenerated desiccant harvester that adsorbs moisture from air overnight and releases it into a passive condenser during the day.
 
@@ -38,15 +38,15 @@ The cost falls hardest on the people who carry the water. UNICEF estimates that 
 
 | Country or region | Why it matters there |
 | --- | --- |
-| Navajo Nation, United States | About 30 % of homes lack running water, according to testimony to the US Senate Committee on Indian Affairs in 2023 ([Native News Online](https://nativenewsonline.net/currents/senate-committee-on-indian-affairs-hears-30-of-navajo-nation-homes-lack-running-water)); a high-income country with households that haul water |
+| Navajo Nation, United States | About 30 % of homes lack running water, according to Navajo Nation Council Speaker Crystalyne Curley's testimony to the US Senate Committee on Indian Affairs on September 27, 2023 ([Senate Committee on Indian Affairs](https://www.indian.senate.gov/hearings/oversight-hearing-on-water-as-a-trust-resource-examining-access-in-native-communities/); [Native News Online](https://nativenewsonline.net/currents/senate-committee-on-indian-affairs-hears-30-of-navajo-nation-homes-lack-running-water)); a high-income country with households that haul water |
 | Jordan | One of the most water-scarce countries in the world, with about 61 m³ of renewable water per person per year against a 500 m³ minimum ([UNICEF Jordan](https://www.unicef.org/jordan/water-sanitation-and-hygiene)) |
-| Northern Kenya and the Horn of Africa | Arid and semi-arid rangelands where households and pastoralists depend on distant boreholes and water trucking in drought |
-| Rajasthan, India | The Thar Desert region, where villages rely on stored rainwater and carried or tanker water through the dry season |
-| Atacama, Chile | Coastal desert towns that already experiment with harvesting water from air, and a demanding test of low-humidity yield |
+| Arid and semi-arid counties, Kenya | Access to safe water and basic sanitation is lowest in the arid and semi-arid land (ASAL) counties, where UNICEF focuses its water work with the government ([UNICEF Kenya](https://www.unicef.org/kenya/water-sanitation-and-hygiene)) |
+| Rajasthan, India | In Thar Desert villages of northwest Rajasthan, water is scarce for up to 11 months of the year; women walk up to 4 km to fetch it, and villages store rainwater in underground taankas ([Al Jazeera, 2015](https://www.aljazeera.com/gallery/2015/11/19/women-lead-the-way-out-of-poverty-in-an-indian-desert)) |
+| Atacama, Chile | In Alto Hospicio, only 1.6 % of informal settlements are connected to the water network and 75.4 % receive water by truck; researchers are assessing fog collection there as a complementary source ([Carter et al., *Frontiers in Environmental Science*, 2025](https://doi.org/10.3389/fenvs.2025.1537058)) |
 
 ## What sparked the idea
 
-The starting point was a wartime device: the inflatable solar still that Mária Telkes developed at MIT during the Second World War, which used the heat of the sun to vaporize salt water and gave torpedoed sailors and downed airmen drinking water on life rafts ([Encyclopedia.com](https://www.encyclopedia.com/history/encyclopedias-almanacs-transcripts-and-maps/telkes-maria); [USPTO, "Solar life"](https://www.uspto.gov/learning-and-resources/journeys-innovation/historical-stories/solar-life)). It showed that sunlight, a transparent envelope and a cool condensing surface can make drinkable water with no fuel at all. Telkes's still needed seawater. DewDrive asks what the same daytime still could do far from any sea, if a desiccant bed filled itself overnight from the desert air.
+The starting point was a wartime device: the inflatable solar still that Mária Telkes developed at MIT during the Second World War for aircrews downed at sea. Seawater evaporated inside a balloon-like plastic envelope that folded into a package the size of a paper cup, and condensed again as drinkable water. The US government ordered 100,000 of them; by the summer of 1945 none had been delivered and the still was not used in the war, but solar stills later became part of military emergency kits ([USPTO, "A solar life"](https://www.uspto.gov/learning-and-resources/journeys-innovation/historical-stories/solar-life)). Telkes later patented a collapsible still, erected by inflation, as emergency equipment for the occupants of life rafts ([US Patent 3,415,719](https://patents.google.com/patent/US3415719A/en)). It showed that sunlight, a transparent envelope and a cool condensing surface can make drinkable water with no fuel at all. Telkes's still needed seawater. DewDrive asks what the same daytime still could do far from any sea, if a desiccant bed filled itself overnight from the desert air.
 
 ## Problem
 
@@ -63,7 +63,7 @@ A glazed, insulated box 1.1 x 1.0 m, tilted 20° toward the sun, holds 4 kg of s
 | Water at 40 % night RH | about 0.57 L per day (target 0.5 L) |
 | Water at 25 % night RH | about 0.45 L per day (target 0.25 L) |
 | Mass | about 54 kg dry; box about 33 kg |
-| Parts cost | $515, over the $500 budget (options awaiting Amish) |
+| Parts cost | $515, within the $520 budget (top-up approved by Amish, 2026-09-26) |
 
 One unit is a supplement: about one fifth of one person's survival drinking need.
 
@@ -101,6 +101,12 @@ The priced bill of materials is in [bom/bom.csv](bom/bom.csv). The parametric mo
 ## Documentation
 
 Controlled documents follow the portfolio [documentation standard](.kit/STANDARDS.md). Each carries a document ID (DWD-PRC-001 for the precis), a version and a revision history. Branded PDFs are built with `python .kit/render.py` and attached to GitHub Releases when a document is tagged, for example `DWD-PRC-001/v1.0`.
+
+## Credits
+
+Designed by Amish Chadha. See [CONTRIBUTORS.md](CONTRIBUTORS.md) for roles. To cite this design, use [CITATION.cff](CITATION.cff) (GitHub shows it as "Cite this repository").
+
+AI assistance (Claude) was used to accelerate concept renders, prototype documentation and first-pass sizing calculations. Design direction and all decisions are Amish Chadha's, recorded in this repository's decision records (`docs/decisions/`).
 
 ## Licenses
 

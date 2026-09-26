@@ -172,7 +172,7 @@ Other key numbers: bed 112 °C at noon (was 104 °C), stagnation 122 °C (was 10
 ### Still awaiting Amish
 
 1. **O1.** First partner and region for co-design (no recommendation made).
-2. **O3, budget (new).** BOM $515 against $500. Options: (a) raise `budget_usd` to $520; (b) cut the drip screens to drip gutters under the low edge of each tray (weaker protection); (c) evaluate a lighter condenser on paper, since the black screens cut its peak load from 333 W to 299 W. Recommendation: (c) first, then (a) if it does not close the gap.
+2. **O3, budget (new). Decided by Amish, 2026-09-26: budget top-up to $520 (DWD-DDR-002 v0.2, D15).** BOM $515 against $500. Options: (a) raise `budget_usd` to $520; (b) cut the drip screens to drip gutters under the low edge of each tray (weaker protection); (c) evaluate a lighter condenser on paper, since the black screens cut its peak load from 333 W to 299 W. Recommendation: (c) first, then (a) if it does not close the gap.
 3. **O4, low-emissivity screen (new).** 0.82 L/day but a 166 °C dry-bed stagnation. Recommendation: evaluate a stagnation vent or higher-rated glazing on paper at TRL 3.
 4. **O5, glazing rating (new).** Dry-bed stagnation is 122 °C, near the usual 120 °C service rating of twin-wall polycarbonate. Recommendation: specify a sheet rated 130 °C or more, or confirm from supplier data that the inner skin stays inside the rating.
 
@@ -189,3 +189,27 @@ None. DewDrive has its own battery and uses no shared interface, so no decision 
 ### TRL 4
 
 **TRL 4 remains on hold by Amish's instruction.** No build, test, purchase, PCB or firmware beyond a sketch was started. The fan rule is a design rule only; measured isotherms, a through-flow tray test article, a drip-screen chamber test and a water test remain for TRL 4.
+
+## Session 2026-09-26: sources strengthened
+
+Every link in the README's rationale, burning platform, use tables and inspiration was fetched and checked against its claim.
+
+| Where | Old source | New source |
+| --- | --- | --- |
+| README, What sparked the idea (Telkes solar still) | Encyclopedia.com with USPTO | USPTO, "A solar life", and US Patent 3,415,719 (Google Patents). The text now says what these support: the still was ordered by the US government but not delivered or used during the war, and later entered military emergency kits; the claim that it supplied torpedoed sailors on life rafts is removed |
+| README, Navajo Nation row | Native News Online alone | US Senate Committee on Indian Affairs hearing page (September 27, 2023, Speaker Curley's testimony), with Native News Online kept for the 30 % figure |
+| README, Kenya row (was "Northern Kenya and the Horn of Africa", uncited) | none | UNICEF Kenya; row rewritten to what UNICEF states: access is lowest in the arid and semi-arid land counties |
+| README, Rajasthan row (uncited) | none | Al Jazeera (2015): Thar Desert villages, water scarce up to 11 months a year, walks of up to 4 km, taanka rainwater storage |
+| README, Atacama row (uncited) | none | Carter et al., *Frontiers in Environmental Science* (2025), doi:10.3389/fenvs.2025.1537058: Alto Hospicio, 1.6 % of informal settlements connected to the network, 75.4 % supplied by truck, fog collection assessed |
+
+`INSPIRATIONS.md` line for DewDrive updated to the new sources (same event). `docs/01-problem.md` did not cite the replaced sources.
+
+### Budget top-up
+
+Budget top-up to $520: decided by Amish, 2026-09-26 ("I am ok with the budget top ups"). This closes O3.
+
+- `project.yaml`: `budget_usd` 500 to 520.
+- DWD-REQ-001 v0.5: R11 target $520 or less; status Met at $515 (11 of 13 met, R6 and R10 not verifiable at TRL 3).
+- DWD-CAL-001 v0.3: `sizing.py` budget updated and re-run; only R11 changed in `results.csv` (now met).
+- DWD-DDR-002 v0.2: new row D15; O3 marked decided.
+- DWD-PRB-001 v0.5 and DWD-PRC-001 v0.5: budget text updated; `bom/bom-notes.md` and README (budget line, parts cost row) updated; concept blueprint label changed to "budget $520" and media regenerated.

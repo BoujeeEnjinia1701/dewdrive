@@ -9,6 +9,6 @@ R7,Salt containment,pores fill at 71 % RH; 43 % of pore volume after one 90 % RH
 R8,Two actions per day,"open flaps at dusk, close at dawn; fan on a timer with a humidity cut-out","2 actions, <= 5 min",met
 R9,Portable,"box 33.4 kg with sorbent; 24.0 kg with trays out; total 53.9 kg (G1, G2)",box <= 35 kg; stand separable,met
 R10,Survive the site,two anchors of 114 N (default) or 46 kg ballast for 20 m/s (H2 to H4); UV and 300 cycles need supplier data and test,stable at 20 m/s; UV; 300 cycles,not verifiable at TRL 3
-R11,Cost,$515 (J1),<= $500 (D1),not met
+R11,Cost,$515 (J1),"<= $520 (top-up, 2026-09-26)",met
 R12,Record performance,"8640 records, 0.41 MB (I1)",5 min for 30 days,met
 R13,Protect users,glazing outer about 57 C at stagnation; fins up to 47 C; 12.8 V DC (D1 to D3),touched surfaces <= 60 C; < 60 V DC,met

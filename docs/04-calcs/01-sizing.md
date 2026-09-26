@@ -3,9 +3,9 @@ doc_id: DWD-CAL-001
 title: DewDrive sizing calculations
 project: DewDrive
 doc_type: Calculation
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-09-25'
+date: '2026-09-26'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,17 +17,21 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002); design of record now through-flow with 25 wt % salt, drip screens and fan cut-out; paper evaluation of a low-emissivity screen
+- version: "0.3"
+  date: '2026-09-26'
+  author: Amish Chadha
+  change: Budget top-up approved by Amish (budget $520; R11 met); script re-run
 ---
 
 # DewDrive sizing calculations
 
-This revision checks the design decided by Amish on 2026-09-25 (DWD-DDR-002): night air drawn down through the sealed, mesh-floored trays; 25 wt % CaCl₂ (1.0 kg in 3.0 kg of gel); a black drip screen under each tray; and a fan that stops above 70 % RH. On paper that design meets ten of its thirteen requirements. It collects about 0.57 L per day at 40 % night RH (R1 target 0.5 L) and 0.45 L at 25 % (R2 target 0.25 L), against 0.20 and 0.09 L for the v0.1 layout. The salt stays in the pores after three 90 % RH nights in a row. The one miss is cost: $515 against the $500 budget (R11). A low-emissivity screen, evaluated here as decided, would lift the yield to 0.82 L per day but let a dry bed stagnate at about 166 °C, beyond the usual rating of polycarbonate glazing, so it is not adopted. Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [B2], is the line of that script's output that carries it.
+This revision checks the design decided by Amish on 2026-09-25 (DWD-DDR-002): night air drawn down through the sealed, mesh-floored trays; 25 wt % CaCl₂ (1.0 kg in 3.0 kg of gel); a black drip screen under each tray; and a fan that stops above 70 % RH. On paper that design meets eleven of its thirteen requirements. It collects about 0.57 L per day at 40 % night RH (R1 target 0.5 L) and 0.45 L at 25 % (R2 target 0.25 L), against 0.20 and 0.09 L for the v0.1 layout. The salt stays in the pores after three 90 % RH nights in a row. Cost is $515, within the $520 budget that Amish approved as a top-up on 2026-09-26 (R11; DWD-DDR-002, D15). A low-emissivity screen, evaluated here as decided, would lift the yield to 0.82 L per day but let a dry bed stagnate at about 166 °C, beyond the usual rating of polycarbonate glazing, so it is not adopted. Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [B2], is the line of that script's output that carries it.
 
 > **Safety:** These calculations concern hot surfaces (a bed up to about 122 °C), a corrosive calcium chloride solution, a lithium iron phosphate battery and a 1.1 m² panel in wind. They are first-principles estimates for a paper proof of concept, not a substitute for measured isotherms, supplier data, an engineering review or test. Harvested water must be tested and treated before drinking. See DWD-PRC-001, Safety.
 
 ## Scope and method
 
-The note checks every requirement in DWD-REQ-001 v0.4 against the design in DWD-PRC-001 v0.4 and the parametric model `cad/src/model.py`. The script imports the model's `PARAMS`, `derived()` and part volumes, so the areas, gaps and masses used here are those of the STEP files and of drawing DWD-DWG-001 Rev P2. It reads prices from `bom/bom.csv` and writes the requirement table to `docs/04-calcs/results.csv`. Run it from the repo root with `python docs/04-calcs/sizing.py` (about 2.5 min; the yield is a time-stepped simulation of repeated night and day cycles until the bed water at dawn repeats).
+The note checks every requirement in DWD-REQ-001 v0.5 against the design in DWD-PRC-001 v0.5 and the parametric model `cad/src/model.py`. The script imports the model's `PARAMS`, `derived()` and part volumes, so the areas, gaps and masses used here are those of the STEP files and of drawing DWD-DWG-001 Rev P2. It reads prices from `bom/bom.csv` and writes the requirement table to `docs/04-calcs/results.csv`. Run it from the repo root with `python docs/04-calcs/sizing.py` (about 2.5 min; the yield is a time-stepped simulation of repeated night and day cycles until the bed water at dawn repeats).
 
 "Design" means the design of record after DWD-DDR-002. "v0.1 layout" is the earlier design, in which the night air flowed past the trays at 32.5 wt % salt; its figures are kept for comparison and come from v0.1 of this note unless tagged.
 
@@ -136,11 +140,11 @@ Five channels every 5 min for 30 days are 8,640 records, about 0.41 MB as CSV [I
 
 ## J. Cost
 
-The BOM has 15 lines and totals $515 against the $500 budget, which Amish kept on 2026-09-25 (DWD-DDR-002, D14) [J1]. The decided changes add $27: $6 for the tray gaskets and baffle, $1 for the changed sorbent mix, and $20 for the four drip screens. Over 5 years at the design point the parts cost about $0.49 per litre of water [J2], against $1.34 for the v0.1 layout.
+The BOM has 15 lines and totals $515 against the $520 budget; Amish kept $500 on 2026-09-25 (DWD-DDR-002, D14) and approved a top-up to $520 on 2026-09-26 (D15) [J1]. The decided changes add $27: $6 for the tray gaskets and baffle, $1 for the changed sorbent mix, and $20 for the four drip screens. Over 5 years at the design point the parts cost about $0.49 per litre of water [J2], against $1.34 for the v0.1 layout.
 
 ## K. Requirements
 
-*Table 4. Requirement status (DWD-REQ-001 v0.4). Also written to `docs/04-calcs/results.csv`.*
+*Table 4. Requirement status (DWD-REQ-001 v0.5). Also written to `docs/04-calcs/results.csv`.*
 
 | ID | Requirement | Value | Target | Status |
 | --- | --- | --- | --- | --- |
@@ -154,11 +158,11 @@ The BOM has 15 lines and totals $515 against the $500 budget, which Amish kept o
 | R8 | Two actions per day | Open the flaps at dusk, close them at dawn; the fan runs on the logger timer with a humidity cut-out | 2 actions, 5 min or less | Met |
 | R9 | Portable | Box 33.4 kg with sorbent, 24.0 kg with trays out; total 53.9 kg | Box 35 kg or less; stand separable | Met |
 | R10 | Survive the site | Two anchors of 114 N (default) or 46 kg of ballast at 20 m/s; UV life and 300 cycles need supplier data and test | Stable at 20 m/s; UV-stable; 300 cycles | Not verifiable at TRL 3 |
-| R11 | Cost | $515 | $500 or less | **Not met** |
+| R11 | Cost | $515 | $520 or less | Met |
 | R12 | Record performance | 8,640 records, 0.41 MB | Every 5 min for 30 days | Met |
 | R13 | Protect users | Glazing outer skin about 57 °C at stagnation; fins up to 47 °C; 12.8 V DC | Touched surfaces 60 °C or less; below 60 V DC | Met |
 
-Counts: 10 met, 1 not met (R11), 2 not verifiable at TRL 3 (R6, R10) [K1].
+Counts: 11 met, 2 not verifiable at TRL 3 (R6, R10) [K1].
 
 ## L. Numbers changed from v0.1
 

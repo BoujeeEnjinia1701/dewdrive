@@ -153,7 +153,7 @@ if __name__ == "__main__":
                      f"Bed about {A['Tb_noon']:.0f} C at noon by sun only; fan {C.P_FAN * C.H_NIGHT:.0f} Wh/night",
                      f"Collector 1.1 x 1.0 m, top edge {derived()['top_edge_m']:.2f} m high",
                      f"About {sum(C.mass.values()):.0f} kg dry; box about {C.box:.0f} kg (estimate)",
-                     f"Parts ${C.cost:.0f} (budget $500)"],
+                     f"Parts ${C.cost:.0f} (budget $520)"],
         cut=False, scale_figure=False, context=[person],
         flow={"title": "water per day at the design point, g (estimates; 40 % night RH, 20 C)",
               "unit": "g",
