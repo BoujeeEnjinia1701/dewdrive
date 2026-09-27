@@ -213,3 +213,36 @@ Budget top-up to $520: decided by Amish, 2026-09-26 ("I am ok with the budget to
 - DWD-CAL-001 v0.3: `sizing.py` budget updated and re-run; only R11 changed in `results.csv` (now met).
 - DWD-DDR-002 v0.2: new row D15; O3 marked decided.
 - DWD-PRB-001 v0.5 and DWD-PRC-001 v0.5: budget text updated; `bom/bom-notes.md` and README (budget line, parts cost row) updated; concept blueprint label changed to "budget $520" and media regenerated.
+
+## Session 2026-09-26: product appearance model and photoreal renders
+
+Amish chose this repo for the first batch of product renders on 2026-09-26.
+
+### What was done
+
+- `cad/src/product_model.py` (new): a product appearance model for photoreal renders. `product_parts()` returns each part with its shape, colour, material, BOM line, group and explode offset; `TITLE` and `RENDER_VIEWS` (hero, exploded and a back-right detail view) drive the renderer. It imports `PARAMS`, `derived()`, `tray_centres()`, `world()` and `build_parts()` from `cad/src/model.py`, and reuses the stand, drip screens, condenser and sorbent bed unchanged. It adds:
+  - painted plywood walls with filleted corners and a shadow-gap parting line, and a teal nameplate on the south wall;
+  - an aluminium lid edge frame holding a clear twin-wall polycarbonate pane (ribs down the slope), so the black trays and the sorbent beds show through; three lid hinges on the north edge and a pull handle on the south edge;
+  - wire lift bails on the four trays and the sealing baffle and rails as a separate aluminium part;
+  - the gutter, a silicone drain tube with a wall grommet, and a 10 L jerrycan with moulded side ribs, a carry handle, a knurled teal cap and a label;
+  - the south inlet flap with its EPDM seal, a five-knuckle hinge and two over-centre latches; the louvred fan hood (open underneath) with a fan guard, and the north outlet flap with its hinge;
+  - bolts on the stand foot pads, two auger ground anchors with webbing tie straps and ratchets;
+  - a framed PV panel with cells, busbars and a junction box, pole clamps on the leg;
+  - an IP65 electronics box with a lid, lid screws, a label, cable glands, a lit green status light and a bracket to the leg, a sheathed cable up the leg, and a stacked-plate radiation shield with a domed cap;
+  - context: a compact patch of compacted gravel ground, not in the BOM.
+- `README.md`: hero image line now points to `media/render-hero.png`, and the links line starts with the exploded render. The render files are produced separately by the render pipeline.
+- Self-check previews (matplotlib, clear parts omitted) were used to set the views; they are scratch files and not in the repo.
+
+### Where the appearance model differs from model.py
+
+Every main dimension, the tilt, the heights and all interfaces are as `model.py`. The differences are cosmetic; each is **Proposed, awaiting Amish**:
+
+1. **Ground anchor position and tie-down.** `model.py` does not model the two auger anchors that BOM line 1 includes. The appearance model places them 190 mm outboard of the two south legs, tied to the legs with webbing straps. Recommendation: accept for the renders; the anchor position and tie-down detail belong to the wind-load check at TRL 4 (DWD-CAL-001, H2 to H4).
+2. **Electronics box orientation.** The appearance model puts the lid, label and status light on the north face, outward from the stand, so they can be reached without reaching under the box. Recommendation: accept.
+3. **Radiation shield.** Drawn as seven stacked plates with a domed cap on a post; its top is about 30 mm higher than the 110 mm cylinder in `model.py`, and the top plate is 96 mm across instead of 90 mm. Recommendation: accept; the shield is a bought part and its size depends on the product chosen.
+4. **Jerrycan handle and neck.** The moulded carry handle adds about 48 mm above the can top, beside the cap at the `model.py` position. Recommendation: accept; the drain tube end and cap position are unchanged.
+5. **Rounded corners and lid frame.** The box corners are filleted (radius 14 mm) and the glazing sits in a 22 mm aluminium edge frame within the same 1,100 x 1,000 mm outline, as BOM line 3 describes. Recommendation: accept.
+
+### TRL
+
+This is an appearance model only: no tolerances, no fabrication detail, no build or test work. `trl` stays 3, and **TRL 4 remains on hold** by Amish's instruction.
