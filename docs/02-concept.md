@@ -3,9 +3,9 @@ doc_id: DWD-PRC-001
 title: DewDrive design precis
 project: DewDrive
 doc_type: Design precis
-version: "0.5"
+version: "0.6"
 status: Draft
-date: '2026-09-26'
+date: '2026-10-01'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -29,11 +29,15 @@ revisions:
   date: '2026-09-26'
   author: Amish Chadha
   change: Budget top-up approved by Amish
+- version: "0.6"
+  date: '2026-10-01'
+  author: Amish Chadha
+  change: "Design made constructable (DWD-DDR-003): tray deck, one outlet through the fan hood, bolted stand; mass and cost from DWD-CAL-001 v0.4"
 ---
 
 # DewDrive design precis
 
-DewDrive is a glazed, insulated box 1.1 x 1.0 m, tilted 20° toward the sun on a steel stand. Inside, four black trays hold 4 kg of silica gel impregnated with 25 wt % calcium chloride. At night the vent flaps are opened and a 2 W fan draws air in above the trays and down through their mesh floors, and the sorbent takes up water. In the morning the flaps are shut; the sun heats the bed to about 112 °C by noon and drives the vapour down past a black drip screen onto a finned aluminium floor that forms the condenser, shaded by the box itself. The condensate runs down the slope into a gutter and a 10 L bottle. The TRL 3 calculation (DWD-CAL-001 v0.2) gives about 0.57 L per day at 40 % night RH and 0.45 L at 25 %, meeting the 0.5 and 0.25 L targets. The design follows Amish's decisions of 2026-09-25 (DWD-DDR-002), which replaced the v0.1 layout that made only 0.20 L per day. Parts cost $515 against the $520 budget (topped up by Amish on 2026-09-26), which is met. One unit supplements drinking water; it does not replace a water supply.
+DewDrive is a glazed, insulated box 1.1 x 1.0 m, tilted 20° toward the sun on a steel stand. Inside, four black trays hold 4 kg of silica gel impregnated with 25 wt % calcium chloride. At night the vent flaps are opened and a 2 W fan draws air in above the trays and down through their mesh floors, and the sorbent takes up water. In the morning the flaps are shut; the sun heats the bed to about 112 °C by noon and drives the vapour down past a black drip screen onto a finned aluminium floor that forms the condenser, shaded by the box itself. The condensate runs down the slope into a gutter and a 10 L bottle. The TRL 3 calculation (DWD-CAL-001 v0.2) gives about 0.57 L per day at 40 % night RH and 0.45 L at 25 %, meeting the 0.5 and 0.25 L targets. The design follows Amish's decisions of 2026-09-25 (DWD-DDR-002), which replaced the v0.1 layout that made only 0.20 L per day. Made buildable in DWD-DDR-003, the parts cost $620 against the $520 budget (topped up by Amish on 2026-09-26), which is not met; that decision is open for Amish. One unit supplements drinking water; it does not replace a water supply.
 
 ![Hero render](../media/hero.png)
 
@@ -41,7 +45,7 @@ DewDrive is a glazed, insulated box 1.1 x 1.0 m, tilted 20° toward the sun on a
 
 ## How it works
 
-1. **Adsorb at night.** In the evening the user opens the south inlet flap, which sits above the trays, and the north outlet flap, which sits below them. The logger switches on the fan, which draws 40 m³/h of night air in over the trays, down through the 9.3 mm sorbent beds and their mesh floors, and out under the trays, for 10 h. The trays sit on an EPDM gasket on a sealing baffle, so the air cannot bypass the beds. The CaCl₂ in the silica gel pores binds water first as hydrates and then as a solution held in the pores; the silica gel adds a little uptake of its own and keeps the solution in place. If the air goes above 70 % RH the logger stops the fan.
+1. **Adsorb at night.** In the evening the user opens the south inlet flap, which sits above the tray deck, and the outlet flap over the fan on the north wall. The logger switches on the fan, which draws 40 m³/h of night air in over the trays, down through the 9.3 mm sorbent beds and their mesh floors, and out under the deck through a slot into the fan hood, for 10 h. The trays sit on an EPDM gasket on the sealing baffle of a lift-out deck, so the air cannot bypass the beds. The CaCl₂ in the silica gel pores binds water first as hydrates and then as a solution held in the pores; the silica gel adds a little uptake of its own and keeps the solution in place. If the air goes above 70 % RH the logger stops the fan.
 2. **Seal and heat by day.** In the morning the user shuts both flaps. Sunlight passes through the twin-wall polycarbonate and heats the black top faces of the trays. The bed passes 89 °C by 09:00 and reaches about 112 °C at noon, and its vapour pressure rises above that of the condenser.
 3. **Condense.** Vapour diffuses down through the 65 mm gap under the trays, around the drip-screen channels, to the aluminium floor plate, which stays within about 12 K of ambient thanks to 21 fins in the shade under the box.
 4. **Collect.** Water films run down the 20° slope to a gutter along the low edge and drain through a silicone tube into a food-grade jerrycan.
@@ -57,7 +61,7 @@ Table 1. Main components. Numbers match `bom/bom.csv`, drawing DWD-DWG-001 and F
 
 | # | Component | Choice | Notes |
 | --- | --- | --- | --- |
-| 1 | Stand | Galvanized steel angle 30 x 30 x 3 mm, four legs, bolted; tilt 20° | Separable from the box; two ground anchors by default, about 50 kg of ballast as the alternative (DWD-DDR-002, D13; DWD-CAL-001, H2 to H4) |
+| 1 | Stand | Galvanized steel angle 30 x 30 x 3 mm, rails, legs, braces and cross members, bolted; tilt 20° | Separable from the box; two ground anchors by default, about 40 kg of ballast as the alternative (DWD-DDR-002, D13; DWD-CAL-001, H2 to H4) |
 | 2 | Insulated box walls | Plywood skins with 25 mm PIR foam, 1,100 x 1,000 x 140 mm, 40 mm thick | Open top (glazing) and bottom (condenser) |
 | 3 | Glazing lid | 10 mm UV-stabilized twin-wall polycarbonate, hinged on the north edge | Must be rated above the 122 °C stagnation temperature of the bed, or shown to stay inside its rating (DWD-DDR-002, O5) |
 | 4 | Sorbent trays (4) | Aluminium pans 490 x 430 x 25 mm with stainless mesh floors; black top, bare underside; EPDM edge gasket on a 1 mm aluminium sealing baffle | Lift out for recharging; the baffle forces the night air through the beds (D9) |
@@ -67,12 +71,12 @@ Table 1. Main components. Numbers match `bom/bom.csv`, drawing DWD-DWG-001 and F
 | 7 | Gutter and drain tube | Gutter along the low edge; food-grade silicone tube | |
 | 8 | Collection bottle | 10 L HDPE jerrycan | About 17 days of production at the design point |
 | 9 | Vent flap, south inlet | Hinged flap 800 x 40 mm above the trays, with EPDM seal and latches | Closed by day; seal quality sets the vapour loss |
-| 10 | Night fan and outlet flap | 12 V 120 mm fan, about 2 W, on the north wall below the trays | Fan switched by the logger; stops above 70 % RH |
+| 10 | Night fan, hood and outlet flap | 12 V 120 mm fan, about 2 W, in a hood over a slot in the north wall below the deck; the outlet flap closes the fan opening by day | Fan switched by the logger; stops above 70 % RH |
 | 11 | PV panel | 10 W, 12 V, on a pole north of the box | Runs fan and logger |
 | 12 | Electronics box | PWM charge controller, 12.8 V 6 Ah LiFePO4 with BMS, ESP32 logger | Only low-voltage DC on the device |
 | 13 | Sensors | Air T and RH in a radiation shield; bed and condenser probes | The air RH reading drives the fan cut-out |
 
-Item 14 (hardware and consumables) is in the BOM but not modelled. The general arrangement is drawing DWD-DWG-001 Rev P2 (`cad/drawings/`); the STEP files are in `cad/step/`.
+Item 14 (hardware and consumables) is in the BOM but not modelled. Item 16 is the lift-out tray deck with its sealing baffle and the wall ledges. The general arrangement is drawing DWD-DWG-001 Rev P4 (`cad/drawings/`); the STEP files are in `cad/step/`; how to build it is the build plan DWD-BLD-001 (`docs/05-build-plan.md`).
 
 **Fan rule (DWD-DDR-002, D11).** The logger runs the fan from the evening flap opening for 10 h, and stops it whenever the air RH is above 70 % (restarting below about 65 %, to avoid cycling). This is a design rule for the firmware sketch; firmware beyond a sketch is TRL 4 work and on hold.
 
@@ -82,7 +86,7 @@ Item 14 (hardware and consumables) is in the BOM but not modelled. The general a
 
 ## Numbers from DWD-CAL-001
 
-All values are first-principles estimates from `docs/04-calcs/sizing.py` (DWD-CAL-001 v0.2); the tag after each value is the line of the script output that carries it. The sorbent isotherm is built from bulk salt data and must be replaced by measured isotherms of the actual composite.
+All values are first-principles estimates from `docs/04-calcs/sizing.py` (DWD-CAL-001 v0.4); the tag after each value is the line of the script output that carries it. The sorbent isotherm is built from bulk salt data and must be replaced by measured isotherms of the actual composite.
 
 ![Water flow](../media/flow.png)
 
@@ -104,9 +108,9 @@ Table 2. Water, energy, size and cost.
 | Stagnation temperature, dry bed | 122 °C (D1) | Noon, 35 °C air | Glazing rating to check (O5) |
 | Electrical use and supply | 23.6 Wh per day against 35 Wh (F1); 2.6 days of autonomy (F2) | Fan 2 W for 10 h; logger 0.15 W | R4 met |
 | Salt containment | Pores fill above 71 % RH (E2); 43 % full after one 90 % RH night (E3) | Sumps 0.58 L (E6) | R7 met on paper |
-| Mass | 53.9 kg (119 lb) dry; box 33.4 kg, 24.0 kg with trays, sorbent and screens out (G1, G2) | Model volumes | R9 met |
-| Wind at 20 m/s | 317 N normal to the lid; tips without two anchors or 46 kg of ballast (H1 to H4) | Force coefficient 1.2 on 1.1 m² | R10 not verifiable at TRL 3 |
-| Parts cost | $515 (J1) | `bom/bom.csv` | R11 met ($520) |
+| Mass | 60.2 kg (133 lb) dry; box 35.2 kg, 23.4 kg with the trays and deck lifted out (G1, G2) | Model components | R9 not met as written (open for Amish) |
+| Wind at 20 m/s | 317 N normal to the lid; tips without two anchors or 40 kg of ballast (H1 to H4) | Force coefficient 1.2 on 1.1 m² | R10 not verifiable at TRL 3 |
+| Parts cost | $620 (J1) | `bom/bom.csv` | R11 not met ($520; open for Amish) |
 | Water per dollar over 5 years | about $0.49 per litre (J2) | Parts only | For comparison |
 
 What the numbers say:
@@ -115,7 +119,7 @@ What the numbers say:
 - **The drip screens help the yield.** Black channels under the trays catch brine and also cut the radiation from the hot beads to the condenser by about 40 %: 0.57 L per day with them against 0.51 L without (C6).
 - **A low-emissivity screen would do more, but overheats the box.** Bare aluminium channels would give 0.82 L per day, but a dry bed would stagnate at about 166 °C, beyond the rating of polycarbonate glazing (C10, D1). That option is proposed for further paper work (DWD-DDR-002, O4), not adopted.
 - **The lower salt loading contains the brine.** At 25 wt % the solution fills the pores only above 71 % RH, against 51 % RH at the v0.1 loading (E2).
-- **Cost is within the topped-up budget.** The gasket, baffle and drip screens add $27; the total is $515 against the $520 budget that Amish approved on 2026-09-26 (D15, closing O3).
+- **Cost is over budget once the design is buildable.** The gasket, baffle and drip screens added $27 (total $515, D15); the parts that make the design buildable (DWD-DDR-003) bring it to $620 against the $520 budget.
 - **Yield is still modest.** About 0.57 L per day is about one fifth of one person's survival drinking need.
 
 ## Key design choices
@@ -145,7 +149,7 @@ Choices 1 to 7 were decided by Amish on 2026-09-25 (DWD-DDR-001, going with the 
 
 > **Safety:** The 12.8 V LiFePO4 battery has a built-in BMS and must be fused at the battery. Keep the electronics box shaded, and do not charge a damaged or swollen battery.
 
-> **Safety:** The tilted lid catches the wind like a sail (317 N at 20 m/s). Without restraint the unit tips over (DWD-CAL-001, H2). Fit the two ground anchors, or about 50 kg of ballast, before loading the box. Deburr all aluminium fins, channels and sheet edges; fins under the box are at ankle and hand height.
+> **Safety:** The tilted lid catches the wind like a sail (317 N at 20 m/s). Without restraint the unit tips over (DWD-CAL-001, H2). Fit the two ground anchors, or about 40 kg of ballast, before the box goes on the stand. Deburr all aluminium fins, channels and sheet edges; fins under the box are at ankle and hand height.
 
 ## Open questions
 

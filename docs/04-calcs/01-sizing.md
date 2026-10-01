@@ -3,9 +3,9 @@ doc_id: DWD-CAL-001
 title: DewDrive sizing calculations
 project: DewDrive
 doc_type: Calculation
-version: "0.3"
+version: "0.4"
 status: Draft
-date: '2026-09-26'
+date: '2026-10-01'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -21,17 +21,21 @@ revisions:
   date: '2026-09-26'
   author: Amish Chadha
   change: Budget top-up approved by Amish (budget $520; R11 met); script re-run
+- version: "0.4"
+  date: '2026-10-01'
+  author: Amish Chadha
+  change: Re-run on the constructable model (DWD-DDR-003); mass by component and material, outlet slot in the fan duty, new leg span in the wind check, repriced BOM; R9 and R11 not met
 ---
 
 # DewDrive sizing calculations
 
-This revision checks the design decided by Amish on 2026-09-25 (DWD-DDR-002): night air drawn down through the sealed, mesh-floored trays; 25 wt % CaCl₂ (1.0 kg in 3.0 kg of gel); a black drip screen under each tray; and a fan that stops above 70 % RH. On paper that design meets eleven of its thirteen requirements. It collects about 0.57 L per day at 40 % night RH (R1 target 0.5 L) and 0.45 L at 25 % (R2 target 0.25 L), against 0.20 and 0.09 L for the v0.1 layout. The salt stays in the pores after three 90 % RH nights in a row. Cost is $515, within the $520 budget that Amish approved as a top-up on 2026-09-26 (R11; DWD-DDR-002, D15). A low-emissivity screen, evaluated here as decided, would lift the yield to 0.82 L per day but let a dry bed stagnate at about 166 °C, beyond the usual rating of polycarbonate glazing, so it is not adopted. Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [B2], is the line of that script's output that carries it.
+This revision checks the design decided by Amish on 2026-09-25 (DWD-DDR-002): night air drawn down through the sealed, mesh-floored trays; 25 wt % CaCl₂ (1.0 kg in 3.0 kg of gel); a black drip screen under each tray; and a fan that stops above 70 % RH. On paper that design, as made constructable in DWD-DDR-003, meets nine of its thirteen requirements. It collects about 0.57 L per day at 40 % night RH (R1 target 0.5 L) and 0.45 L at 25 % (R2 target 0.25 L), against 0.20 and 0.09 L for the v0.1 layout. The salt stays in the pores after three 90 % RH nights in a row. Making the design buildable added the parts that hold it together (wall battens, a tray deck, screen frames, stand bracing and fixings): the parts cost is now $620 against the $520 budget (R11 not met) and the full box weighs 35.2 kg against the 35 kg two-person limit, 23.4 kg once the trays and deck are lifted out (R9 not met as written). Both are open decisions for Amish in the design decisions register (DWD-DEC-001). A low-emissivity screen, evaluated here as decided, would lift the yield to 0.82 L per day but let a dry bed stagnate at about 166 °C, beyond the usual rating of polycarbonate glazing, so it is not adopted. Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [B2], is the line of that script's output that carries it.
 
 > **Safety:** These calculations concern hot surfaces (a bed up to about 122 °C), a corrosive calcium chloride solution, a lithium iron phosphate battery and a 1.1 m² panel in wind. They are first-principles estimates for a paper proof of concept, not a substitute for measured isotherms, supplier data, an engineering review or test. Harvested water must be tested and treated before drinking. See DWD-PRC-001, Safety.
 
 ## Scope and method
 
-The note checks every requirement in DWD-REQ-001 v0.5 against the design in DWD-PRC-001 v0.5 and the parametric model `cad/src/model.py`. The script imports the model's `PARAMS`, `derived()` and part volumes, so the areas, gaps and masses used here are those of the STEP files and of drawing DWD-DWG-001 Rev P2. It reads prices from `bom/bom.csv` and writes the requirement table to `docs/04-calcs/results.csv`. Run it from the repo root with `python docs/04-calcs/sizing.py` (about 2.5 min; the yield is a time-stepped simulation of repeated night and day cycles until the bed water at dawn repeats).
+The note checks every requirement in DWD-REQ-001 v0.5 against the design in DWD-PRC-001 v0.5 and the parametric model `cad/src/model.py`. The script imports the model's `PARAMS`, `derived()` and components (`build_components()`, each with its material), so the areas, gaps and masses used here are those of the STEP files and of drawing DWD-DWG-001 Rev P4. It reads prices from `bom/bom.csv` and writes the requirement table to `docs/04-calcs/results.csv`. Run it from the repo root with `python docs/04-calcs/sizing.py` (about 6 min; the yield is a time-stepped simulation of repeated night and day cycles until the bed water at dawn repeats).
 
 "Design" means the design of record after DWD-DDR-002. "v0.1 layout" is the earlier design, in which the night air flowed past the trays at 32.5 wt % salt; its figures are kept for comparison and come from v0.1 of this note unless tagged.
 
@@ -124,15 +128,15 @@ Kinetics limit what one humid night can do. A 10 h night at 90 % RH with the fan
 
 ## F. Electrical energy
 
-The fan uses 20 Wh a night and the logger 3.6 Wh a day, 23.6 Wh in all, against 35 Wh a day from the 10 W panel, a margin of 1.48 [F1]. The 76.8 Wh battery, 80 % usable, gives 2.6 days with no sun [F2]. The fan works against only about 0.4 Pa, including 0.16 Pa for the bed and the smaller 800 x 40 mm inlet above the trays, so a 120 mm fan delivers 40 m³/h at low speed [F3]. The humidity cut-out only ever lowers the fan energy.
+The fan uses 20 Wh a night and the logger 3.6 Wh a day, 23.6 Wh in all, against 35 Wh a day from the 10 W panel, a margin of 1.48 [F1]. The 76.8 Wh battery, 80 % usable, gives 2.6 days with no sun [F2]. The fan works against only about 3.3 Pa: the 800 x 40 mm inlet above the deck, the 140 x 44 mm outlet slot behind the fan hood (DWD-DDR-003) and 0.16 Pa for the bed, so a 120 mm fan delivers 40 m³/h at low speed [F3]. The humidity cut-out only ever lowers the fan energy.
 
 ## G. Mass
 
-From the model volumes, with component estimates for the parts the massing model draws as solid blocks, the box with trays, sorbent, drip screens and condenser weighs 33.4 kg, the stand 14.1 kg, and the whole unit 53.9 kg (119 lb) dry [G1]. The drip screens add 2.2 kg. With the trays, sorbent and screens lifted out first, the box is 24.0 kg [G2]. v0.1 gave 51.4 kg in total and a 30.9 kg box.
+v0.4 takes each component of the constructable model (DWD-DDR-003) with its own material: plywood skins at 0.60 g/cm³, softwood battens at 0.45, PIR at 0.035, aluminium at 2.70 and steel at 7.85, the drip-screen channels at the thickness of 0.5 mm flashing, and catalogue masses for the bought items drawn as blocks (bottle, fan, electronics box, PV panel, sensor shield). The box with its deck, trays, sorbent and drip screens weighs 35.2 kg, the stand 16.6 kg and the whole unit 60.2 kg (133 lb) dry; the walls, with their battens, are 7.6 kg [G1]. The trays, sorbent, deck and drip screens (11.8 kg) all lift out through the open lid, and the box without them is 23.4 kg [G2]. v0.3 gave 33.4 kg for the box and 53.9 kg in total, from massing volumes with averaged densities.
 
 ## H. Wind
 
-At 20 m/s the dynamic pressure is 240 Pa and the normal force on the lid 317 N: 298 N of uplift and 108 N horizontal, against a dry weight of 529 N [H1]. The overturning moment of 271 N·m exceeds the restoring moment of 219 N·m, so the unit would tip without restraint; about 46 kg of ballast on the stand gives a factor of 1.5 [H2]. Sliding has a margin of only 7 N without ballast and needs 10 kg for a factor of 1.5 [H3]. Two upwind ground anchors, each rated for 114 N or more in uplift, do the same job [H4]; they are the default restraint (DWD-DDR-002, D13).
+At 20 m/s the dynamic pressure is 240 Pa and the normal force on the lid 317 N: 298 N of uplift and 108 N horizontal, against a dry weight of 591 N [H1]. The overturning moment of 271 N·m exceeds the restoring moment of 244 N·m (ratio 0.90), so the unit would still tip without restraint; about 40 kg of ballast on the stand gives a factor of 1.5 [H2]. Sliding has a margin of 38 N without ballast and needs 3 kg for a factor of 1.5 [H3]. Two upwind ground anchors, each rated for 98 N or more in uplift, do the same job [H4]; they are the default restraint (DWD-DDR-002, D13).
 
 ## I. Logging
 
@@ -140,11 +144,11 @@ Five channels every 5 min for 30 days are 8,640 records, about 0.41 MB as CSV [I
 
 ## J. Cost
 
-The BOM has 15 lines and totals $515 against the $520 budget; Amish kept $500 on 2026-09-25 (DWD-DDR-002, D14) and approved a top-up to $520 on 2026-09-26 (D15) [J1]. The decided changes add $27: $6 for the tray gaskets and baffle, $1 for the changed sorbent mix, and $20 for the four drip screens. Over 5 years at the design point the parts cost about $0.49 per litre of water [J2], against $1.34 for the v0.1 layout.
+The BOM has 16 lines and totals $620 against the $520 budget [J1], so R11 is not met. The v0.3 total was $515. The difference is the cost of making the design buildable (DWD-DDR-003): new line 16, the tray deck and wall ledges ($35); wall battens, inserts and paint ($13 more on line 2); the lid's U-channel frame, hinges and latches priced in full ($15 more); trays with a perforated floor under the mesh ($10 more in all); fin feet, rivets and epoxy ($4); a proper drain fitting ($7); stand bracing, foot plates and straps ($3); screen frames ($4 in all); pole, bracket and backing plate ($6); the fan hood ($1); and fixings ($7). Raising the budget is Amish's decision; it is open in the design decisions register. Over 5 years at the design point the parts cost about $0.59 per litre of water [J2].
 
 ## K. Requirements
 
-*Table 4. Requirement status (DWD-REQ-001 v0.5). Also written to `docs/04-calcs/results.csv`.*
+*Table 4. Requirement status (DWD-REQ-001 v0.6). Also written to `docs/04-calcs/results.csv`.*
 
 | ID | Requirement | Value | Target | Status |
 | --- | --- | --- | --- | --- |
@@ -156,13 +160,13 @@ The BOM has 15 lines and totals $515 against the $520 budget; Amish kept $500 on
 | R6 | Water quality | Food-grade materials by selection; chloride carry-over needs a water test | Food-grade; chloride below 250 mg/L | Not verifiable at TRL 3 |
 | R7 | Salt containment | Pores fill at 71 % RH; 43 % of the pore volume after one 90 % RH night; 50 % after three with the fan rule; sumps 0.58 L | No brine leaves the tray and drip-screen assembly after a 90 % RH night | Met |
 | R8 | Two actions per day | Open the flaps at dusk, close them at dawn; the fan runs on the logger timer with a humidity cut-out | 2 actions, 5 min or less | Met |
-| R9 | Portable | Box 33.4 kg with sorbent, 24.0 kg with trays out; total 53.9 kg | Box 35 kg or less; stand separable | Met |
-| R10 | Survive the site | Two anchors of 114 N (default) or 46 kg of ballast at 20 m/s; UV life and 300 cycles need supplier data and test | Stable at 20 m/s; UV-stable; 300 cycles | Not verifiable at TRL 3 |
-| R11 | Cost | $515 | $520 or less | Met |
+| R9 | Portable | Box 35.2 kg with everything inside; 23.4 kg with the trays and deck lifted out; total 60.2 kg | Box 35 kg or less; stand separable | **Not met** as written (0.2 kg over); met with the trays and deck lifted out |
+| R10 | Survive the site | Two anchors of 98 N (default) or 40 kg of ballast at 20 m/s; UV life and 300 cycles need supplier data and test | Stable at 20 m/s; UV-stable; 300 cycles | Not verifiable at TRL 3 |
+| R11 | Cost | $620 | $520 or less | **Not met** |
 | R12 | Record performance | 8,640 records, 0.41 MB | Every 5 min for 30 days | Met |
 | R13 | Protect users | Glazing outer skin about 57 °C at stagnation; fins up to 47 °C; 12.8 V DC | Touched surfaces 60 °C or less; below 60 V DC | Met |
 
-Counts: 11 met, 2 not verifiable at TRL 3 (R6, R10) [K1].
+Counts: 9 met, 2 not met (R9, R11), 2 not verifiable at TRL 3 (R6, R10) [K1].
 
 ## L. Numbers changed from v0.1
 
@@ -184,6 +188,17 @@ Counts: 11 met, 2 not verifiable at TRL 3 (R6, R10) [K1].
 | Ballast; anchor rating | 49 kg; 120 N | 46 kg; 114 N | H2, H4 |
 | Parts cost | $488 | $515 | J1 |
 | Water cost over 5 years | $1.34 per litre | $0.49 per litre | J2 |
+
+*Table 6. Numbers changed by the constructable design (DWD-DDR-003). Water, heat, salt and electrical figures are unchanged.*
+
+| Quantity | v0.3 | v0.4 | Tag |
+| --- | --- | --- | --- |
+| Box; total mass | 33.4 kg; 53.9 kg | 35.2 kg; 60.2 kg | G1 |
+| Box with trays (and now the deck) out | 24.0 kg | 23.4 kg | G2 |
+| Fan duty | about 0.4 Pa | about 3.3 Pa | F3 |
+| Ballast; anchor rating | 46 kg; 114 N | 40 kg; 98 N | H2, H4 |
+| Parts cost | $515 | $620 | J1 |
+| Water cost over 5 years | $0.49 per litre | $0.59 per litre | J2 |
 
 ## M. Limits of this note
 

@@ -5,18 +5,22 @@ repo: BoujeeEnjinia1701/dewdrive         # GitHub repository, shown on every dra
 area: Water Security
 trl: 3                   # Technology Readiness Level, see .kit/STANDARDS.md section 9
 trl_target: 3            # TRL 4 on hold by Amish's instruction (2026-09-25)
+design_state: constructable   # DWD-DDR-003; build plan DWD-BLD-001
 trl_evidence:
   - docs/01-problem.md
   - docs/02-concept.md
   - docs/03-requirements.md
   - docs/decisions/0001-trl2-review-decisions.md
   - docs/decisions/0002-recommendations-accepted.md
+  - docs/decisions/0003-design-for-construction.md
   - docs/04-calcs/01-sizing.md
   - docs/04-calcs/sizing.py
   - cad/src/model.py
   - cad/step/dewdrive-assembly.step
   - cad/drawings/DWD-DWG-001.pdf
   - bom/bom.csv
+  - docs/05-build-plan.md
+  - docs/06-design-decisions.md
 shortlisted: false
 pitch: >-
   Solar-regenerated desiccant harvester that adsorbs moisture from air overnight and releases it into a passive condenser during the day.

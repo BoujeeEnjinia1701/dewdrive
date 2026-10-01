@@ -252,3 +252,61 @@ This is an appearance model only: no tolerances, no fabrication detail, no build
 - Kit 1.5.0 synced: STANDARDS v1.5 (sections 12 to 15: product renders, storefront images and image quality, public release, authorship and signing), `.kit/cards.py`, `.kit/image_qc.py`, `.kit/release_gate.py`, issue templates, and the `/render-product` and `/release` commands. `CLAUDE.md` now matches `.kit/CLAUDE.md`.
 - Every `media/render-*.png` recaptioned from its original render with the new layout: the title, concept label and repository sit in a band above the render and the view note in a band below it, each line wrapped to the image width, so no text overlaps other text or the render or runs off the image. `media/card.png` and `media/social-preview.png` regenerated with the same rules.
 - `python .kit/image_qc.py` and `python .kit/release_gate.py` pass. trl stays 3.
+
+## Session 2026-10-01: kit 1.7.0, constructable design and prototype build plan
+
+Done under the build plan rollout (kit 1.7.0) and Amish's instruction of 2026-09-30 to make the design physically buildable while drawing the build plan. TRL stays 3; nothing was built, bought or tested.
+
+### What was done
+
+- Kit 1.7.0 installed (`.kit/`, `.claude/commands/`); `CLAUDE.md` replaced by `.kit/CLAUDE.md`.
+- `cad/src/model.py` rewritten from a massing model to a constructable one: every made or bought piece is its own component with its material, and `python cad/src/model.py --check` runs 91 constructability checks (contacts, overlaps, clearances); all 91 pass. `build_parts()` keeps the old BOM groups, plus a new group for line 16.
+- New decision record `docs/decisions/0003-design-for-construction.md` (DWD-DDR-003, draft, open for Amish's review).
+- New build plan `docs/05-build-plan.md` (DWD-BLD-001) with pictures from `cad/src/build_plan_media.py`: an overview, 22 making sketches (`cad/drawings/DWD-DWG-101` to `122`), 14 joint close-ups, 19 assembly steps, a plate hole layout and a wiring diagram, all in `docs/05-build-plan/`.
+- New design decisions register `docs/06-design-decisions.md` (DWD-DEC-001).
+- `bom/bom.csv`: lines repriced and line 16 (tray deck and wall ledges) added; $620 in all.
+- `docs/04-calcs/sizing.py` re-run on the new model (DWD-CAL-001 v0.4): mass by component and material, outlet slot in the fan duty, new leg span in the wind check.
+- DWD-REQ-001 v0.6, DWD-PRC-001 v0.6, README (links line, "Building the prototype", key numbers), `project.yaml` (`design_state: constructable`, new evidence) updated.
+- STEP and STL re-exported, general arrangement DWD-DWG-001 at Rev P4, concept media regenerated from the new model; PDFs of the changed documents re-rendered.
+
+### Design changes made for construction (DWD-DDR-003)
+
+1. Condenser plate under the walls, closing the box; walls start 5 mm higher and are 133 mm tall so every height and gap in the calculation is kept (the concept plate overlapped the walls by 240 cm³).
+2. Walls as battened sandwich panels, screwed at the corners, with framed openings and threaded inserts for the stand.
+3. A lift-out tray deck (20 x 5 mm flat bar frame, baffle riveted on top, EPDM edge seal) on two wall ledges, in place of a loose 1 mm baffle on unfixed rails.
+4. Drip screens framed and hung from the deck bars by their sump and end plate (they floated 7 mm below the trays); sumps moved under the channel ends.
+5. Fins with a 10 mm folded foot, bonded and riveted with closed-end rivets.
+6. A folded L gutter in the low corner and a bulkhead drain fitting down through the floor between two fins (the concept gutter could not take water in).
+7. One outlet: a slot under the deck into a fan hood, with the outlet flap over the fan. The concept's separate outlet flap would have let the fan draw air past the beds, and a 120 mm fan did not fit under the trays.
+8. Inlet opening lowered 20 mm (same 800 x 40 mm, still above the deck) so the wall keeps a solid top edge.
+9. Lid sheet in an aluminium U-channel frame with hinges, latches and a seal.
+10. Stand redesigned: rails under the box edges bolted into the wall inserts, legs bolted to the rails, side braces, cross members, a south diagonal, foot plates with cleats (the concept stand ran through the box).
+11. PV pole as a square tube on spacers on the north-east leg, 6 mm clear of the box (the concept pole passed through the box).
+12. Electronics box and sensor shield on a backing plate on the north-west leg.
+13. Trays as folded 1 mm pans with a perforated floor under the mesh.
+
+### Key results (DWD-CAL-001 v0.4)
+
+- Water, heat, salt and electrical results unchanged: 0.57 and 0.45 L per day, bed 112 °C at noon, condenser rise 12.1 K, pores fill at 71 % RH.
+- **R11 not met:** parts $620 against the $520 budget.
+- **R9 not met as written:** full box 35.2 kg against 35 kg; 23.4 kg with the trays, sorbent, deck and screens lifted out. Total 60.2 kg.
+- Wind: two anchors of 98 N, or 40 kg of ballast. Fan duty about 3.3 Pa.
+- Requirement count: 9 met, 2 not met (R9, R11), 2 not verifiable at TRL 3 (R6, R10).
+
+### Proposed, awaiting Amish
+
+All open decisions are in the design decisions register (`docs/06-design-decisions.md`): review of DDR-003; the budget (recommend raising `budget_usd` to $625); restating R9 for a lift with the trays and deck out; the glazing rating (O5); the low-emissivity screen (O4); the co-design partner (O1); and the appearance model deviations.
+
+### Stale on Amish's Mac
+
+The photoreal renders (`media/render-hero.png`, `media/render-exploded.png`, `media/render-detail.png`), `media/card.png` and `media/social-preview.png`, and the appearance model `cad/src/product_model.py`, still show the concept stand, lid frame, outlet flap and PV pole; they need regenerating after the appearance model is brought into line with `model.py`.
+
+### Safety concerns
+
+- Sorbent preparation (calcium chloride dissolving hot, corrosive brine) now has written steps and stops (build plan S1, S2, S7).
+- The glazing rating (122 °C stagnation) must be confirmed before the lid is first closed in sun (S3).
+- Mass rose by 6 kg; the build plan lifts the box onto the stand with the trays and deck out, two people, after the anchors are in (S4).
+
+### Recommended next step
+
+Amish to review DDR-003 and decide the budget and R9 items in the register. TRL 4 remains on hold; when released, the build plan is ready to build from.

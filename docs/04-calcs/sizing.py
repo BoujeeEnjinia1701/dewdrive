@@ -1,4 +1,4 @@
-"""DewDrive sizing calculations, DWD-CAL-001 v0.2.
+"""DewDrive sizing calculations, DWD-CAL-001 v0.4.
 
 Run from the repo root:  python docs/04-calcs/sizing.py
 Prints every number quoted in docs/04-calcs/01-sizing.md, tagged [A1], [B2] and so on,
@@ -11,6 +11,10 @@ cad/src/model.py (PARAMS and derived()), prices from bom/bom.csv.
 v0.2 checks the design of record after DWD-DDR-002 (recommendations accepted by Amish,
 2026-09-25): night air drawn down through the sealed, mesh-floored trays; 25 wt % CaCl2
 (1.0 kg in 3.0 kg of gel); a louvred drip screen under each tray; the fan stopped above 70 % RH.
+
+v0.4 takes its geometry and mass from the constructable model of DWD-DDR-003 (build_components):
+mass by component and material (G1, G2), the outlet slot in the fan duty (F3), the new leg span in
+the wind check (H1 to H4) and the repriced BOM (J1).
 """
 import csv
 import math
@@ -19,7 +23,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "cad" / "src"))
-from model import PARAMS, derived, volumes_cm3  # noqa: E402
+from model import PARAMS, derived, build_components, wall_layers  # noqa: E402
 
 G = derived()
 OUT = {}
@@ -156,7 +160,7 @@ def h_sorption(W, T):
 
 
 # ============================================================================================
-print("DewDrive sizing, DWD-CAL-001 v0.2 (all values are estimates)\n")
+print("DewDrive sizing, DWD-CAL-001 v0.4 (all values are estimates)\n")
 print("A. Air, sorbent and bed")
 T_N, RH_N, RH_DRY = 20.0, 0.40, 0.25
 T_DAY = 35.0
@@ -565,35 +569,52 @@ say("F1", f"Loads {E_day:.1f} Wh per day (fan {P_FAN * H_NIGHT:.0f} Wh, logger {
           f"(10 W x 5 h x 0.70); margin {E_pv / E_day:.2f}", E_day)
 say("F2", f"Battery {BATT:.1f} Wh, 80 % usable: {auto:.1f} days of autonomy with no sun", auto)
 a_in = PARAMS["flap_in"][0] * PARAMS["flap_in"][1] / 1e6
-dP_box = 0.5 * RHO_AIR * (FLOW / a_in) ** 2 * 3 + dP_B
-say("F3", f"Fan duty: {FLOW * 3600:.0f} m3/h against about {dP_box:.1f} Pa (flap openings and the hood, 3 velocity "
-          f"heads at the {1e3 * a_in / 1e3:.3f} m2 inlet, plus {dP_B:.2f} Pa for the bed); a 120 mm fan delivers this at low speed", dP_box)
+a_slot = G["slot_m2"]
+dP_box = 0.5 * RHO_AIR * (FLOW / a_in) ** 2 * 3 + 0.5 * RHO_AIR * (FLOW / a_slot) ** 2 * 1.5 + dP_B
+say("F3", f"Fan duty: {FLOW * 3600:.0f} m3/h against about {dP_box:.1f} Pa (3 velocity heads at the {a_in:.3f} m2 inlet, "
+          f"1.5 at the {a_slot:.4f} m2 outlet slot behind the hood, plus {dP_B:.2f} Pa for the bed); a 120 mm fan delivers this at low speed", dP_box)
 
-print("\nG. Mass (R9), from the model volumes")
-vol = volumes_cm3()
-dens = {  # g/cm3 effective, for the solid volumes in the massing model
-    "walls": 0.36,        # 12 mm plywood (0.6) in 40 mm, rest PIR (0.035): (12 x 0.6 + 28 x 0.035) / 40
-    "glazing": 0.17,      # 10 mm twin-wall PC, 1.7 kg/m2, plus frame (added below)
-    "trays": 2.70, "condenser": 2.70, "gutter": 2.70, "flap": 2.70, "fan": 1.2,
-    "screens": 2.70 * 0.5,   # massing channels are 1 mm thick; the BOM calls for 0.5 mm flashing
-    "stand": 7.85, "bottle": 0.0, "pv": 0.9, "ebox": 1.3, "shield": 0.3,
+print("\nG. Mass (R9), from the component volumes and materials of the constructable model (DWD-DDR-003)")
+COMP = build_components()
+WL = wall_layers()
+dens = {  # g/cm3
+    "ply": 0.60, "softwood": 0.45, "pir": 0.035,
+    "al": 2.70, "steel": 7.85,
+    "pc": 0.17,           # 10 mm twin-wall PC, 1.7 kg/m2
+    "mesh": 2.3,          # 1 mm perforated aluminium (about 50 % open) with a fine stainless woven mesh, modelled as 0.8 mm
+    "screens": 2.70 * 0.6,  # channels modelled 1 mm thick, made from 0.5 mm flashing; frames 1 to 2 mm
+    "plastic": 1.2, "silicone": 1.2 * 0.45,  # tube modelled solid, 12 mm bore in 16 mm
 }
-mass = {k: vol[k] * dens.get(k, 0) / 1e3 for k in vol if k != "bed"}
-mass["glazing"] += 1.2          # aluminium edge frame and hinges
-mass["trays"] = min(mass["trays"], 4 * 0.60 + 0.5 + G["baffle_m2"] * PARAMS["baffle_t"] * 2.7)  # 0.6 kg each, rails, baffle
-mass["bed"] = M_SORB
-mass["bottle"] = 0.45
-# parts drawn as solid blocks in the massing model: use component estimates instead
-mass.update(flap=0.4, fan=0.8, ebox=1.8, pv=2.5, shield=0.2)
-mass["hardware"] = 1.5
-box = sum(mass[k] for k in ("walls", "glazing", "trays", "bed", "screens", "condenser", "gutter", "flap", "fan"))
+fixed = {"bottle": 0.45, "fan": 0.15, "ebox": 1.8, "pv": 1.1, "shield": 0.2}   # bought items drawn as blocks: catalogue masses
+mass_c = {}
+for k, comp in COMP.items():
+    if k.startswith("wall_"):
+        side = k[5:]
+        sk, bat, foam = WL[side]
+        mass_c[k] = (sk.volume * dens["ply"] + bat.volume * dens["softwood"] + foam.volume * dens["pir"]) / 1e6
+    elif comp.material in fixed:
+        mass_c[k] = fixed[comp.material]
+    elif k == "bed":
+        mass_c[k] = M_SORB
+    else:
+        mass_c[k] = comp.shape.volume * dens[comp.material] / 1e6
+mass = {}
+for k, comp in COMP.items():
+    g = comp.group or "hardware"
+    mass[g] = mass.get(g, 0.0) + mass_c[k]
+mass["hardware"] += 0.8         # wood screws, rivets, sealant, gaskets and cable glands not drawn
+BOX_GROUPS = ("walls", "glazing", "deck", "trays", "bed", "screens", "condenser", "gutter", "flap", "fan")
+box = sum(mass[k] for k in BOX_GROUPS) - mass_c["drain_tube"] + mass_c["plate_screws"] + 0.5   # box screws, rivets, sealant
 total = sum(mass.values())
 for k in sorted(mass, key=lambda k: -mass[k]):
     print(f"      {k:10s} {mass[k]:6.2f} kg")
-say("G1", f"Box with trays, sorbent and condenser {box:.1f} kg; stand {mass['stand']:.1f} kg; total dry {total:.1f} kg "
-          f"({total * 2.2046:.0f} lb)", box)
-box_no_trays = box - mass["trays"] - mass["bed"] - mass["screens"]
-say("G2", f"Box lifted with trays, sorbent and drip screens removed: {box_no_trays:.1f} kg (screens {mass['screens']:.1f} kg)", box_no_trays)
+walls_kg = sum(mass_c[k] for k in mass_c if k.startswith("wall_"))
+say("G1", f"Box with deck, trays, sorbent and screens {box:.1f} kg; stand {mass['stand']:.1f} kg; total dry {total:.1f} kg "
+          f"({total * 2.2046:.0f} lb); walls {walls_kg:.1f} kg with their battens", box)
+lift_out = mass["trays"] + mass["bed"] + mass["screens"] + mass["deck"]
+box_no_trays = box - lift_out
+say("G2", f"Box lifted with the trays, sorbent and the deck with its drip screens taken out first: {box_no_trays:.1f} kg "
+          f"(those parts {lift_out:.1f} kg: trays {mass['trays']:.1f}, sorbent {mass['bed']:.1f}, deck {mass['deck']:.1f}, screens {mass['screens']:.1f})", box_no_trays)
 
 print("\nH. Wind (R10), 20 m/s")
 V = 20.0
@@ -637,7 +658,7 @@ life_l = cD40["collected"] * 365 * 5
 say("J2", f"Water cost over 5 years at the design point: {life_l:.0f} L, ${cost / life_l:.2f} per litre", cost / life_l)
 
 # ============================================================================================
-print("\nK. Requirements (DWD-REQ-001 v0.4)")
+print("\nK. Requirements (DWD-REQ-001 v0.6)")
 R = []
 
 
@@ -662,7 +683,7 @@ req("R7", "Salt containment", f"pores fill at {100 * rh_fill:.0f} % RH; {100 * f
     f"{100 * fill(spell_rule[-1]):.0f} % after three with the fan rule; sumps {G['sump_l']:.2f} L (E2 to E6)",
     "no brine leaves the tray and drip-screen assembly after a 90 % RH night", "met" if r7_ok else "at risk")
 req("R8", "Two actions per day", "open flaps at dusk, close at dawn; fan on a timer with a humidity cut-out", "2 actions, <= 5 min", "met")
-req("R9", "Portable", f"box {box:.1f} kg with sorbent; {box_no_trays:.1f} kg with trays out; total {total:.1f} kg (G1, G2)",
+req("R9", "Portable", f"box {box:.1f} kg with everything inside; {box_no_trays:.1f} kg with the trays and deck lifted out; total {total:.1f} kg (G1, G2)",
     "box <= 35 kg; stand separable", "met" if box <= 35 else "not met")
 req("R10", "Survive the site", f"two anchors of {anchor:.0f} N (default) or {ballast:.0f} kg ballast for 20 m/s (H2 to H4); UV and 300 cycles need supplier data and test",
     "stable at 20 m/s; UV; 300 cycles", "not verifiable at TRL 3")

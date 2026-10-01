@@ -8,7 +8,7 @@ Solar-regenerated desiccant harvester that adsorbs moisture from air overnight a
 
 ![DewDrive: solar-regenerated desiccant water harvester, product render](media/render-hero.png)
 
-[Exploded render](media/render-exploded.png) · [Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement DWD-DWG-001 (PDF)](cad/drawings/DWD-DWG-001.pdf) · [Sizing calculations](docs/04-calcs/01-sizing.md) · [Review note](docs/REVIEW.md)
+[Exploded render](media/render-exploded.png) · [Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement DWD-DWG-001 (PDF)](cad/drawings/DWD-DWG-001.pdf) · [Sizing calculations](docs/04-calcs/01-sizing.md) · [Prototype build plan](docs/05-build-plan.md) · [Design decisions](docs/06-design-decisions.md) · [Review note](docs/REVIEW.md)
 
 ## Concept rationale
 
@@ -56,14 +56,14 @@ Problem statement: [docs/01-problem.md](docs/01-problem.md)
 
 ## Concept
 
-A glazed, insulated box 1.1 x 1.0 m, tilted 20° toward the sun, holds 4 kg of silica gel impregnated with 25 wt % calcium chloride in four sealed trays. At night the vent flaps are opened and a small solar-powered fan draws air in above the trays and down through the sorbent beds; the fan stops if the air goes above 70 % RH. By day the flaps are shut, the sun heats the sorbent to about 112 °C, and the vapour passes a black drip screen, condenses on the shaded, finned floor of the box and drains into a bottle. TRL 3 calculations ([DWD-CAL-001](docs/04-calcs/01-sizing.md)) for the design decided on 2026-09-25 ([DWD-DDR-002](docs/decisions/0002-recommendations-accepted.md)) give:
+A glazed, insulated box 1.1 x 1.0 m, tilted 20° toward the sun, holds 4 kg of silica gel impregnated with 25 wt % calcium chloride in four sealed trays. At night the vent flaps are opened and a small solar-powered fan draws air in above the trays and down through the sorbent beds; the fan stops if the air goes above 70 % RH. By day the flaps are shut, the sun heats the sorbent to about 112 °C, and the vapour passes a black drip screen, condenses on the shaded, finned floor of the box and drains into a bottle. TRL 3 calculations ([DWD-CAL-001](docs/04-calcs/01-sizing.md)) for the design decided on 2026-09-25 ([DWD-DDR-002](docs/decisions/0002-recommendations-accepted.md)), made buildable in [DWD-DDR-003](docs/decisions/0003-design-for-construction.md), give:
 
 | Quantity | Estimate |
 | --- | --- |
 | Water at 40 % night RH | about 0.57 L per day (target 0.5 L) |
 | Water at 25 % night RH | about 0.45 L per day (target 0.25 L) |
-| Mass | about 54 kg dry; box about 33 kg |
-| Parts cost | $515, within the $520 budget (top-up approved by Amish, 2026-09-26) |
+| Mass | about 60 kg dry; box about 35 kg, 23 kg with the trays and deck lifted out |
+| Parts cost | $620 for the buildable design, over the $520 budget (a budget decision is open for Amish) |
 
 One unit is a supplement: about one fifth of one person's survival drinking need.
 
@@ -80,9 +80,15 @@ Full design precis: [docs/02-concept.md](docs/02-concept.md)
 
 The priced bill of materials is in [bom/bom.csv](bom/bom.csv). The parametric model is [cad/src/model.py](cad/src/model.py), with STEP files in `cad/step/`.
 
+## Building the prototype
+
+The prototype build plan ([docs/05-build-plan.md](docs/05-build-plan.md)) shows how to make each of the 31 components and put them together, with a making sketch for every made part, close-ups of the joints and a picture for every assembly step. Making the concept buildable added the parts that hold it together: battened wall panels, a lift-out tray deck that carries the drip screens, a fan hood that is now the only outlet, and a bolted, braced stand ([DWD-DDR-003](docs/decisions/0003-design-for-construction.md)). The water and heat results are unchanged; the parts now cost about $620 and the full box weighs 35.2 kg, both open decisions in the [design decisions register](docs/06-design-decisions.md). It is a plan only: building and testing to it is TRL 4 work.
+
+![DewDrive prototype: every component pulled apart and numbered in build order](docs/05-build-plan/overview.png)
+
 ## Safety
 
-> **Safety:** Harvested water must be tested and treated before drinking. The box interior and glazing get hot enough to burn, calcium chloride irritates eyes and skin, the small lithium iron phosphate battery must be fused, and the tilted panel must be held down with two ground anchors (or about 50 kg of ballast) against wind. See the safety section of the [design precis](docs/02-concept.md).
+> **Safety:** Harvested water must be tested and treated before drinking. The box interior and glazing get hot enough to burn, calcium chloride irritates eyes and skin, the small lithium iron phosphate battery must be fused, and the tilted panel must be held down with two ground anchors (or about 40 kg of ballast) against wind. See the safety section of the [design precis](docs/02-concept.md).
 
 ## Repository layout
 

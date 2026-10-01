@@ -3,9 +3,9 @@ doc_id: DWD-REQ-001
 title: DewDrive requirements
 project: DewDrive
 doc_type: Requirements
-version: "0.5"
+version: "0.6"
 status: Draft
-date: '2026-09-26'
+date: '2026-10-01'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -29,11 +29,15 @@ revisions:
   date: '2026-09-26'
   author: Amish Chadha
   change: Budget top-up approved by Amish (R11 target $520; status from DWD-CAL-001 v0.3)
+- version: "0.6"
+  date: '2026-10-01'
+  author: Amish Chadha
+  change: Status from DWD-CAL-001 v0.4 for the constructable design (DWD-DDR-003); R9 and R11 not met, open for Amish
 ---
 
 # DewDrive requirements
 
-These requirements were checked by calculation at TRL 3 in DWD-CAL-001 v0.3, for the design decided by Amish on 2026-09-25 (DWD-DDR-002): night air drawn down through the sealed trays, 25 wt % CaCl₂, a drip screen under each tray and a fan cut-out above 70 % RH. The design meets eleven of thirteen. R11 (cost) is met since Amish approved the budget top-up to $520 on 2026-09-26 (DWD-DDR-002, D15): the parts come to $515. R6 and R10 can only be verified by test. The yield targets R1 and R2, missed by the v0.1 design, are now met. Targets are still proposals for review, not user-validated needs, and will be revised after co-design sessions.
+These requirements were checked by calculation at TRL 3 in DWD-CAL-001 v0.4, for the design decided by Amish on 2026-09-25 (DWD-DDR-002) as made buildable in DWD-DDR-003: night air drawn down through the sealed trays, 25 wt % CaCl₂, a drip screen under each tray and a fan cut-out above 70 % RH. The design meets nine of thirteen. Making it buildable added parts: R11 (cost) is not met at $620 against $520, and R9 (portability) is not met as written, the full box being 35.2 kg against 35 kg (23.4 kg with the trays and deck lifted out). Both are open decisions in the design decisions register (DWD-DEC-001). R6 and R10 can only be verified by test. The yield targets R1 and R2, missed by the v0.1 design, are now met. Targets are still proposals for review, not user-validated needs, and will be revised after co-design sessions.
 
 ## Design point
 
@@ -45,7 +49,7 @@ Decided by Amish on 2026-09-25 (DWD-DDR-001, D8). Unless a requirement says othe
 
 ## Requirements
 
-Table 1. Requirements and TRL 3 status. Values and tags are from DWD-CAL-001 v0.3, Table 4.
+Table 1. Requirements and TRL 3 status. Values and tags are from DWD-CAL-001 v0.4, Table 4.
 
 | ID | Requirement | Target | Verification | TRL 3 status |
 | --- | --- | --- | --- | --- |
@@ -57,9 +61,9 @@ Table 1. Requirements and TRL 3 status. Values and tags are from DWD-CAL-001 v0.
 | R6 | Keep the water clean | All wetted parts food-grade; no salt carry-over (chloride in the collected water below 250 mg/L) | Materials review; later laboratory water test | **Not verifiable at TRL 3.** Materials chosen to meet it |
 | R7 | Contain the salt | No liquid CaCl₂ solution leaves the tray and drip-screen assembly or reaches the condenser, even after a night at 90 % RH (restated by DWD-DDR-002, D11; was "leaves the trays") | Pore volume against solution volume; sump volume; later chamber test | Met on paper: the pores fill only above 71 % RH (E2); one 90 % RH night fills 43 % of them (E3), three in a row 50 % with the fan rule and 63 % without it (E4, E5); the sumps hold 0.58 L as a backstop (E6) |
 | R8 | Be simple to operate | Two user actions per day (open flaps in the evening, close them in the morning), 5 min per day or less | Task analysis; co-design sessions | Met by design; the fan timer and humidity cut-out need no user action |
-| R9 | Be portable and quick to set up | Box 35 kg or less (two-person lift); stand separable; set up by two people in 30 min or less | Mass from model volumes; later trial | Met: box 33.4 kg, 24.0 kg with trays, sorbent and screens out; total 53.9 kg (G1, G2). Set-up time needs a trial |
-| R10 | Survive the site | Stable in 20 m/s (72 km/h) wind with two ground anchors (default, DWD-DDR-002, D13) or ballast; UV-stable glazing; sorbent 300 cycles or more with 20 % or less loss of capacity | Wind load calculation; supplier data; later cycling test | **Not verifiable at TRL 3.** Wind: two anchors of 114 N each, or 46 kg of ballast (H2 to H4) |
-| R11 | Cost | Parts $520 or less (`project.yaml` budget, raised from $400 to $500 by Amish on 2026-09-25, DWD-DDR-001 D1; budget top-up to $520 approved by Amish on 2026-09-26, DWD-DDR-002 D15) | Priced BOM | Met: $515 (J1), $5 under |
+| R9 | Be portable and quick to set up | Box 35 kg or less (two-person lift); stand separable; set up by two people in 30 min or less | Mass from model components; later trial | **Not met as written:** box 35.2 kg with everything inside; 23.4 kg with the trays, sorbent, deck and screens lifted out; total 60.2 kg (G1, G2). Restating R9 for a lift with the trays and deck out is open for Amish (DWD-DEC-001). Set-up time needs a trial |
+| R10 | Survive the site | Stable in 20 m/s (72 km/h) wind with two ground anchors (default, DWD-DDR-002, D13) or ballast; UV-stable glazing; sorbent 300 cycles or more with 20 % or less loss of capacity | Wind load calculation; supplier data; later cycling test | **Not verifiable at TRL 3.** Wind: two anchors of 98 N each, or 40 kg of ballast (H2 to H4) |
+| R11 | Cost | Parts $520 or less (`project.yaml` budget, raised from $400 to $500 by Amish on 2026-09-25, DWD-DDR-001 D1; budget top-up to $520 approved by Amish on 2026-09-26, DWD-DDR-002 D15) | Priced BOM | **Not met:** $620 (J1), $100 over; the buildable design added parts (DWD-DDR-003). A budget decision is open for Amish (DWD-DEC-001) |
 | R12 | Record performance | Log air temperature and RH, bed and condenser temperature every 5 min for 30 days or more; daily water mass recorded by weighing | Storage estimate; design review | Met: 8,640 records, 0.41 MB (I1) |
 | R13 | Protect users | External surfaces a person would touch in normal use stay at 60 °C or less; the glazing is labelled hot; no exposed conductor above 60 V DC | Surface temperature estimate; design review | Met: glazing outer skin about 57 °C at stagnation, fins up to 47 °C (D2, D3); 12.8 V DC |
 
