@@ -25,8 +25,9 @@ def ortho_cells(sheet, views, names=("front", "top", "right")):
     dims = {n: _viewbox(Path(views[n]).read_text())[2:] for n in names}
     fw, fh = dims["front"]; tw, th = dims["top"]; rw, rh = dims["right"]
     k = sheet.scale
-    ax += (aw - (k * (max(fw, tw) + rw) + gap)) / 2
-    ay += (ah - (k * (th + max(fh, rh)) + gap + 2 * lab)) / 2
+    dl = 11  # room the kit leaves left of and above the views for overall dimensions
+    ax += (aw - (k * (max(fw, tw) + rw) + gap + dl)) / 2 + dl
+    ay += (ah - (k * (th + max(fh, rh)) + gap + 2 * lab + dl)) / 2 + dl
     colw = k * max(fw, tw)
     front_y = ay + k * th + lab + gap
     row_h = k * max(fh, rh)
@@ -61,11 +62,12 @@ def main():
     asm = build()
     views = project_views(asm, work)
     bb = asm.bounding_box()
-    s = Sheet(project="DewDrive", title="General arrangement", dwg_no="DWD-DWG-001", rev="P2",
+    s = Sheet(project="DewDrive", title="General arrangement", dwg_no="DWD-DWG-001", rev="P3",
               author="Amish Chadha", date=DATE, scale=None, theme="technical",
               material="Plywood and PIR box, twin-wall PC lid, Al trays and finned condenser, galv. steel stand; see bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
               revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC"),
-                         ("P2", "Through-flow trays, baffle, raised inlet, drip screens (DDR-002)", DATE, "AC")])
+                         ("P2", "Through-flow trays, baffle, raised inlet, drip screens (DDR-002)", DATE, "AC"),
+                         ("P3", "Layout and labels tidied", DATE, "AC")])
     s.add_ortho(views)
     k = s.scale
     c = ortho_cells(s, views)
@@ -73,19 +75,16 @@ def main():
     LX, LY = P["box_x"], P["box_y"]
     # ---- top view (looking down, north up): overall and box plan sizes
     x, y, w, h = c["top"]
-    out += dim_h(x, x + w, y - 3.5, f"{bb.size.X:.0f} overall")
-    out += dim_v(x - 4, y, y + h, f"{bb.size.Y:.0f} overall")
     bx0 = x + (-LX / 2 - bb.min.X) * k
     bx1 = x + (LX / 2 - bb.min.X) * k
-    out += [ext(bx0, y + 2, bx0, y - 10), ext(bx1, y + 2, bx1, y - 10)]
-    out += dim_h(bx0, bx1, y - 9, f"{LX:.0f} box")
+    out += [ext(bx0, y + 2, bx0, y - 16), ext(bx1, y + 2, bx1, y - 16)]
+    out += dim_h(bx0, bx1, y - 15, f"{LX:.0f} box")
     # ---- front view (from the south, -Y): overall height, top and low edge heights
     x, y, w, h = c["front"]
     zb = y + h
-    out += dim_v(x - 4, y, zb, f"{bb.size.Z:.0f} to PV")
     zt = zb - D["top_edge_m"] * 1e3 * k
-    out += [ext(x - 11, zt, bx0, zt)]
-    out += dim_v(x - 10, zt, zb, f"{D['top_edge_m'] * 1e3:.0f} top edge")
+    out += [ext(x - 17, zt, bx0, zt)]
+    out += dim_v(x - 16, zt, zb, f"{D['top_edge_m'] * 1e3:.0f} top edge")
     # ---- right view (from +X, south at left): box slope length, tilt, low edge height
     x, y, w, h = c["right"]
     zb = y + h
