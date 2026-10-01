@@ -3,7 +3,7 @@ doc_id: DWD-PRC-001
 title: DewDrive design precis
 project: DewDrive
 doc_type: Design precis
-version: "0.6"
+version: "0.7"
 status: Draft
 date: '2026-10-01'
 author: Amish Chadha
@@ -33,11 +33,15 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: "Design made constructable (DWD-DDR-003): tray deck, one outlet through the fan hood, bolted stand; mass and cost from DWD-CAL-001 v0.4"
+- version: "0.7"
+  date: '2026-10-01'
+  author: Amish Chadha
+  change: Budget treated as a value-engineering target
 ---
 
 # DewDrive design precis
 
-DewDrive is a glazed, insulated box 1.1 x 1.0 m, tilted 20° toward the sun on a steel stand. Inside, four black trays hold 4 kg of silica gel impregnated with 25 wt % calcium chloride. At night the vent flaps are opened and a 2 W fan draws air in above the trays and down through their mesh floors, and the sorbent takes up water. In the morning the flaps are shut; the sun heats the bed to about 112 °C by noon and drives the vapour down past a black drip screen onto a finned aluminium floor that forms the condenser, shaded by the box itself. The condensate runs down the slope into a gutter and a 10 L bottle. The TRL 3 calculation (DWD-CAL-001 v0.2) gives about 0.57 L per day at 40 % night RH and 0.45 L at 25 %, meeting the 0.5 and 0.25 L targets. The design follows Amish's decisions of 2026-09-25 (DWD-DDR-002), which replaced the v0.1 layout that made only 0.20 L per day. Made buildable in DWD-DDR-003, the parts cost $620 against the $520 budget (topped up by Amish on 2026-09-26), which is not met; that decision is open for Amish. One unit supplements drinking water; it does not replace a water supply.
+DewDrive is a glazed, insulated box 1.1 x 1.0 m, tilted 20° toward the sun on a steel stand. Inside, four black trays hold 4 kg of silica gel impregnated with 25 wt % calcium chloride. At night the vent flaps are opened and a 2 W fan draws air in above the trays and down through their mesh floors, and the sorbent takes up water. In the morning the flaps are shut; the sun heats the bed to about 112 °C by noon and drives the vapour down past a black drip screen onto a finned aluminium floor that forms the condenser, shaded by the box itself. The condensate runs down the slope into a gutter and a 10 L bottle. The TRL 3 calculation (DWD-CAL-001 v0.2) gives about 0.57 L per day at 40 % night RH and 0.45 L at 25 %, meeting the 0.5 and 0.25 L targets. The design follows Amish's decisions of 2026-09-25 (DWD-DDR-002), which replaced the v0.1 layout that made only 0.20 L per day. Made buildable in DWD-DDR-003, the estimated parts cost is $620 against the $520 value-engineering target (moved to $520 by Amish on 2026-09-26), $100 over the target. One unit supplements drinking water; it does not replace a water supply.
 
 ![Hero render](../media/hero.png)
 
@@ -86,7 +90,7 @@ Item 14 (hardware and consumables) is in the BOM but not modelled. Item 16 is th
 
 ## Numbers from DWD-CAL-001
 
-All values are first-principles estimates from `docs/04-calcs/sizing.py` (DWD-CAL-001 v0.4); the tag after each value is the line of the script output that carries it. The sorbent isotherm is built from bulk salt data and must be replaced by measured isotherms of the actual composite.
+All values are first-principles estimates from `docs/04-calcs/sizing.py` (DWD-CAL-001 v0.5); the tag after each value is the line of the script output that carries it. The sorbent isotherm is built from bulk salt data and must be replaced by measured isotherms of the actual composite.
 
 ![Water flow](../media/flow.png)
 
@@ -110,7 +114,7 @@ Table 2. Water, energy, size and cost.
 | Salt containment | Pores fill above 71 % RH (E2); 43 % full after one 90 % RH night (E3) | Sumps 0.58 L (E6) | R7 met on paper |
 | Mass | 60.2 kg (133 lb) dry; box 35.2 kg, 23.4 kg with the trays and deck lifted out (G1, G2) | Model components | R9 not met as written (open for Amish) |
 | Wind at 20 m/s | 317 N normal to the lid; tips without two anchors or 40 kg of ballast (H1 to H4) | Force coefficient 1.2 on 1.1 m² | R10 not verifiable at TRL 3 |
-| Parts cost | $620 (J1) | `bom/bom.csv` | R11 not met ($520; open for Amish) |
+| Parts cost | $620 (J1) | `bom/bom.csv` | R11 over the value-engineering target by $100 (target $520) |
 | Water per dollar over 5 years | about $0.49 per litre (J2) | Parts only | For comparison |
 
 What the numbers say:
@@ -119,7 +123,7 @@ What the numbers say:
 - **The drip screens help the yield.** Black channels under the trays catch brine and also cut the radiation from the hot beads to the condenser by about 40 %: 0.57 L per day with them against 0.51 L without (C6).
 - **A low-emissivity screen would do more, but overheats the box.** Bare aluminium channels would give 0.82 L per day, but a dry bed would stagnate at about 166 °C, beyond the rating of polycarbonate glazing (C10, D1). That option is proposed for further paper work (DWD-DDR-002, O4), not adopted.
 - **The lower salt loading contains the brine.** At 25 wt % the solution fills the pores only above 71 % RH, against 51 % RH at the v0.1 loading (E2).
-- **Cost is over budget once the design is buildable.** The gasket, baffle and drip screens added $27 (total $515, D15); the parts that make the design buildable (DWD-DDR-003) bring it to $620 against the $520 budget.
+- **Cost is over the value-engineering target once the design is buildable.** The gasket, baffle and drip screens added $27 (total $515, D15); the parts that make the design buildable (DWD-DDR-003) bring the estimated cost to $620 against the $520 target ($100 over).
 - **Yield is still modest.** About 0.57 L per day is about one fifth of one person's survival drinking need.
 
 ## Key design choices
@@ -136,7 +140,7 @@ Choices 1 to 7 were decided by Amish on 2026-09-25 (DWD-DDR-001, going with the 
 8. **Night air drawn down through the sealed trays** (D9), with the inlet flap above the trays and the fan below them.
 9. **Drip screens and a fan humidity cut-out** for wet spells (D11). The screens are black, not low-emissivity, after the paper evaluation of D12.
 10. **Two ground anchors by default**, ballast as the alternative (D13).
-11. **Budget kept at $500** (D14), then topped up to $520 by Amish on 2026-09-26 (D15) once the BOM reached $515.
+11. **Value-engineering target kept at $500** (D14), then moved to $520 by Amish on 2026-09-26 (D15) once the BOM reached $515.
 12. **Built-in logging** so that each prototype yields comparable data.
 
 ## Safety
@@ -154,7 +158,7 @@ Choices 1 to 7 were decided by Amish on 2026-09-25 (DWD-DDR-001, going with the 
 ## Open questions
 
 - [ ] What are the measured uptake isotherms and rates of the 25 wt % composite at 20 °C and at 80 to 120 °C? These set every yield number.
-- [x] How can the parts cost come back to $500, or should the budget rise? Decided by Amish, 2026-09-26: budget top-up to $520 (DWD-DDR-002, D15).
+- [x] How can the parts cost come back to $500, or should the value-engineering target move? Decided by Amish, 2026-09-26: target moved to $520 (DWD-DDR-002, D15).
 - [ ] Is a low-emissivity screen worth pursuing with a stagnation vent or a higher-rated glazing (O4, awaiting Amish)?
 - [ ] Does the polycarbonate stay inside its rating with a 122 °C dry bed (O5, awaiting Amish)?
 - [ ] How much salt carries over into the condensate, and does the aluminium condenser need a coating or a stainless replacement?

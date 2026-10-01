@@ -3,9 +3,9 @@ doc_id: DWD-PRB-001
 title: DewDrive problem statement
 project: DewDrive
 doc_type: Problem statement
-version: "0.5"
+version: "0.6"
 status: Draft
-date: '2026-09-26'
+date: '2026-10-01'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -29,6 +29,10 @@ revisions:
   date: '2026-09-26'
   author: Amish Chadha
   change: Budget top-up approved by Amish
+- version: "0.6"
+  date: '2026-10-01'
+  author: Amish Chadha
+  change: Budget treated as a value-engineering target
 ---
 
 # DewDrive problem statement
@@ -67,7 +71,7 @@ Operating environment (proposed design envelope):
 
 ## Constraints
 
-- Garage-buildable research prototype, $520 USD or less in parts (`project.yaml`; budget raised from $400 to $500 by Amish on 2026-09-25, DWD-DDR-001, D1, and topped up to $520 by Amish on 2026-09-26, DWD-DDR-002, D15). The TRL 3 BOM totals $515, within budget.
+- Garage-buildable research prototype, a value-engineering target of $520 USD in parts (`project.yaml`; a hypothetical control target, not a limit; moved from $400 to $500 by Amish on 2026-09-25, DWD-DDR-001, D1, and to $520 on 2026-09-26, DWD-DDR-002, D15). The TRL 3 estimate was $515, within the target; after the design for construction it is $620, $100 over the target (DWD-DDR-003).
 - Regeneration heat from the sun only. Any electricity (fan, logger) comes from the device's own small solar panel.
 - Common, low-cost sorbents: silica gel and calcium chloride, both sold as desiccants and food-grade chemicals.
 - Everything in contact with the water must be food-grade.

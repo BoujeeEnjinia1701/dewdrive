@@ -288,14 +288,14 @@ Done under the build plan rollout (kit 1.7.0) and Amish's instruction of 2026-09
 ### Key results (DWD-CAL-001 v0.4)
 
 - Water, heat, salt and electrical results unchanged: 0.57 and 0.45 L per day, bed 112 °C at noon, condenser rise 12.1 K, pores fill at 71 % RH.
-- **R11 not met:** parts $620 against the $520 budget.
+- **R11 over the value-engineering target:** parts an estimated $620 against a $520 target ($100 over).
 - **R9 not met as written:** full box 35.2 kg against 35 kg; 23.4 kg with the trays, sorbent, deck and screens lifted out. Total 60.2 kg.
 - Wind: two anchors of 98 N, or 40 kg of ballast. Fan duty about 3.3 Pa.
-- Requirement count: 9 met, 2 not met (R9, R11), 2 not verifiable at TRL 3 (R6, R10).
+- Requirement count: 9 met, 1 not met (R9), 1 over its value-engineering target (R11), 2 not verifiable at TRL 3 (R6, R10).
 
 ### Proposed, awaiting Amish
 
-All open decisions are in the design decisions register (`docs/06-design-decisions.md`): review of DDR-003; the budget (recommend raising `budget_usd` to $625); restating R9 for a lift with the trays and deck out; the glazing rating (O5); the low-emissivity screen (O4); the co-design partner (O1); and the appearance model deviations.
+All open decisions are in the design decisions register (`docs/06-design-decisions.md`): review of DDR-003; restating R9 for a lift with the trays and deck out; the glazing rating (O5); the low-emissivity screen (O4); the co-design partner (O1); and the appearance model deviations.
 
 ### Stale on Amish's Mac
 
@@ -309,4 +309,4 @@ The photoreal renders (`media/render-hero.png`, `media/render-exploded.png`, `me
 
 ### Recommended next step
 
-Amish to review DDR-003 and decide the budget and R9 items in the register. TRL 4 remains on hold; when released, the build plan is ready to build from.
+Amish to review DDR-003 and decide the R9 item in the register; its Value engineering section has the cost drivers. TRL 4 remains on hold; when released, the build plan is ready to build from.

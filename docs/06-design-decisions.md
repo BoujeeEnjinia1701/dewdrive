@@ -3,7 +3,7 @@ doc_id: DWD-DEC-001
 title: DewDrive design decisions register
 project: DewDrive
 doc_type: Design decisions register
-version: "0.1"
+version: "0.2"
 status: Draft
 date: '2026-10-01'
 author: Amish Chadha
@@ -13,6 +13,10 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Register opened with the open decisions from the review note, DWD-DDR-001 to DWD-DDR-003 and the build plan work
+- version: "0.2"
+  date: '2026-10-01'
+  author: Amish Chadha
+  change: Budget treated as a value-engineering target
 ---
 
 # DewDrive design decisions register
@@ -26,12 +30,11 @@ All are **Proposed, awaiting Amish**.
 | # | Decision needed | Options | Recommendation | Affects in the build | Source |
 | --- | --- | --- | --- | --- | --- |
 | 1 | Review of the design-for-construction changes P1 to P13 (condenser plate under the walls, battened wall panels, tray deck, hung drip screens, fin feet, gutter and floor drain, one outlet through the fan hood, lowered inlet, framed lid, bolted and braced stand, PV pole and backing plate, folded trays) | (a) accept as made; (b) change any item | (a) | The whole build plan follows them | DWD-DDR-003, Table 1 |
-| 2 | Budget (R11): the buildable design costs $620 against the $520 `budget_usd` | (a) raise `budget_usd` to $625; (b) cut about $20 (single strap size, offcut sheet, cheaper bracket and plate), still over budget; (c) also drop the logger for a timer-only fan switch (about $15 more), losing R12 | (a) | Buying every part on the BOM | DWD-DDR-003, A1; DWD-CAL-001, J1 |
-| 3 | Portability (R9): the full box is 35.2 kg against 35 kg; 23.4 kg with the trays and deck lifted out first, as the build plan does | (a) restate R9 as "box 35 kg or less when lifted with the trays and deck taken out"; (b) take about 0.5 kg out (thinner screen straps and deck brackets, lighter lid channel) and keep R9 as written | (a) | Step 16 (box onto the stand) | DWD-DDR-003, A2; DWD-CAL-001, G1, G2 |
-| 4 | Glazing temperature rating: a dry bed stagnates at about 122 °C, near the usual 120 °C service rating of twin-wall polycarbonate | (a) specify a sheet rated 130 °C or more; (b) confirm from supplier data that the inner skin, which runs cooler than the bed, stays inside the rating | (a), or (b) if no such sheet is sold locally | Lid sheet (section 3.9); safety stop S3 | DWD-DDR-002, O5 |
-| 5 | Low-emissivity drip screens: 0.82 L per day instead of 0.57, but a 166 °C dry-bed stagnation | (a) evaluate a stagnation vent or a higher-rated glazing on paper at TRL 3; (b) drop the idea | (a) | None for the first prototype (black screens) | DWD-DDR-002, O4 |
-| 6 | First partner and region for co-design, which also supplies the site climate data | Partner and region to be named | None yet (portfolio rule: partners are picked per area later) | Site, anchors and the design point check | DWD-DDR-001, O1 |
-| 7 | Appearance model deviations (anchor position and straps, electronics box orientation, radiation shield, jerrycan handle, rounded corners and lid frame), now also behind the constructable design | (a) accept the five deviations and update the appearance model and renders to the constructable design on Amish's Mac; (b) leave the renders as concept images | (a) | None in the build; renders and storefront images | `docs/REVIEW.md`, session 2026-09-26 |
+| 2 | Portability (R9): the full box is 35.2 kg against 35 kg; 23.4 kg with the trays and deck lifted out first, as the build plan does | (a) restate R9 as "box 35 kg or less when lifted with the trays and deck taken out"; (b) take about 0.5 kg out (thinner screen straps and deck brackets, lighter lid channel) and keep R9 as written | (a) | Step 16 (box onto the stand) | DWD-DDR-003, A2; DWD-CAL-001, G1, G2 |
+| 3 | Glazing temperature rating: a dry bed stagnates at about 122 °C, near the usual 120 °C service rating of twin-wall polycarbonate | (a) specify a sheet rated 130 °C or more; (b) confirm from supplier data that the inner skin, which runs cooler than the bed, stays inside the rating | (a), or (b) if no such sheet is sold locally | Lid sheet (section 3.9); safety stop S3 | DWD-DDR-002, O5 |
+| 4 | Low-emissivity drip screens: 0.82 L per day instead of 0.57, but a 166 °C dry-bed stagnation | (a) evaluate a stagnation vent or a higher-rated glazing on paper at TRL 3; (b) drop the idea | (a) | None for the first prototype (black screens) | DWD-DDR-002, O4 |
+| 5 | First partner and region for co-design, which also supplies the site climate data | Partner and region to be named | None yet (portfolio rule: partners are picked per area later) | Site, anchors and the design point check | DWD-DDR-001, O1 |
+| 6 | Appearance model deviations (anchor position and straps, electronics box orientation, radiation shield, jerrycan handle, rounded corners and lid frame), now also behind the constructable design | (a) accept the five deviations and update the appearance model and renders to the constructable design on Amish's Mac; (b) leave the renders as concept images | (a) | None in the build; renders and storefront images | `docs/REVIEW.md`, session 2026-09-26 |
 
 ## To confirm when parts are bought
 
@@ -46,13 +49,21 @@ All are **Proposed, awaiting Amish**.
 | 7 | The electronics box is about 160 x 110 x 220 and holds the controller, battery and logger | Sets the backing plate and hole pattern | Build plan, section 3.18 |
 | 8 | The tray deck sags no more than the gasket can take (about 3 mm at the centre by hand calculation) | If the tray lips lift, use a deeper bar | DWD-DDR-003, P3 |
 
+## Value engineering
+
+Value-engineering target: USD 520 (a hypothetical control target, not a limit). Estimated cost of the constructable design: USD 620 (USD 100 over the target). The estimate was USD 515 before the design for construction.
+
+Main cost drivers (the parts added to make the design buildable): the tray deck and wall ledges (USD 35), the lid's U-channel frame, hinges and latches priced in full (USD 15 more), wall battens, inserts and paint (USD 13 more), trays with a perforated floor under the mesh (USD 10 more), a proper drain fitting (USD 7), fixings (USD 7), pole, bracket and backing plate (USD 6), fin feet, rivets and epoxy (USD 4), screen frames (USD 4), stand bracing, foot plates and straps (USD 3) and the fan hood (USD 1). Over 5 years at the design point the parts cost about USD 0.59 per litre of water.
+
+Savings worth trying: a single 1.5 mm strap size and offcut sheet for the deck and screens (about USD 15), a cheaper panel bracket and backing plate (about USD 5), and a timer-only fan switch in place of the logger (about USD 15, but it loses R12). Together these still leave the design over the target.
+
 ## Decisions made
 
 | Date | Decision | Decided by | Record |
 | --- | --- | --- | --- |
-| 2026-09-25 | TRL 2 review items D1 to D8: budget raised to $500; problem wording; silica gel and CaCl₂ composite; single-stage flat box with the condenser as its floor; fan-assisted night airflow with a 10 W panel and LiFePO4 battery; manual flaps; fixed 20° tilt and twin-wall polycarbonate; design point | Amish: go with recommendation | DWD-DDR-001 |
-| 2026-09-25 | TRL 3 items D9 to D14: night air drawn down through sealed trays; 25 wt % salt; drip screens and a fan cut-out above 70 % RH; low-emissivity screen evaluated on paper; ground anchors as default restraint; budget kept at $500 | Amish: "i accept all your recommendations, go with them across all repos." | DWD-DDR-002 |
+| 2026-09-25 | TRL 2 review items D1 to D8: value-engineering target raised to $500; problem wording; silica gel and CaCl₂ composite; single-stage flat box with the condenser as its floor; fan-assisted night airflow with a 10 W panel and LiFePO4 battery; manual flaps; fixed 20° tilt and twin-wall polycarbonate; design point | Amish: go with recommendation | DWD-DDR-001 |
+| 2026-09-25 | TRL 3 items D9 to D14: night air drawn down through sealed trays; 25 wt % salt; drip screens and a fan cut-out above 70 % RH; low-emissivity screen evaluated on paper; ground anchors as default restraint; value-engineering target kept at $500 | Amish: "i accept all your recommendations, go with them across all repos." | DWD-DDR-002 |
 | 2026-09-25 | TRL 4 on hold; `trl_target` stays 3 | Amish | `project.yaml` |
-| 2026-09-26 | Budget top-up to $520 (D15) | Amish: "I am ok with the budget top ups" | DWD-DDR-002 v0.2 |
+| 2026-09-26 | Value-engineering target moved to $520 (D15) | Amish: "I am ok with the budget top ups" | DWD-DDR-002 v0.2 |
 | 2026-09-30 | Make the design physically buildable while drawing the build plan | Amish: "If you are realising that the design cannot be built as per concept - fix the design assumptions to match and be physically feasible as you draw the illustrations." | DWD-DDR-003 (changes made under this instruction; open decision 1) |
 | 2026-09-30 | Open decisions are kept in this register, not in the build plan | Amish: "don't log outstanding decisions in this build plan - that is not the place for it. that should be in a separate design document logged and named as such" | `.kit/STANDARDS.md`, section 18 |

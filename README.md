@@ -2,7 +2,7 @@
 
 ![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827) [![DOI](https://zenodo.org/badge/1386351481.svg)](https://zenodo.org/badge/latestdoi/1386351481) [![REUSE compliant](https://github.com/BoujeeEnjinia1701/dewdrive/actions/workflows/reuse.yml/badge.svg)](https://github.com/BoujeeEnjinia1701/dewdrive/actions/workflows/reuse.yml) [![Archived in Software Heritage](https://archive.softwareheritage.org/badge/origin/https://github.com/BoujeeEnjinia1701/dewdrive/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/BoujeeEnjinia1701/dewdrive)
 
-**Area:** Water Security · **TRL:** 3 of 9 (proof of concept on paper) · **Prototype budget:** $520 USD · **Difficulty:** 4 of 5
+**Area:** Water Security · **TRL:** 3 of 9 (proof of concept on paper) · **Value-engineering target:** $520 USD · **Difficulty:** 4 of 5
 
 Solar-regenerated desiccant harvester that adsorbs moisture from air overnight and releases it into a passive condenser during the day.
 
@@ -63,7 +63,7 @@ A glazed, insulated box 1.1 x 1.0 m, tilted 20° toward the sun, holds 4 kg of s
 | Water at 40 % night RH | about 0.57 L per day (target 0.5 L) |
 | Water at 25 % night RH | about 0.45 L per day (target 0.25 L) |
 | Mass | about 60 kg dry; box about 35 kg, 23 kg with the trays and deck lifted out |
-| Parts cost | $620 for the buildable design, over the $520 budget (a budget decision is open for Amish) |
+| Parts cost | Estimated $620 for the buildable design, $100 over the $520 value-engineering target (a hypothetical control target, not a limit) |
 
 One unit is a supplement: about one fifth of one person's survival drinking need.
 

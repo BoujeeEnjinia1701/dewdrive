@@ -3,7 +3,7 @@ doc_id: DWD-BLD-001
 title: DewDrive prototype build plan
 project: DewDrive
 doc_type: Build plan
-version: "0.1"
+version: "0.2"
 status: Draft
 date: '2026-10-01'
 author: Amish Chadha
@@ -13,6 +13,10 @@ revisions:
     date: '2026-10-01'
     author: Amish Chadha
     change: First build plan, with pictures by component and step; design made constructable (DWD-DDR-003)
+  - version: "0.2"
+    date: '2026-10-01'
+    author: Amish Chadha
+    change: Budget treated as a value-engineering target; cross-references updated
 ---
 
 # DewDrive prototype build plan
@@ -687,7 +691,7 @@ Stop at each point. Carry on only when everything listed is true.
 - Model and constructability checks: `cad/src/model.py` (`python cad/src/model.py --check`, 91 checks); STEP and STL exports in `cad/step/` and `cad/stl/`.
 - Pictures: `cad/src/build_plan_media.py`, using `.kit/build_views.py`; written to `docs/05-build-plan/` and `cad/drawings/DWD-DWG-101` to `DWD-DWG-122`.
 - General arrangement: `cad/drawings/DWD-DWG-001.pdf`, Rev P4.
-- Calculations: `docs/04-calcs/01-sizing.md` (DWD-CAL-001 v0.4) and `docs/04-calcs/sizing.py`; mass [G1], [G2], fan duty [F3], wind [H1] to [H4], sorbent and bed [A5], salt containment [E1] to [E6].
+- Calculations: `docs/04-calcs/01-sizing.md` (DWD-CAL-001 v0.5) and `docs/04-calcs/sizing.py`; mass [G1], [G2], fan duty [F3], wind [H1] to [H4], sorbent and bed [A5], salt containment [E1] to [E6].
 - Bill of materials: `bom/bom.csv`.
 - Decisions: `docs/decisions/0003-design-for-construction.md` (DWD-DDR-003), with DWD-DDR-001 and DWD-DDR-002.
-- Requirements: `docs/03-requirements.md` (DWD-REQ-001 v0.6).
+- Requirements: `docs/03-requirements.md` (DWD-REQ-001 v0.7).
