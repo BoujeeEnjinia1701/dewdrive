@@ -3,9 +3,9 @@ doc_id: DWD-BLD-001
 title: DewDrive prototype build plan
 project: DewDrive
 doc_type: Build plan
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,6 +17,10 @@ revisions:
     date: '2026-10-01'
     author: Amish Chadha
     change: Budget treated as a value-engineering target; cross-references updated
+  - version: "0.3"
+    date: '2026-10-02'
+    author: Amish Chadha
+    change: 'Decisions of 2026-10-02 carried in: glazing rated 130 °C or more (sections 3.9, 3.19, stop S3); box labelled to be emptied before lifting (step 16, stop S4) (DWD-DEC-001, items 2 and 3)'
 ---
 
 # DewDrive prototype build plan
@@ -262,7 +266,7 @@ Each screen hangs under its opening by two tabs: the sump tab riveted to the fac
 
 *Figure 18. Lid frame (DWD-DWG-111).*
 
-**What it is and what it is made from.** The glazing: a 10 mm twin-wall polycarbonate sheet, 1,096 x 996, rated above 122 °C, held in an aluminium glazing U-channel frame (14 x 12 x 2, for 10 mm sheet).
+**What it is and what it is made from.** The glazing: a 10 mm twin-wall polycarbonate sheet, 1,096 x 996, rated 130 °C or more, held in an aluminium glazing U-channel frame (14 x 12 x 2, for 10 mm sheet).
 
 **How to make it.**
 
@@ -513,7 +517,7 @@ The logger needs firmware, which is TRL 4 work; for the first checks the fan is 
 
 Buy to specification, not brand. Line numbers are those of the bill of materials.
 
-- **Glazing sheet (line 3).** 10 mm UV-stabilized twin-wall polycarbonate, 1,096 x 996, rated above 122 °C, with breather and aluminium flute tape, EPDM seal, three 60 mm stainless butt hinges and two over-centre latches.
+- **Glazing sheet (line 3).** 10 mm UV-stabilized twin-wall polycarbonate, 1,096 x 996, rated 130 °C or more (a 120 °C sheet only if the supplier's data and the inner-skin temperature measured at the first stagnation test both show it stays inside its rating), with breather and aluminium flute tape, EPDM seal, three 60 mm stainless butt hinges and two over-centre latches.
 - **Tray floors (line 4).** 1 mm perforated aluminium, about 50 % open; stainless woven mesh, 1 mm aperture; EPDM gasket tape.
 - **Silica gel and salt (line 5).** Mesoporous silica gel beads, 2 to 5 mm, about 1.0 cm³/g pore volume; food-grade anhydrous calcium chloride (E509).
 - **Drain (line 7).** Food-grade bulkhead fitting with a 12 mm hose barb, for a 17 mm hole; 1 m of food-grade silicone tube, 12 mm bore.
@@ -624,7 +628,7 @@ Screw each anchor in 190 outside a south leg and strap it to the leg with a ratc
 
 ![Step 16](05-build-plan/step-16.png)
 
-Two people, with the trays and the deck taken out of the box first. Lower the box onto the rails so the rail holes line up with the inserts, and drive the six M6 bolts up into the inserts. Then put the deck and trays back.
+Two people, with the trays and the deck taken out of the box first, as the label on the box says. Lower the box onto the rails so the rail holes line up with the inserts, and drive the six M6 bolts up into the inserts. Then put the deck and trays back.
 
 ### Step 17: PV pole and panel
 
@@ -670,8 +674,8 @@ Stop at each point. Carry on only when everything listed is true.
 
 - **S1. Before mixing the sorbent.** Gloves and eye protection on; a plastic or stainless tub; water to rinse eyes and skin within reach; the salt added to water, never water to dry salt in a closed container.
 - **S2. Before drying the sorbent.** An oven or collector that cannot pass 160 °C; nothing combustible touching the beads; ventilation.
-- **S3. Before the lid is first closed in sun.** The glazing sheet's rating is at least 122 °C (confirmed from the supplier); "Hot surface" labels on the glazing; the trays sit on the deck with no brine visible.
-- **S4. Before the box goes on the stand.** Every stand bolt tight; both anchors in and strapped (or about 40 kg of ballast on the cross members); two people for the lift; the trays and deck out of the box.
+- **S3. Before the lid is first closed in sun.** The glazing sheet's rating is 130 °C or more (confirmed from the supplier), or a 120 °C sheet is backed by the supplier's data and its inner skin is logged at the first stagnation test; "Hot surface" labels on the glazing; the trays sit on the deck with no brine visible.
+- **S4. Before the box goes on the stand.** Every stand bolt tight; both anchors in and strapped (or about 40 kg of ballast on the cross members); two people for the lift; the trays and deck out of the box, and the "Empty before lifting" label on the box.
 - **S5. Before the battery fuse goes in.** Wiring checked against Figure 39 with a meter, not by wire colour; the controller set to LiFePO4; the battery undamaged, above 0 °C and in the shade of the collector.
 - **S6. Before anyone drinks the water.** A laboratory test of the collected water (chloride, metals, bacteria); until then, boil or disinfect it and treat it as a supplement only.
 - **S7. Before emptying the sumps.** The box cool; gloves and eye protection; the deck lifted out and tipped over a bucket, away from the water bottle.

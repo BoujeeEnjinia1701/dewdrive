@@ -3,9 +3,9 @@ doc_id: DWD-DDR-001
 title: DewDrive TRL 2 review decisions
 project: DewDrive
 doc_type: Design decision record
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,12 +17,16 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.3"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: O1 decided by Amish on 2026-10-02 (DWD-DEC-001, item 5)
 ---
 
 # 0001: TRL 2 review decisions
 
 - **Date:** 2026-09-25
-- **Status:** accepted for items D1 to D8; the O2 proposals were decided in DWD-DDR-002; item O1 remains proposed
+- **Status:** accepted for items D1 to D8; the O2 proposals were decided in DWD-DDR-002; item O1 was decided by Amish on 2026-10-02 as recommended in the design decisions register (DWD-DEC-001, item 5)
 
 ## Context
 
@@ -56,15 +60,15 @@ Notes on the decided items:
 - **D8.** DWD-CAL-001 (C1) shows that the 6.0 kWh/m² day puts 4.24 kWh/m², not 4.5, in the 09:00 to 15:00 window; DWD-REQ-001 v0.3 carries the corrected figure.
 - **SwapCell.** DewDrive uses its own 76.8 Wh battery and does not use a SwapCell pack. The portfolio decisions of 2026-09-25 on the SwapCell interface (v0.3 items: wake without CAN, charge-while-discharging mode, latch vibration rating) and on pricing shared packs once therefore do not change the DewDrive design or BOM.
 
-*Table 2. Items left open by this record. O1 is still Proposed, awaiting Amish; O2 has since been decided.*
+*Table 2. Items left open by this record, both since decided.*
 
-| # | Item | Why it stays open |
+| # | Item | Status |
 | --- | --- | --- |
-| O1 | First partner and region for co-design, which will also supply the site climate data | No recommendation was made; the portfolio decision is to pick co-design partners per area later |
+| O1 | First partner and region for co-design, which will also supply the site climate data | **Decided by Amish, 2026-10-02:** first candidate type to approach (not yet agreed), a university dryland field station in a hot semi-arid region with night humidity of about 25 to 40 % and an existing weather record, with a water and sanitation NGO for the later community trial (DWD-DEC-001, item 5) |
 | O2 | New TRL 3 proposals: through-flow trays, salt loading, radiation between bed and condenser, humid-night protection | Decided by Amish, 2026-09-25: go with recommendation. Recorded in DWD-DDR-002 (D9 to D14) |
 
 ## Consequences
 
 - DWD-PRB-001, DWD-PRC-001 and DWD-REQ-001 are revised to v0.3 to show the decisions: the key design choices of the precis are no longer "proposed", R11 carries the new budget, and the design point is decided.
 - `project.yaml` carries `budget_usd: 500` and the reworded problem line.
-- The partner question (O1) stays open in DWD-PRB-001.
+- The partner question (O1) was decided on 2026-10-02 (DWD-DEC-001, item 5).

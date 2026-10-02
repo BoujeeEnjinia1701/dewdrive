@@ -3,9 +3,9 @@ doc_id: DWD-PRB-001
 title: DewDrive problem statement
 project: DewDrive
 doc_type: Problem statement
-version: "0.6"
+version: "0.7"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -33,6 +33,10 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Budget treated as a value-engineering target
+- version: "0.7"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: First partner type and region decided on 2026-10-02 (DWD-DEC-001, item 5)
 ---
 
 # DewDrive problem statement
@@ -97,7 +101,7 @@ The gap DewDrive targets is an open, documented and locally buildable device usi
 
 ## Open questions
 
-- [ ] Which partner and region for co-design, and what are the real night humidity and solar figures there? (Proposed, awaiting Amish: DWD-DDR-001, O1. Portfolio rule: partners are picked per area later.)
+- [ ] What are the real night humidity and solar figures at the partner's site? The partner and region were decided by Amish on 2026-10-02 (DWD-DEC-001, item 5): the first candidate type to approach, not yet agreed, is a university dryland field station in a hot semi-arid region with night humidity of about 25 to 40 % and an existing weather record, with a water and sanitation NGO for the later community trial.
 - [ ] Is about 0.5 L per day per unit worth a household's time and money, compared with carrying or buying water? DWD-CAL-001 v0.2 puts the parts cost at about $0.49 per litre over five years.
 - [ ] How will households test and treat the water, and who pays for the tests?
 - [ ] Would a school or clinic, with staff on site twice a day, be a better first user than a household?

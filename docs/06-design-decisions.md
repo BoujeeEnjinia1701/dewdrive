@@ -3,9 +3,9 @@ doc_id: DWD-DEC-001
 title: DewDrive design decisions register
 project: DewDrive
 doc_type: Design decisions register
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,6 +17,10 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Budget treated as a value-engineering target
+- version: "0.3"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: Amish approved the recommendations of open items 1 to 6 on 2026-10-02; all moved to decisions made; glazing rating line updated
 ---
 
 # DewDrive design decisions register
@@ -25,23 +29,14 @@ Every design decision still to be made, and every decision made, in one place. E
 
 ## Open decisions
 
-All are **Proposed, awaiting Amish**.
-
-| # | Decision needed | Options | Recommendation | Affects in the build | Source |
-| --- | --- | --- | --- | --- | --- |
-| 1 | Review of the design-for-construction changes P1 to P13 (condenser plate under the walls, battened wall panels, tray deck, hung drip screens, fin feet, gutter and floor drain, one outlet through the fan hood, lowered inlet, framed lid, bolted and braced stand, PV pole and backing plate, folded trays) | (a) accept as made; (b) change any item | (a) | The whole build plan follows them | DWD-DDR-003, Table 1 |
-| 2 | Portability (R9): the full box is 35.2 kg against 35 kg; 23.4 kg with the trays and deck lifted out first, as the build plan does | (a) restate R9 as "box 35 kg or less when lifted with the trays and deck taken out"; (b) take about 0.5 kg out (thinner screen straps and deck brackets, lighter lid channel) and keep R9 as written | (a) | Step 16 (box onto the stand) | DWD-DDR-003, A2; DWD-CAL-001, G1, G2 |
-| 3 | Glazing temperature rating: a dry bed stagnates at about 122 °C, near the usual 120 °C service rating of twin-wall polycarbonate | (a) specify a sheet rated 130 °C or more; (b) confirm from supplier data that the inner skin, which runs cooler than the bed, stays inside the rating | (a), or (b) if no such sheet is sold locally | Lid sheet (section 3.9); safety stop S3 | DWD-DDR-002, O5 |
-| 4 | Low-emissivity drip screens: 0.82 L per day instead of 0.57, but a 166 °C dry-bed stagnation | (a) evaluate a stagnation vent or a higher-rated glazing on paper at TRL 3; (b) drop the idea | (a) | None for the first prototype (black screens) | DWD-DDR-002, O4 |
-| 5 | First partner and region for co-design, which also supplies the site climate data | Partner and region to be named | None yet (portfolio rule: partners are picked per area later) | Site, anchors and the design point check | DWD-DDR-001, O1 |
-| 6 | Appearance model deviations (anchor position and straps, electronics box orientation, radiation shield, jerrycan handle, rounded corners and lid frame), now also behind the constructable design | (a) accept the five deviations and update the appearance model and renders to the constructable design on Amish's Mac; (b) leave the renders as concept images | (a) | None in the build; renders and storefront images | `docs/REVIEW.md`, session 2026-09-26 |
+None. All open decisions were decided on 2026-10-02.
 
 ## To confirm when parts are bought
 
 | # | What to confirm | Why it matters | Source |
 | --- | --- | --- | --- |
 | 1 | The silica gel is a grade that does not crack in liquid water (sold as water-resistant or for impregnation), with about 1.0 cm³/g pore volume | Ordinary silica gel can shatter when the salt solution is poured on it; the pore volume sets the salt containment | Build plan, section 3.8; DWD-CAL-001, E1 |
-| 2 | The polycarbonate sheet's temperature rating and that the U-channel fits its 10 mm edge | Open decision 4; the frame holds the sheet | Build plan, section 3.9 |
+| 2 | The polycarbonate sheet is rated 130 °C or more (decided 2026-10-02), or, for a 120 °C sheet, that the supplier's data and the inner-skin temperature measured at the TRL 4 stagnation test both show it stays inside its rating; and that the U-channel fits its 10 mm edge | A dry bed stagnates near 122 °C; the frame holds the sheet | Build plan, section 3.9; decision of 2026-10-02 (open item 3) |
 | 3 | High-temperature epoxy rated 120 °C or more, and a food-safe coating for aluminium | The fins' bond and the wetted face see condenser temperatures and the water | Build plan, section 3.2 |
 | 4 | The bulkhead fitting suits a 17 mm hole and its nut clears the fins (31 mm or less across) | It sits between two fins 50 apart | Build plan, section 3.3 |
 | 5 | The 120 mm fan fits the hood front's 114 mm hole and its four corner screws | Sets the hood hole | Build plan, section 3.11 |
@@ -65,5 +60,11 @@ Savings worth trying: a single 1.5 mm strap size and offcut sheet for the deck a
 | 2026-09-25 | TRL 3 items D9 to D14: night air drawn down through sealed trays; 25 wt % salt; drip screens and a fan cut-out above 70 % RH; low-emissivity screen evaluated on paper; ground anchors as default restraint; value-engineering target kept at $500 | Amish: "i accept all your recommendations, go with them across all repos." | DWD-DDR-002 |
 | 2026-09-25 | TRL 4 on hold; `trl_target` stays 3 | Amish | `project.yaml` |
 | 2026-09-26 | Value-engineering target moved to $520 (D15) | Amish: "I am ok with the budget top ups" | DWD-DDR-002 v0.2 |
-| 2026-09-30 | Make the design physically buildable while drawing the build plan | Amish: "If you are realising that the design cannot be built as per concept - fix the design assumptions to match and be physically feasible as you draw the illustrations." | DWD-DDR-003 (changes made under this instruction; open decision 1) |
+| 2026-09-30 | Make the design physically buildable while drawing the build plan | Amish: "If you are realising that the design cannot be built as per concept - fix the design assumptions to match and be physically feasible as you draw the illustrations." | DWD-DDR-003 (changes made under this instruction; accepted on 2026-10-02, below) |
 | 2026-09-30 | Open decisions are kept in this register, not in the build plan | Amish: "don't log outstanding decisions in this build plan - that is not the place for it. that should be in a separate design document logged and named as such" | `.kit/STANDARDS.md`, section 18 |
+| 2026-10-02 | Open item 1: design for construction accepted: the changes P1 to P13 and their knock-on changes, as made | Amish: "i approve your recommendations for all 555 open decisions." | DWD-DDR-003, Tables 1 and 2 |
+| 2026-10-02 | Open item 2: R9 restated as a box of 35 kg or less when lifted with the trays and deck taken out (23.4 kg, met); the box is labelled to be emptied before lifting | Amish: "i approve your recommendations for all 555 open decisions." | DWD-DDR-003, A2; DWD-CAL-001, G1, G2 |
+| 2026-10-02 | Open item 3: glazing is twin-wall polycarbonate rated 130 °C or more; a 120 °C sheet is accepted only if the supplier's data and the inner-skin temperature measured at the TRL 4 stagnation test both show it stays inside its rating | Amish: "i approve your recommendations for all 555 open decisions." | DWD-DDR-002, O5 |
+| 2026-10-02 | Open item 4: one short paper study of a passive stagnation vent; if it cannot hold a dry bed near 122 °C at a modest cost, the low-emissivity screens are dropped. The first prototype keeps black screens | Amish: "i approve your recommendations for all 555 open decisions." | DWD-DDR-002, O4 |
+| 2026-10-02 | Open item 5: first partner, the first candidate type to approach (not yet agreed), is a university dryland field station in a hot semi-arid region with night humidity of about 25 to 40 % and an existing weather record, with a water and sanitation NGO for the later community trial | Amish: "i approve your recommendations for all 555 open decisions." | DWD-DDR-001, O1 |
+| 2026-10-02 | Open item 6: the five appearance model deviations are accepted, and the appearance model and renders are to be updated to the constructable design on Amish's Mac | Amish: "i approve your recommendations for all 555 open decisions." | `docs/REVIEW.md`, session 2026-09-26 |

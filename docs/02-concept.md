@@ -3,9 +3,9 @@ doc_id: DWD-PRC-001
 title: DewDrive design precis
 project: DewDrive
 doc_type: Design precis
-version: "0.7"
+version: "0.8"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -37,6 +37,10 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Budget treated as a value-engineering target
+- version: "0.8"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: 'Decisions of 2026-10-02 carried in (DWD-DEC-001 items 2 to 5): glazing rated 130 °C or more, stagnation vent study, R9 restated with lifting rule, first partner type'
 ---
 
 # DewDrive design precis
@@ -67,7 +71,7 @@ Table 1. Main components. Numbers match `bom/bom.csv`, drawing DWD-DWG-001 and F
 | --- | --- | --- | --- |
 | 1 | Stand | Galvanized steel angle 30 x 30 x 3 mm, rails, legs, braces and cross members, bolted; tilt 20° | Separable from the box; two ground anchors by default, about 40 kg of ballast as the alternative (DWD-DDR-002, D13; DWD-CAL-001, H2 to H4) |
 | 2 | Insulated box walls | Plywood skins with 25 mm PIR foam, 1,100 x 1,000 x 140 mm, 40 mm thick | Open top (glazing) and bottom (condenser) |
-| 3 | Glazing lid | 10 mm UV-stabilized twin-wall polycarbonate, hinged on the north edge | Must be rated above the 122 °C stagnation temperature of the bed, or shown to stay inside its rating (DWD-DDR-002, O5) |
+| 3 | Glazing lid | 10 mm UV-stabilized twin-wall polycarbonate, hinged on the north edge | Rated 130 °C or more; a 120 °C sheet only if supplier data and the inner skin measured at the TRL 4 stagnation test both show it stays inside its rating (DWD-DEC-001, item 3) |
 | 4 | Sorbent trays (4) | Aluminium pans 490 x 430 x 25 mm with stainless mesh floors; black top, bare underside; EPDM edge gasket on a 1 mm aluminium sealing baffle | Lift out for recharging; the baffle forces the night air through the beds (D9) |
 | 5 | Composite sorbent | 4 kg: 3.0 kg mesoporous silica gel with 1.0 kg CaCl₂ (25 wt %, D10) | Bed 9.3 mm deep on 0.785 m²; all food-grade |
 | 15 | Drip screens (4) | Two staggered layers of 20 x 6 mm aluminium channels at 30 mm pitch under each tray, running down the slope to a closed brine sump; painted matt black | Catch any brine that leaves the beds (sumps 0.58 L in all) with no line of sight from bed to condenser (D11) |
@@ -109,10 +113,10 @@ Table 2. Water, energy, size and cost.
 | Condenser rise above ambient, peak | 12.1 K (C2) | Load 299 W peak; UA 24.6 W/K (C8) | R5 met |
 | Where the sun goes | 3.68 kWh absorbed; 0.44 kWh desorbs water; 1.69 kWh lost through the glazing; 1.47 kWh to the condenser (C7) | The black drip screens cut the effective bed-to-condenser emissivity from 0.545 to 0.327 (C5) | |
 | Solar-to-water efficiency | 7.1 % (C7) | Published devices reach about 9 % (LaPotin et al., 2021) | |
-| Stagnation temperature, dry bed | 122 °C (D1) | Noon, 35 °C air | Glazing rating to check (O5) |
+| Stagnation temperature, dry bed | 122 °C (D1) | Noon, 35 °C air | Glazing rated 130 °C or more (DWD-DEC-001, item 3) |
 | Electrical use and supply | 23.6 Wh per day against 35 Wh (F1); 2.6 days of autonomy (F2) | Fan 2 W for 10 h; logger 0.15 W | R4 met |
 | Salt containment | Pores fill above 71 % RH (E2); 43 % full after one 90 % RH night (E3) | Sumps 0.58 L (E6) | R7 met on paper |
-| Mass | 60.2 kg (133 lb) dry; box 35.2 kg, 23.4 kg with the trays and deck lifted out (G1, G2) | Model components | R9 not met as written (open for Amish) |
+| Mass | 60.2 kg (133 lb) dry; box 35.2 kg, 23.4 kg with the trays and deck lifted out (G1, G2) | Model components | R9 met as restated on 2026-10-02 (lift with the trays and deck out) |
 | Wind at 20 m/s | 317 N normal to the lid; tips without two anchors or 40 kg of ballast (H1 to H4) | Force coefficient 1.2 on 1.1 m² | R10 not verifiable at TRL 3 |
 | Parts cost | $620 (J1) | `bom/bom.csv` | R11 over the value-engineering target by $100 (target $520) |
 | Water per dollar over 5 years | about $0.49 per litre (J2) | Parts only | For comparison |
@@ -121,7 +125,7 @@ What the numbers say:
 
 - **Drawing the air through the bed fixes the yield.** The v0.1 layout, with air skimming past the trays, captured only 11 % of the vapour driving force and made 0.20 L per day. Through the bed, the air leaves close to equilibrium with the sorbent, and the day desorption now sets the limit. Even if slow diffusion inside the grains cut the night NTU to 1, the yield would still be 0.53 L per day (C9).
 - **The drip screens help the yield.** Black channels under the trays catch brine and also cut the radiation from the hot beads to the condenser by about 40 %: 0.57 L per day with them against 0.51 L without (C6).
-- **A low-emissivity screen would do more, but overheats the box.** Bare aluminium channels would give 0.82 L per day, but a dry bed would stagnate at about 166 °C, beyond the rating of polycarbonate glazing (C10, D1). That option is proposed for further paper work (DWD-DDR-002, O4), not adopted.
+- **A low-emissivity screen would do more, but overheats the box.** Bare aluminium channels would give 0.82 L per day, but a dry bed would stagnate at about 166 °C, beyond the rating of polycarbonate glazing (C10, D1). That option is not adopted. Amish decided on 2026-10-02 (DWD-DEC-001, item 4) on one short paper study of a passive stagnation vent; if it cannot hold a dry bed near 122 °C at a modest cost, the low-emissivity screens are dropped.
 - **The lower salt loading contains the brine.** At 25 wt % the solution fills the pores only above 71 % RH, against 51 % RH at the v0.1 loading (E2).
 - **Cost is over the value-engineering target once the design is buildable.** The gasket, baffle and drip screens added $27 (total $515, D15); the parts that make the design buildable (DWD-DDR-003) bring the estimated cost to $620 against the $520 target ($100 over).
 - **Yield is still modest.** About 0.57 L per day is about one fifth of one person's survival drinking need.
@@ -147,20 +151,20 @@ Choices 1 to 7 were decided by Amish on 2026-09-25 (DWD-DDR-001, going with the 
 
 > **Safety:** Harvested water must be tested and treated before drinking. Condensed water is close to distilled, but it can pick up bacteria, dust, salt from the sorbent and metal from the condenser. Until a laboratory test shows otherwise, boil or disinfect it and do not use it as the only drinking source. Distilled-like water also lacks minerals.
 
-> **Safety:** The inside of the box gets hot enough to burn: an estimated 112 °C in the bed at noon and about 122 °C with a dry bed (DWD-CAL-001 v0.2, C2 and D1). The glazing outer skin reaches about 57 °C and the condenser fins about 47 °C. Open the lid only when cool, wear gloves when handling trays and drip screens, and label the glazing. The polycarbonate must be rated above the stagnation temperature (DWD-DDR-002, O5). Do not fit bare, low-emissivity screens: they would raise the dry bed to about 166 °C.
+> **Safety:** The inside of the box gets hot enough to burn: an estimated 112 °C in the bed at noon and about 122 °C with a dry bed (DWD-CAL-001 v0.2, C2 and D1). The glazing outer skin reaches about 57 °C and the condenser fins about 47 °C. Open the lid only when cool, wear gloves when handling trays and drip screens, and label the glazing. The polycarbonate must be rated 130 °C or more (DWD-DEC-001, item 3); a 120 °C sheet is acceptable only if the supplier's data and the inner-skin temperature measured at the TRL 4 stagnation test both show it stays inside its rating. Do not fit bare, low-emissivity screens: they would raise the dry bed to about 166 °C.
 
 > **Safety:** Calcium chloride irritates eyes and skin and gives off heat when it dissolves. Wear gloves and eye protection when preparing the sorbent and when emptying the drip-screen sumps. At 25 wt % the solution fills the pores only above about 71 % RH (DWD-CAL-001, E2); the fan stops above 70 % RH and the drip screens catch any brine. Keep trays level, close the flaps in rain, and never let the solution reach the water path.
 
 > **Safety:** The 12.8 V LiFePO4 battery has a built-in BMS and must be fused at the battery. Keep the electronics box shaded, and do not charge a damaged or swollen battery.
 
-> **Safety:** The tilted lid catches the wind like a sail (317 N at 20 m/s). Without restraint the unit tips over (DWD-CAL-001, H2). Fit the two ground anchors, or about 40 kg of ballast, before the box goes on the stand. Deburr all aluminium fins, channels and sheet edges; fins under the box are at ankle and hand height.
+> **Safety:** The tilted lid catches the wind like a sail (317 N at 20 m/s). Without restraint the unit tips over (DWD-CAL-001, H2). Fit the two ground anchors, or about 40 kg of ballast, before the box goes on the stand. Empty the box of its trays and deck before lifting it; it carries a label saying so (R9 as restated, DWD-DEC-001, item 2). Deburr all aluminium fins, channels and sheet edges; fins under the box are at ankle and hand height.
 
 ## Open questions
 
 - [ ] What are the measured uptake isotherms and rates of the 25 wt % composite at 20 °C and at 80 to 120 °C? These set every yield number.
 - [x] How can the parts cost come back to $500, or should the value-engineering target move? Decided by Amish, 2026-09-26: target moved to $520 (DWD-DDR-002, D15).
-- [ ] Is a low-emissivity screen worth pursuing with a stagnation vent or a higher-rated glazing (O4, awaiting Amish)?
-- [ ] Does the polycarbonate stay inside its rating with a 122 °C dry bed (O5, awaiting Amish)?
+- [ ] Can a passive stagnation vent hold a dry bed near 122 °C at a modest cost? Decided by Amish, 2026-10-02 (DWD-DEC-001, item 4): one short paper study; if it cannot, the low-emissivity screens are dropped.
+- [x] Glazing rating with a 122 °C dry bed. Decided by Amish, 2026-10-02 (DWD-DEC-001, item 3): rated 130 °C or more, or a 120 °C sheet only with supplier data and a measured inner-skin temperature at the TRL 4 stagnation test.
 - [ ] How much salt carries over into the condensate, and does the aluminium condenser need a coating or a stainless replacement?
 - [ ] How well do simple flap and tray seals hold, by night against bypass air and by day against vapour loss?
-- [ ] Which site and partner provide the humidity and solar data for the design point (DWD-DDR-001, O1)?
+- [ ] Which site provides the humidity and solar data for the design point? Partner type decided by Amish, 2026-10-02 (DWD-DEC-001, item 5): the first candidate to approach, not yet agreed, is a university dryland field station in a hot semi-arid region with night humidity of about 25 to 40 % and an existing weather record, with a water and sanitation NGO for the later community trial.

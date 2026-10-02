@@ -310,3 +310,49 @@ The photoreal renders (`media/render-hero.png`, `media/render-exploded.png`, `me
 ### Recommended next step
 
 Amish to review DDR-003 and decide the R9 item in the register; its Value engineering section has the cost drivers. TRL 4 remains on hold; when released, the build plan is ready to build from.
+
+## Session 2026-10-02: open decisions decided
+
+On 2026-10-02 Amish approved every recommendation written for the open decisions: "i approve your recommendations for all 555 open decisions." trl stays 3; nothing was built or tested.
+
+### Decisions recorded
+
+6 decisions recorded in the design decisions register (DWD-DEC-001, Decisions made, dated 2026-10-02): DWD-DDR-003 accepted as made (1); R9 restated for a lift with the trays and deck taken out, with an empty-before-lifting label (2); glazing rated 130 °C or more (3); a short paper study of a passive stagnation vent, else drop the low-emissivity screens (4); first partner type and region (5), the first candidate to approach and not an agreed partner; appearance deviations accepted and renders to be updated (6).
+
+### Documents changed
+
+- `docs/06-design-decisions.md` (DWD-DEC-001 v0.3): all 6 open items moved to Decisions made; Open decisions now reads "None"; item 2 of "To confirm when parts are bought" updated for the glazing rating.
+- `docs/decisions/0003-design-for-construction.md` (DWD-DDR-003 v0.3): status line records acceptance of Tables 1 and 2 and of A2; status stays Draft.
+- `docs/decisions/0002-recommendations-accepted.md` (DWD-DDR-002 v0.3): O1, O4 and O5 recorded as decided.
+- `docs/decisions/0001-trl2-review-decisions.md` (DWD-DDR-001 v0.3): O1 recorded as decided.
+- `docs/01-problem.md` (DWD-PRB-001 v0.7): partner and region named as the first candidate type to approach.
+- `docs/03-requirements.md` (DWD-REQ-001 v0.8): R9 restated and met; count of requirements met updated.
+- `docs/04-calcs/01-sizing.md` (DWD-CAL-001 v0.6): R9 row and counts for the restated R9; glazing rating decision noted in section D; no computed number changed.
+- `docs/02-concept.md` (DWD-PRC-001 v0.8): glazing rating, low-emissivity study, R9, lifting rule and partner from the 2026-10-02 decisions.
+- `docs/05-build-plan.md` (DWD-BLD-001 v0.3): glazing rated 130 °C or more (sections 3.9 and 3.19, stop S3); lifting label in step 16 and stop S4.
+- `bom/bom-notes.md`: glazing rating and lifting label noted; BOM changes are follow-ups.
+- `README.md`: the portability and cost sentence of "Building the prototype".
+- PDFs re-rendered with `python .kit/render.py`; superseded versions removed.
+
+No CAD model, BOM quantity or price, or picture was changed. Requirement status: R9 is now met as restated, so 10 met, 1 over its value-engineering target (R11, $620 against $520), 2 not verifiable at TRL 3 (R6, R10).
+
+### Follow-up actions to carry approved decisions into the design
+
+1. Decision 2 (bom): Add an "Empty before lifting" label to the BOM (a line or within line 3 or the box line) and show it in the step 16 picture.
+2. Decision 2 (calcs): Re-run `docs/04-calcs/sizing.py` with R9 as restated so `results.csv` and the counts [K1] report R9 met.
+3. Decision 3 (bom): Change the BOM line 3 specification to twin-wall polycarbonate rated 130 °C or more (price to be checked; a higher-rated sheet may cost more).
+4. Decision 4 (calcs): Write the short paper study of a passive stagnation vent in DWD-CAL-001; if it cannot hold a dry bed near 122 °C at a modest cost, record that the low-emissivity screens are dropped.
+5. Decision 6 (pictures): Update the appearance model `cad/src/product_model.py` to the constructable design (stand, lid, no outlet flap) with the five accepted deviations, and regenerate the photoreal renders, `media/card.png` and `media/social-preview.png` on Amish's Mac.
+
+### Points found in the review
+
+- The constructable design is USD 620 against the USD 520 value-engineering target (19 % over), and the savings listed still leave it over.
+- Renders still show the concept stand, lid and the outlet flap that P7 removed.
+
+### Safety
+
+The glazing must now be rated 130 °C or more, against a dry-bed stagnation near 122 °C; a 120 °C sheet is allowed only with supplier data and a measured inner-skin temperature. The box must be emptied of its trays and deck before any lift. Low-emissivity screens stay out of the prototype.
+
+### Recommended next step
+
+Carry out the follow-up actions above, starting with the BOM line 3 glazing specification and the stagnation vent study. TRL 4 remains on hold by Amish's instruction.

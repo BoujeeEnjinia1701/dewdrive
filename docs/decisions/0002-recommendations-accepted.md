@@ -3,9 +3,9 @@ doc_id: DWD-DDR-002
 title: DewDrive TRL 3 recommendations accepted
 project: DewDrive
 doc_type: Design decision record
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-09-26'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,12 +17,16 @@ revisions:
   date: '2026-09-26'
   author: Amish Chadha
   change: Budget top-up approved by Amish (O3 decided)
+- version: "0.3"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: O1, O4 and O5 decided by Amish on 2026-10-02 as recommended in DWD-DEC-001
 ---
 
 # 0002: TRL 3 recommendations accepted
 
 - **Date:** 2026-09-25
-- **Status:** accepted for items D9 to D14 and, on 2026-09-26, the budget top-up (D15, closing O3); items O1, O4 and O5 remain proposed
+- **Status:** accepted for items D9 to D14 and, on 2026-09-26, the budget top-up (D15, closing O3); items O1, O4 and O5 were decided by Amish on 2026-10-02 as recommended in the design decisions register (DWD-DEC-001, open items 3 to 5): "i approve your recommendations for all 555 open decisions."
 
 ## Context
 
@@ -56,16 +60,16 @@ Results of the decided design (DWD-CAL-001 v0.2), before and after:
 | Mass; box | 51.4 kg; 30.9 kg | 53.9 kg; 33.4 kg |
 | Parts cost (R11, $500) | $488 | $515 |
 
-## Items still open
+## Items left open by this record
 
-*Table 2. Proposed, awaiting Amish.*
+*Table 2. Items left open by this record, all since decided.*
 
 | # | Item | Status |
 | --- | --- | --- |
-| O1 | First partner and region for co-design, which also supplies the site climate data | No recommendation was made; stays open (DWD-DDR-001) |
+| O1 | First partner and region for co-design, which also supplies the site climate data | **Decided by Amish, 2026-10-02:** first candidate type to approach (not yet agreed), a university dryland field station in a hot semi-arid region with night humidity of about 25 to 40 % and an existing weather record, with a water and sanitation NGO for the later community trial (DWD-DEC-001, item 5) |
 | O3 | Budget: the BOM is $515 against $500 (R11 not met) | **Decided by Amish, 2026-09-26: budget top-up to $520 (option a); see D15.** Original options: Options: (a) raise `budget_usd` to $520; (b) cut the drip screens to a drip gutter under the low edge of each tray (about $8 in all, weaker protection); (c) evaluate a lighter condenser on paper, since the black screens cut its peak load from 333 W to 299 W. Recommendation: (c) first, then (a) if it does not close the gap |
-| O4 | Low-emissivity screen with overheat protection | New. The low-e screen gives 0.82 L per day but a 166 °C stagnation bed; it would need a stagnation vent or a glazing rated well above that. Recommendation: evaluate on paper at TRL 3 |
-| O5 | Glazing temperature rating | New. With black drip screens the dry bed stagnates at about 122 °C, near the usual 120 °C service rating of twin-wall polycarbonate. Recommendation: specify a sheet rated 130 °C or more, or confirm from supplier data that the inner skin, which runs cooler than the bed, stays inside the rating |
+| O4 | Low-emissivity screen with overheat protection | New. The low-e screen gives 0.82 L per day but a 166 °C stagnation bed; it would need a stagnation vent or a glazing rated well above that. Recommendation: evaluate on paper at TRL 3. **Decided by Amish, 2026-10-02:** one short paper study of a passive stagnation vent; if it cannot hold a dry bed near 122 °C at a modest cost, drop the low-emissivity screens (DWD-DEC-001, item 4) |
+| O5 | Glazing temperature rating | New. With black drip screens the dry bed stagnates at about 122 °C, near the usual 120 °C service rating of twin-wall polycarbonate. Recommendation: specify a sheet rated 130 °C or more, or confirm from supplier data that the inner skin, which runs cooler than the bed, stays inside the rating. **Decided by Amish, 2026-10-02:** a sheet rated 130 °C or more; a 120 °C sheet only if the supplier's data and the inner-skin temperature measured at the TRL 4 stagnation test both show it stays inside its rating (DWD-DEC-001, item 3) |
 
 ## Consequences
 

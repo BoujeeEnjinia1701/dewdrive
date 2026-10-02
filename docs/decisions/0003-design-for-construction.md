@@ -3,9 +3,9 @@ doc_id: DWD-DDR-003
 title: DewDrive design for construction
 project: DewDrive
 doc_type: Design decision record
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,12 +17,16 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Budget treated as a value-engineering target
+- version: "0.3"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: Accepted by Amish on 2026-10-02, including the recommendation for A2
 ---
 
 # 0003: Design for construction
 
 - **Date:** 2026-10-01
-- **Status:** draft. The changes in Table 1 were made under Amish's 2026-09-30 instruction to make the design physically buildable; they are open for his review. The item in Table 3 changes a requirement and is **Proposed, awaiting Amish**.
+- **Status:** accepted. Amish, 2026-10-02: "i approve your recommendations for all 555 open decisions." This covers every change in Tables 1 and 2, as made, and the recommendation for A2 in Table 3, which is now decided as recommended and recorded in the design decisions register (DWD-DEC-001).
 
 ## Context
 
@@ -62,16 +66,16 @@ Every change below keeps what DewDrive does: the same glazed, insulated 1.1 x 1.
 | Documents | DWD-CAL-001 v0.5, DWD-REQ-001 v0.7, DWD-PRC-001 v0.7; build plan DWD-BLD-001 and design decisions register DWD-DEC-001 added. | Follow the model. |
 | Unchanged | Water (0.57 and 0.45 L per day), bed and stagnation temperatures, condenser rise, salt containment, electrical energy. | No change to the box's heights, areas, bed, screens or condenser. |
 
-*Table 3. Proposed, awaiting Amish.*
+*Table 3. Item that changes a requirement: proposed, then accepted by Amish as recommended on 2026-10-02.*
 
 | # | Question | Options | Recommendation |
 | --- | --- | --- | --- |
-| A2 | Portability (R9). The full box is 35.2 kg against the 35 kg two-person limit; with the trays, sorbent, deck and screens lifted out (as the build plan does before any lift) it is 23.4 kg. | (a) restate R9 as "box 35 kg or less when lifted with the trays and deck taken out"; (b) take about 0.5 kg out (1.5 mm screen straps and deck brackets, a lighter lid channel) and keep R9 as written. | (a): lifting the box with brine sumps and loose sorbent inside should be avoided anyway; the 0.2 kg excess is inside the accuracy of the estimate. |
+| A2 | Portability (R9). The full box is 35.2 kg against the 35 kg two-person limit; with the trays, sorbent, deck and screens lifted out (as the build plan does before any lift) it is 23.4 kg. | (a) restate R9 as "box 35 kg or less when lifted with the trays and deck taken out"; (b) take about 0.5 kg out (1.5 mm screen straps and deck brackets, a lighter lid channel) and keep R9 as written. | (a): lifting the box with brine sumps and loose sorbent inside should be avoided anyway; the 0.2 kg excess is inside the accuracy of the estimate. **Accepted 2026-10-02:** R9 restated as a box of 35 kg or less when lifted with the trays and deck taken out, and the box labelled to be emptied before lifting. |
 
 ## Consequences
 
 - `design_state: constructable` in `project.yaml`. The build plan DWD-BLD-001 shows every component and step in pictures generated from the model (`cad/src/build_plan_media.py`).
 - Cost is reported against the value-engineering target: USD 520 (a hypothetical control target, not a limit) against an estimated USD 620 for the constructable design, USD 100 over; the register lists cost drivers and savings worth trying.
-- Requirement status (DWD-CAL-001 v0.5): 9 met, 1 not met (R9 by 0.2 kg as written), 1 over its value-engineering target (R11, by $100), 2 not verifiable at TRL 3 (R6, R10). R9 waits on A2.
+- Requirement status (DWD-CAL-001 v0.5): 9 met, 1 not met (R9 by 0.2 kg as written), 1 over its value-engineering target (R11, by $100), 2 not verifiable at TRL 3 (R6, R10). With A2 accepted, R9 is restated as a box of 35 kg or less when lifted with the trays and deck taken out, and is met at 23.4 kg; the box carries a label to empty it before lifting (DWD-REQ-001).
 - The photoreal renders (`media/render-*.png`), `media/card.png`, `media/social-preview.png` and the appearance model `cad/src/product_model.py` still show the concept stand, lid and outlet flap; they need updating on Amish's Mac, where Blender is.
 - Open decisions, and the items to confirm when parts are bought, are kept in the design decisions register (`docs/06-design-decisions.md`, DWD-DEC-001).

@@ -3,9 +3,9 @@ doc_id: DWD-CAL-001
 title: DewDrive sizing calculations
 project: DewDrive
 doc_type: Calculation
-version: "0.5"
+version: "0.6"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -29,6 +29,10 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Budget treated as a value-engineering target
+- version: "0.6"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: R9 row and counts follow the restated R9; glazing rating decision noted in section D (DWD-DEC-001, items 2 and 3); no computed number changed
 ---
 
 # DewDrive sizing calculations
@@ -122,7 +126,7 @@ The condenser has 3.86 m² of fins with a natural-convection coefficient of 4.7 
 
 ## D. Stagnation and touch temperatures
 
-With a dry bed at noon on a 35 °C day, the bed stagnates near 122 °C with black drip screens, 105 °C with no screens and 166 °C with low-emissivity screens [D1]. The glazing inner skin runs cooler than the bed, but the supplier rating of the polycarbonate must be checked against this (O5). The outer skin of the glazing reaches about 57 °C at stagnation [D2], and the condenser fins, at ankle and hand height, up to 47 °C [D3]. Both are under the 60 °C limit of R13, but the inside of the box is not: the bed and trays are hot enough to burn.
+With a dry bed at noon on a 35 °C day, the bed stagnates near 122 °C with black drip screens, 105 °C with no screens and 166 °C with low-emissivity screens [D1]. The glazing inner skin runs cooler than the bed, but the supplier rating of the polycarbonate must be checked against this. Amish decided on 2026-10-02 (DWD-DEC-001, item 3) to specify a sheet rated 130 °C or more, or a 120 °C sheet only if the supplier's data and the inner-skin temperature measured at the TRL 4 stagnation test both show it stays inside its rating. The outer skin of the glazing reaches about 57 °C at stagnation [D2], and the condenser fins, at ankle and hand height, up to 47 °C [D3]. Both are under the 60 °C limit of R13, but the inside of the box is not: the bed and trays are hot enough to burn.
 
 ## E. Salt containment
 
@@ -164,13 +168,13 @@ The BOM has 16 lines and totals $620 against the $520 value-engineering target (
 | R6 | Water quality | Food-grade materials by selection; chloride carry-over needs a water test | Food-grade; chloride below 250 mg/L | Not verifiable at TRL 3 |
 | R7 | Salt containment | Pores fill at 71 % RH; 43 % of the pore volume after one 90 % RH night; 50 % after three with the fan rule; sumps 0.58 L | No brine leaves the tray and drip-screen assembly after a 90 % RH night | Met |
 | R8 | Two actions per day | Open the flaps at dusk, close them at dawn; the fan runs on the logger timer with a humidity cut-out | 2 actions, 5 min or less | Met |
-| R9 | Portable | Box 35.2 kg with everything inside; 23.4 kg with the trays and deck lifted out; total 60.2 kg | Box 35 kg or less; stand separable | **Not met** as written (0.2 kg over); met with the trays and deck lifted out |
+| R9 | Portable | Box 35.2 kg with everything inside; 23.4 kg with the trays and deck lifted out; total 60.2 kg | Box 35 kg or less when lifted with the trays and deck taken out (restated 2026-10-02, DWD-DEC-001 item 2); stand separable | Met (was not met by 0.2 kg against the first wording) |
 | R10 | Survive the site | Two anchors of 98 N (default) or 40 kg of ballast at 20 m/s; UV life and 300 cycles need supplier data and test | Stable at 20 m/s; UV-stable; 300 cycles | Not verifiable at TRL 3 |
 | R11 | Cost | $620 | $520 or less | **Over the value-engineering target by $100** |
 | R12 | Record performance | 8,640 records, 0.41 MB | Every 5 min for 30 days | Met |
 | R13 | Protect users | Glazing outer skin about 57 °C at stagnation; fins up to 47 °C; 12.8 V DC | Touched surfaces 60 °C or less; below 60 V DC | Met |
 
-Counts: 9 met, 1 not met (R9), 1 over its value-engineering target (R11), 2 not verifiable at TRL 3 (R6, R10) [K1].
+Counts: 10 met, 1 over its value-engineering target (R11), 2 not verifiable at TRL 3 (R6, R10), with R9 as restated on 2026-10-02. The computed counts [K1] in `results.csv` still use the first wording of R9 until `sizing.py` is re-run.
 
 ## L. Numbers changed from v0.1
 
