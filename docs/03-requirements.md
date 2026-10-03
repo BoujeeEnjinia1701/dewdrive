@@ -3,7 +3,7 @@ doc_id: DWD-REQ-001
 title: DewDrive requirements
 project: DewDrive
 doc_type: Requirements
-version: "0.8"
+version: "0.9"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -41,11 +41,15 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: R9 restated by Amish on 2026-10-02 for a lift with the trays and deck taken out, with an empty-before-lifting label (DWD-DEC-001, item 2); R9 met
+- version: "0.9"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: Status from DWD-CAL-001 v0.7 (script re-run; R9 met as restated); R11 over the target by $119 after the 130 °C glazing and the label
 ---
 
 # DewDrive requirements
 
-These requirements were checked by calculation at TRL 3 in DWD-CAL-001 v0.5, for the design decided by Amish on 2026-09-25 (DWD-DDR-002) as made buildable in DWD-DDR-003: night air drawn down through the sealed trays, 25 wt % CaCl₂, a drip screen under each tray and a fan cut-out above 70 % RH. The design meets ten of thirteen. Making it buildable added parts: R11 (cost) is over its value-engineering target, at an estimated $620 against $520, and R9 (portability) was not met as first written, the full box being 35.2 kg against 35 kg. Amish restated R9 on 2026-10-02 for a lift with the trays and deck taken out (DWD-DEC-001, item 2), and it is met at 23.4 kg. The design decisions register (DWD-DEC-001) lists R11's cost drivers and savings. R6 and R10 can only be verified by test. The yield targets R1 and R2, missed by the v0.1 design, are now met. Targets are still proposals for review, not user-validated needs, and will be revised after co-design sessions.
+These requirements were checked by calculation at TRL 3 in DWD-CAL-001 v0.7, for the design decided by Amish on 2026-09-25 (DWD-DDR-002) as made buildable in DWD-DDR-003: night air drawn down through the sealed trays, 25 wt % CaCl₂, a drip screen under each tray and a fan cut-out above 70 % RH. The design meets ten of thirteen. Making it buildable added parts: R11 (cost) is over its value-engineering target, at an estimated $639 against $520, and R9 (portability) was not met as first written, the full box being 35.2 kg against 35 kg. Amish restated R9 on 2026-10-02 for a lift with the trays and deck taken out (DWD-DEC-001, item 2), and it is met at 23.4 kg. The design decisions register (DWD-DEC-001) lists R11's cost drivers and savings. R6 and R10 can only be verified by test. The yield targets R1 and R2, missed by the v0.1 design, are now met. Targets are still proposals for review, not user-validated needs, and will be revised after co-design sessions.
 
 ## Design point
 
@@ -71,7 +75,7 @@ Table 1. Requirements and TRL 3 status. Values and tags are from DWD-CAL-001 v0.
 | R8 | Be simple to operate | Two user actions per day (open flaps in the evening, close them in the morning), 5 min per day or less | Task analysis; co-design sessions | Met by design; the fan timer and humidity cut-out need no user action |
 | R9 | Be portable and quick to set up | Box 35 kg or less when lifted with the trays and deck taken out (two-person lift), and labelled to be emptied before lifting; stand separable; set up by two people in 30 min or less. Restated by Amish on 2026-10-02 (DWD-DEC-001, item 2; DWD-DDR-003, A2); was "box 35 kg or less" | Mass from model components; later trial | Met: 23.4 kg with the trays, sorbent, deck and screens lifted out; 35.2 kg with everything inside; total 60.2 kg (G1, G2). Set-up time needs a trial |
 | R10 | Survive the site | Stable in 20 m/s (72 km/h) wind with two ground anchors (default, DWD-DDR-002, D13) or ballast; UV-stable glazing; sorbent 300 cycles or more with 20 % or less loss of capacity | Wind load calculation; supplier data; later cycling test | **Not verifiable at TRL 3.** Wind: two anchors of 98 N each, or 40 kg of ballast (H2 to H4) |
-| R11 | Cost | Parts $520 or less (`project.yaml` value-engineering target, moved from $400 to $500 by Amish on 2026-09-25, DWD-DDR-001 D1, and to $520 on 2026-09-26, DWD-DDR-002 D15) | Priced BOM | **Over the value-engineering target by $100:** $620 (J1) against $520; the buildable design added parts (DWD-DDR-003) |
+| R11 | Cost | Parts $520 or less (`project.yaml` value-engineering target, moved from $400 to $500 by Amish on 2026-09-25, DWD-DDR-001 D1, and to $520 on 2026-09-26, DWD-DDR-002 D15) | Priced BOM | **Over the value-engineering target by $119:** $639 (J1) against $520; the buildable design added parts (DWD-DDR-003) and the decisions of 2026-10-02 added a 130 °C glazing sheet and the label |
 | R12 | Record performance | Log air temperature and RH, bed and condenser temperature every 5 min for 30 days or more; daily water mass recorded by weighing | Storage estimate; design review | Met: 8,640 records, 0.41 MB (I1) |
 | R13 | Protect users | External surfaces a person would touch in normal use stay at 60 °C or less; the glazing is labelled hot; no exposed conductor above 60 V DC | Surface temperature estimate; design review | Met: glazing outer skin about 57 °C at stagnation, fins up to 47 °C (D2, D3); 12.8 V DC |
 

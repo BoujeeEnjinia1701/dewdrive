@@ -3,7 +3,7 @@ doc_id: DWD-DEC-001
 title: DewDrive design decisions register
 project: DewDrive
 doc_type: Design decisions register
-version: "0.3"
+version: "0.4"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -21,6 +21,10 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: Amish approved the recommendations of open items 1 to 6 on 2026-10-02; all moved to decisions made; glazing rating line updated
+- version: "0.4"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: Follow-ups carried out; vent study result recorded (low-emissivity screens dropped); cost USD 639 against the USD 520 target
 ---
 
 # DewDrive design decisions register
@@ -46,9 +50,9 @@ None. All open decisions were decided on 2026-10-02.
 
 ## Value engineering
 
-Value-engineering target: USD 520 (a hypothetical control target, not a limit). Estimated cost of the constructable design: USD 620 (USD 100 over the target). The estimate was USD 515 before the design for construction.
+Value-engineering target: USD 520 (a hypothetical control target, not a limit). Estimated cost of the constructable design: USD 639 (USD 119 over the target). The estimate was USD 515 before the design for construction.
 
-Main cost drivers (the parts added to make the design buildable): the tray deck and wall ledges (USD 35), the lid's U-channel frame, hinges and latches priced in full (USD 15 more), wall battens, inserts and paint (USD 13 more), trays with a perforated floor under the mesh (USD 10 more), a proper drain fitting (USD 7), fixings (USD 7), pole, bracket and backing plate (USD 6), fin feet, rivets and epoxy (USD 4), screen frames (USD 4), stand bracing, foot plates and straps (USD 3) and the fan hood (USD 1). Over 5 years at the design point the parts cost about USD 0.59 per litre of water.
+Main cost drivers (the parts added to make the design buildable): the tray deck and wall ledges (USD 35), the lid's U-channel frame, hinges and latches priced in full (USD 15 more), wall battens, inserts and paint (USD 13 more), trays with a perforated floor under the mesh (USD 10 more), a proper drain fitting (USD 7), fixings (USD 7), pole, bracket and backing plate (USD 6), fin feet, rivets and epoxy (USD 4), screen frames (USD 4), stand bracing, foot plates and straps (USD 3) and the fan hood (USD 1). The decisions of 2026-10-02 added a glazing sheet rated 130 °C or more (USD 17 more, an estimate without a supplier quote) and the "Empty before lifting" label (USD 2). Over 5 years at the design point the parts cost about USD 0.61 per litre of water.
 
 Savings worth trying: a single 1.5 mm strap size and offcut sheet for the deck and screens (about USD 15), a cheaper panel bracket and backing plate (about USD 5), and a timer-only fan switch in place of the logger (about USD 15, but it loses R12). Together these still leave the design over the target.
 
@@ -68,3 +72,4 @@ Savings worth trying: a single 1.5 mm strap size and offcut sheet for the deck a
 | 2026-10-02 | Open item 4: one short paper study of a passive stagnation vent; if it cannot hold a dry bed near 122 °C at a modest cost, the low-emissivity screens are dropped. The first prototype keeps black screens | Amish: "i approve your recommendations for all 555 open decisions." | DWD-DDR-002, O4 |
 | 2026-10-02 | Open item 5: first partner, the first candidate type to approach (not yet agreed), is a university dryland field station in a hot semi-arid region with night humidity of about 25 to 40 % and an existing weather record, with a water and sanitation NGO for the later community trial | Amish: "i approve your recommendations for all 555 open decisions." | DWD-DDR-001, O1 |
 | 2026-10-02 | Open item 6: the five appearance model deviations are accepted, and the appearance model and renders are to be updated to the constructable design on Amish's Mac | Amish: "i approve your recommendations for all 555 open decisions." | `docs/REVIEW.md`, session 2026-09-26 |
+| 2026-10-02 | Result of the vent study of open item 4: a passive vent cannot hold a dry bed near 122 °C at a modest cost (it needs about 117 cm² and must stay shut in normal operation), so the low-emissivity screens are dropped and the black screens stay | Applies Amish's 2026-10-02 decision of open item 4 to the study result | DWD-CAL-001 v0.7, section D (D4, D5) |

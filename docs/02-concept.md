@@ -3,7 +3,7 @@ doc_id: DWD-PRC-001
 title: DewDrive design precis
 project: DewDrive
 doc_type: Design precis
-version: "0.8"
+version: "0.9"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -41,6 +41,10 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: 'Decisions of 2026-10-02 carried in (DWD-DEC-001 items 2 to 5): glazing rated 130 °C or more, stagnation vent study, R9 restated with lifting rule, first partner type'
+- version: "0.9"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: 'Follow-ups carried out: vent study concluded (low-emissivity screens dropped), label and 130 °C glazing in the BOM, cost USD 639 against the USD 520 target'
 ---
 
 # DewDrive design precis
@@ -118,16 +122,16 @@ Table 2. Water, energy, size and cost.
 | Salt containment | Pores fill above 71 % RH (E2); 43 % full after one 90 % RH night (E3) | Sumps 0.58 L (E6) | R7 met on paper |
 | Mass | 60.2 kg (133 lb) dry; box 35.2 kg, 23.4 kg with the trays and deck lifted out (G1, G2) | Model components | R9 met as restated on 2026-10-02 (lift with the trays and deck out) |
 | Wind at 20 m/s | 317 N normal to the lid; tips without two anchors or 40 kg of ballast (H1 to H4) | Force coefficient 1.2 on 1.1 m² | R10 not verifiable at TRL 3 |
-| Parts cost | $620 (J1) | `bom/bom.csv` | R11 over the value-engineering target by $100 (target $520) |
+| Parts cost | $639 (J1) | `bom/bom.csv` | R11 over the value-engineering target by $119 (target $520) |
 | Water per dollar over 5 years | about $0.49 per litre (J2) | Parts only | For comparison |
 
 What the numbers say:
 
 - **Drawing the air through the bed fixes the yield.** The v0.1 layout, with air skimming past the trays, captured only 11 % of the vapour driving force and made 0.20 L per day. Through the bed, the air leaves close to equilibrium with the sorbent, and the day desorption now sets the limit. Even if slow diffusion inside the grains cut the night NTU to 1, the yield would still be 0.53 L per day (C9).
 - **The drip screens help the yield.** Black channels under the trays catch brine and also cut the radiation from the hot beads to the condenser by about 40 %: 0.57 L per day with them against 0.51 L without (C6).
-- **A low-emissivity screen would do more, but overheats the box.** Bare aluminium channels would give 0.82 L per day, but a dry bed would stagnate at about 166 °C, beyond the rating of polycarbonate glazing (C10, D1). That option is not adopted. Amish decided on 2026-10-02 (DWD-DEC-001, item 4) on one short paper study of a passive stagnation vent; if it cannot hold a dry bed near 122 °C at a modest cost, the low-emissivity screens are dropped.
+- **A low-emissivity screen would do more, but overheats the box.** Bare aluminium channels would give 0.82 L per day, but a dry bed would stagnate at about 166 °C, beyond the rating of polycarbonate glazing (C10, D1). That option is not adopted. Amish decided on 2026-10-02 (DWD-DEC-001, item 4) on one short paper study of a passive stagnation vent. The study (DWD-CAL-001, section D) finds that a vent of about 117 cm² would hold the dry bed at 122 °C, but it would have to stay shut in normal operation, when the bed already runs at 130 to 149 °C, so it needs a thermostat and is not passive or modest in cost. The low-emissivity screens are therefore dropped and the prototype keeps the black screens.
 - **The lower salt loading contains the brine.** At 25 wt % the solution fills the pores only above 71 % RH, against 51 % RH at the v0.1 loading (E2).
-- **Cost is over the value-engineering target once the design is buildable.** The gasket, baffle and drip screens added $27 (total $515, D15); the parts that make the design buildable (DWD-DDR-003) bring the estimated cost to $620 against the $520 target ($100 over).
+- **Cost is over the value-engineering target once the design is buildable.** The gasket, baffle and drip screens added $27 (total $515, D15); the parts that make the design buildable (DWD-DDR-003) bring the estimated cost to $620; the 2026-10-02 decisions add a glazing sheet rated 130 °C or more and a label, making $639 against the $520 target ($119 over).
 - **Yield is still modest.** About 0.57 L per day is about one fifth of one person's survival drinking need.
 
 ## Key design choices

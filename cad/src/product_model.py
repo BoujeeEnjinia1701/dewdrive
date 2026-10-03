@@ -1,21 +1,25 @@
-"""DewDrive product appearance model (build123d), TRL 3.
+"""DewDrive product appearance model (build123d), TRL 3, updated 2026-10-02 to the constructable design.
 
 Finished-product look for photoreal renders: the painted insulated box with filleted corners and a
-shadow-gap parting line, an aluminium lid frame with a clear twin-wall polycarbonate pane (the
-black trays and the sorbent beds show through it), lid hinges and a pull handle, lift bails on the
-trays, the finned condenser under the box, the gutter and silicone drain tube, the hinged south
-inlet flap with its seal and two over-centre latches, the louvred fan hood and outlet flap on the
-north wall, the galvanized stand with bolted foot pads, two auger ground anchors with webbing tie
-straps, a 10 L jerrycan with a moulded handle and teal cap, the framed 10 W PV panel on its pole,
-the electronics box with a lit green status light and a stacked-plate radiation shield. Context is
-a compact patch of compacted ground.
+shadow-gap parting line, an aluminium U-channel lid frame with a clear twin-wall polycarbonate pane
+(the black trays and the sorbent beds show through), lid hinges, latches and a pull handle, lift
+bails on the trays, the lift-out tray deck on its wall ledges, the finned condenser under the box,
+the gutter, drain fitting and silicone drain tube, the hinged south inlet flap with its seal and two
+over-centre latches, the louvred fan hood with its single outlet flap over the fan on the north
+wall, the galvanized stand bolted to the box rails, two auger ground anchors with webbing tie
+straps, a yellow "Empty before lifting" label on the east wall, a 10 L jerrycan with a moulded
+handle and teal cap, the framed 10 W PV panel on its square-tube pole and tilt bracket, the
+electronics box with a lit green status light on its backing plate, and a stacked-plate radiation
+shield. Context is a compact patch of compacted ground.
 APPEARANCE MODEL ONLY: no tolerances, no fabrication detail. CONCEPT, NOT FOR FABRICATION.
 
-Every main dimension and interface comes from PARAMS, derived(), tray_centres(), world() and
-build_parts() in model.py (the stand, the drip screens, the condenser and the sorbent bed are
-reused unchanged). Axes as model.py: X east to west, Y south to north (front is -Y, the glazing
-faces south), Z up, ground at Z = 0. The anchor and strap positions are an appearance choice; see
-docs/REVIEW.md, session 2026-09-26.
+Every main dimension and interface comes from PARAMS, stand_geometry(), tray_centres(), world() and
+build_components() in model.py. These parts are model.py's own shapes: the stand with its anchors,
+the lid frame, hinges and latches, the deck, ledges, drip screens, condenser, sorbent bed, gutter,
+drain fitting and tube, inlet flap and its hardware, the outlet flap, the PV pole and bracket, the
+backing plate, the bolts and the label. Axes as model.py: X east to west, Y south to north (front
+is -Y, the glazing faces south), Z up, ground at Z = 0. The anchor straps are an appearance choice;
+see docs/REVIEW.md, session 2026-09-26.
 
     from product_model import product_parts
     for p in product_parts(): print(p["name"], p["group"], p["material"])
@@ -27,9 +31,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from build123d import (Axis, Box, Cylinder, Plane, Pos, RegularPolygon, Rot, Solid, Sphere, Vector,  # noqa: E402
+from build123d import (Axis, Box, Compound, Cylinder, Plane, Pos, RegularPolygon, Rot, Solid, Sphere, Vector,  # noqa: E402
                        extrude, fillet)
-from model import PARAMS, build_parts, derived, tray_centres, world  # noqa: E402
+from model import PARAMS, build_components, derived, stand_geometry, tray_centres, world  # noqa: E402
 
 TITLE = "DewDrive: solar-regenerated desiccant water harvester"
 
@@ -40,7 +44,7 @@ RENDER_VIEWS = [
              "it and the collection jerrycan in front"},
     {"name": "exploded", "groups": ["shell", "internal", "accessory"], "explode": True, "el": 28, "az": -55,
      "note": "Exploded view from the front right and above (about 28 deg elevation): glazed lid, sorbent beds, "
-             "trays, sealing baffle, drip screens, insulated box, condenser, gutter and jerrycan, inlet flap, "
+             "trays, tray deck and baffle, drip screens, insulated box, condenser, gutter and jerrycan, inlet flap, "
              "fan hood, PV panel, electronics box and sensor shield, stand"},
     {"name": "detail", "groups": ["shell", "internal"], "explode": False, "el": 22, "az": 55,
      "note": "Detail from the back right, slightly above (about 22 deg elevation), without the ground: louvred "
@@ -58,6 +62,7 @@ C_BLACK = "#23262B"      # matt black trays and screens
 C_RUBBER = "#1C1F23"
 C_BED = "#E6E0CC"        # silica gel and CaCl2 beads
 C_CLEAR = "#DCEBF5"
+C_WARN = "#F2C94C"        # warning label
 C_ACCENT = "#0F766E"
 C_LABEL = "#F4F4F2"
 C_HOOD = "#3A3F46"
@@ -161,7 +166,16 @@ def product_parts(P=PARAMS):
     ix, iy = LX - 2 * WT, LY - 2 * WT
     zw0, zw1 = P["wall_z0"], P["wall_z0"] + P["wall_h"]
     gt = P["glaz_t"]
-    base = {k: shape for k, _, shape, _ in build_parts(P)}
+    Cm = build_components(P)            # the constructable model, in world coordinates
+    base = {}
+    for c_ in Cm.values():
+        if c_.group:
+            base.setdefault(c_.group, []).append(c_.shape)
+    base = {k: Compound(children=v) for k, v in base.items()}
+    SG = stand_geometry(P)
+    LEG = P["leg"]
+    XL = SG[1]["xr"] + LEG / 2          # leg centre line east-west (560)
+    pts = {(xs, ys): (xs * XL, SG[ys]["Yc"], 0.0) for xs in (-1, 1) for ys in (-1, 1)}
     out = []
 
     def add(name, shape, color, material, bom, group, explode):
@@ -189,33 +203,25 @@ def product_parts(P=PARAMS):
     ink = (_box(385, fy - 0.8, 101, 80, 0.4, 11) + _box(470, fy - 0.8, 104, 50, 0.4, 4)
            + _box(470, fy - 0.8, 96, 50, 0.4, 3) + _box(430, fy - 0.8, 84, 160, 0.4, 3))
     add("Nameplate print", W * ink, C_LABEL, "paper", 2, "shell", E_WALL)
+    # "Empty before lifting" label on the east wall (BOM 14), as model.py
+    add("Label: empty before lifting", Cm["label"].shape, C_WARN, "paper", 14, "shell", E_WALL)
+    lbp = Pos(LX / 2 + 0.7, 0, zw0 + 95) * (_box(0, 0, 0, 0.4, 120, 7) + _box(0, 0, -11, 0.4, 100, 4) + _box(0, 0, 11, 0.4, 70, 4))
+    add("Label print", W * lbp, C_BLACK, "paper", 14, "shell", E_WALL)
 
     # ------------------------------------------------------------ glazing lid (BOM 3)
     E_LID = along_n(1250)
-    fw_ = 22.0
-    fo = _box(0, 0, zw1 + gt / 2 + 1, LX, LY, gt + 2)
-    fo = _fillet_try(fo, _vert(fo), [14.0, 10.0, 6.0])
-    fo = _fillet_try(fo, _top(fo), [2.0, 1.0])
-    fin = _box(0, 0, zw1 + gt / 2 + 1, LX - 2 * fw_, LY - 2 * fw_, gt + 10)
-    fin = _fillet_try(fin, _vert(fin), [4.0, 2.0])
-    frame = fo - fin
-    add("Lid edge frame (aluminium)", W * frame, C_ALU, "metal", 3, "shell", E_LID)
-    # twin-wall pane: two skins and ribs running down the slope
-    px_, py_ = LX - 2 * fw_ + 8, LY - 2 * fw_ + 8
-    pane = _box(0, 0, zw1 + 0.6, px_, py_, 1.2) + _box(0, 0, zw1 + gt - 0.6, px_, py_, 1.2)
+    gz0 = P["glaz_z0"]
+    add("Lid edge frame (aluminium U-channel)", Cm["lid_frame"].shape, C_ALU, "metal", 3, "shell", E_LID)
+    # twin-wall pane in the U-channel (model.py: sheet 1,096 x 996 x 10): two skins and ribs running down the slope
+    px_, py_ = LX - 2 * P["lid_frame"][1], LY - 2 * P["lid_frame"][1]
+    pane = _box(0, 0, gz0 + 0.6, px_, py_, 1.2) + _box(0, 0, gz0 + gt - 0.6, px_, py_, 1.2)
     n_rib = int(px_ // 25)
     x0 = -(n_rib - 1) * 25 / 2
     for i in range(n_rib):
-        pane += _box(x0 + i * 25, 0, zw1 + gt / 2, 0.8, py_, gt - 2.0)
+        pane += _box(x0 + i * 25, 0, gz0 + gt / 2, 0.8, py_, gt - 2.0)
     add("Twin-wall polycarbonate glazing", W * pane, C_CLEAR, "clear", 3, "shell", E_LID)
-    # hinges on the north edge
-    hinges = None
-    for x in (-380, 0, 380):
-        h = _xcyl(x, LY / 2 + 5, zw1 + 4, 5.0, 70) + _box(x, LY / 2 + 1.0, zw1 - 18, 70, 2.0, 40)
-        h += _box(x, LY / 2 - 20, zw1 + gt + 2.6, 70, 40, 1.2)
-        hinges = h if hinges is None else hinges + h
-    add("Lid hinges", W * hinges, C_STEEL, "metal", 3, "shell", E_LID)
-    handle = _pipe([(-80, fy, zw1 + 6), (-80, fy - 26, zw1 + 6), (80, fy - 26, zw1 + 6), (80, fy, zw1 + 6)], 5.0)
+    add("Lid hinges (3) and latches (2)", Cm["lid_hinges"].shape + Cm["lid_latches"].shape, C_STEEL, "metal", 3, "shell", E_LID)
+    handle = _pipe([(-80, fy, zw1 + 7), (-80, fy - 26, zw1 + 7), (80, fy - 26, zw1 + 7), (80, fy, zw1 + 7)], 5.0)
     add("Lid pull handle", W * handle, C_ALU_DARK, "metal", 3, "shell", E_LID)
 
     # ------------------------------------------------------------ sorbent trays (BOM 4) and bed (BOM 5)
@@ -235,12 +241,8 @@ def product_parts(P=PARAMS):
     add("Sorbent trays (black tops)", W * _union(pans), C_BLACK, "painted", 4, "internal", along_n(520))
     add("Tray lift bails", W * _union(bails), C_STEEL, "metal", 4, "internal", along_n(520))
     add("Composite sorbent beds", base["bed"], C_BED, "clay", 5, "internal", along_n(760))
-    rail_z = tz0 - 5
-    baffle = _box(0, 0, tz0 - P["baffle_t"] / 2, ix, iy, P["baffle_t"])
-    for (x, y) in tray_centres(P):
-        baffle -= _box(x, y, tz0, tx - 2 * rim, ty - 2 * rim, 10)
-    baffle += _box(-(ix / 2 - 8), 0, rail_z, 16, iy, 10) + _box(ix / 2 - 8, 0, rail_z, 16, iy, 10)
-    add("Sealing baffle and tray rails", W * baffle, C_ALU, "metal", 4, "internal", along_n(330))
+    add("Tray deck frame and sealing baffle", Cm["deck_frame"].shape + Cm["baffle"].shape, C_ALU, "metal", 16, "internal", along_n(330))
+    add("Wall ledges", Cm["ledges"].shape, C_ALU_DARK, "metal", 16, "internal", along_n(250))
 
     # drip screens (BOM 15), condenser (BOM 6), as model.py
     add("Drip screens and brine sumps", base["screens"], C_BLACK, "painted", 15, "internal", along_n(180))
@@ -249,18 +251,11 @@ def product_parts(P=PARAMS):
     # ------------------------------------------------------------ gutter, drain, bottle (BOM 7, 8)
     E_WATER = (0, -380, -60)
     pt = P["plate_top"]
-    gy = -LY / 2 + WT + P["gutter_w"] / 2
-    gutter = _box(0, gy, pt + 8, ix, P["gutter_w"], 16) - _box(0, gy, pt + 11, ix - 6, P["gutter_w"] - 6, 16)
-    add("Condensate gutter", W * gutter, C_ALU, "metal", 7, "internal", E_WATER)
     bx, by = P["bottle_xy"]
     bw, bd, bh = P["bottle"]
-    g_in = world(bx, -LY / 2 + WT, pt + 8, P)
-    g_out = world(bx, -LY / 2 - 20, pt + 8, P)
-    drain = _pipe([g_in, g_out, (bx, by + 40, bh + 60)], 8.0)
-    add("Silicone drain tube", drain, C_TUBE, "plastic", 7, "shell", E_WATER)
-    gro =Plane(origin=Vector(*g_out), z_dir=(Vector(*g_out) - Vector(*g_in)).normalized()).location * \
-        (Pos(0, 0, -2) * Cylinder(12.0, 6.0))
-    add("Drain grommet", gro, C_RUBBER, "rubber", 14, "shell", E_WATER)
+    add("Condensate gutter", Cm["gutter"].shape, C_ALU, "metal", 7, "internal", E_WATER)
+    add("Drain fitting (bulkhead, hose barb)", Cm["drain_fit"].shape, C_STEEL, "metal", 7, "shell", E_WATER)
+    add("Silicone drain tube", Cm["drain_tube"].shape, C_TUBE, "plastic", 7, "shell", E_WATER)
 
     jb = _box(bx, by, bh / 2, bw, bd, bh)
     jb = _fillet_try(jb, _vert(jb), [22.0, 16.0, 10.0])
@@ -295,29 +290,10 @@ def product_parts(P=PARAMS):
     E_FLAP = (0, -300, 40)
     fwid, fht = P["flap_in"]
     fz = P["flap_in_z"]
-    fl = _box(-100, fy - 5, fz, fwid, 10, fht)
-    fl = _fillet_try(fl, fl.edges().filter_by(Axis.Y), [4.0, 2.0])
-    fl = _fillet_try(fl, fl.faces().sort_by(Axis.Y)[0].edges(), [1.5, 1.0])
-    add("South inlet flap", W * fl, C_ALU, "metal", 9, "shell", E_FLAP)
-    seal = _box(-100, fy - 0.5, fz, fwid + 12, 1.0, fht + 12) - _box(-100, fy - 0.5, fz, fwid, 3, fht)
+    add("South inlet flap", Cm["flap"].shape, C_ALU, "metal", 9, "shell", E_FLAP)
+    seal = _box(0, fy - 0.5, fz, fwid + 12, 1.0, fht + 12) - _box(0, fy - 0.5, fz, fwid, 3, fht)
     add("Inlet flap seal", W * seal, C_RUBBER, "rubber", 9, "shell", E_FLAP)
-    knuckles = None
-    for k in range(5):
-        kx = -100 - fwid / 2 + 40 + k * (fwid - 80) / 4
-        kn = _xcyl(kx, fy - 6, fz + fht / 2 + 1, 4.0, 60)
-        knuckles = kn if knuckles is None else knuckles + kn
-    knuckles += _xcyl(-100, fy - 6, fz + fht / 2 + 1, 1.5, fwid - 20)
-    add("Inlet flap hinge", W * knuckles, C_STEEL, "metal", 9, "shell", E_FLAP)
-    latches = None
-    for x in (-100 - 280, -100 + 280):
-        body = _box(x, fy - 7, fz - fht / 2 - 16, 30, 14, 24)
-        body = _fillet_try(body, body.edges().filter_by(Axis.Y), [3.0, 2.0])
-        lever = _box(x, fy - 16, fz - fht / 2 - 6, 18, 5, 30)
-        lever = _fillet_try(lever, lever.edges().filter_by(Axis.Y), [2.0, 1.0])
-        hook = _box(x, fy - 12, fz - fht / 2 + 6, 12, 4, 10)
-        la = body + lever + hook
-        latches = la if latches is None else latches + la
-    add("Over-centre latches", W * latches, C_STEEL, "metal", 9, "shell", E_FLAP)
+    add("Inlet flap hinge and latches", Cm["flap_hw"].shape, C_STEEL, "metal", 9, "shell", E_FLAP)
 
     # ------------------------------------------------------------ fan hood and outlet flap (BOM 10)
     E_FAN = (0, 320, 60)
@@ -334,46 +310,39 @@ def product_parts(P=PARAMS):
     for a in (0, 60, 120):
         guard += Pos(330, ny + 3, zw0 + hz / 2) * Rot(0, a, 0) * Box(2.0, 4.0, 112)
     add("Fan guard", W * guard, C_RUBBER, "metal", 10, "internal", E_FAN)
-    ow, oh = P["flap_out"]
-    of = _box(-230, ny + 5, zw0 + oh / 2, ow, 10, oh)
-    of = _fillet_try(of, of.edges().filter_by(Axis.Y), [4.0, 2.0])
-    of += _xcyl(-230, ny + 11, zw0 + oh + 1, 4.0, ow - 20)
-    add("North outlet flap", W * of, C_ALU, "metal", 10, "shell", E_FAN)
+    add("North outlet flap (over the fan)", Cm["oflap"].shape, C_ALU, "metal", 10, "shell", E_FAN)
 
     # ------------------------------------------------------------ stand (BOM 1)
     E_STAND = (0, 0, -420)
-    add("Stand, galvanized steel angle", base["stand"], C_GALV, "metal", 1, "shell", E_STAND)
-    pts = {(xs, ys): world(xs * (LX / 2 - 20), ys * (LY / 2 - 60), zw0 - 3, P) for xs in (-1, 1) for ys in (-1, 1)}
-    bolts = []
-    for (x, y, _z) in pts.values():
-        for dx in (-42, 42):
-            for dy in (-42, 42):
-                b = _hex_z(x + dx, y + dy, 8.0, 13.0, 4.0) + _zcyl(x + dx, y + dy, 11.0, 3.0, 4.0)
-                bolts.append(b)
-    add("Foot pad bolts", _union(bolts), C_STEEL, "metal", 14, "shell", E_STAND)
+    add("Stand, galvanized steel angle, with its two auger anchors", base["stand"], C_GALV, "metal", 1, "shell", E_STAND)
+    add("Stand, rail, pole and plate bolts", Cm["stand_bolts"].shape + Cm["rail_bolts"].shape + Cm["pv_bolts"].shape + Cm["ebolts"].shape, C_STEEL, "metal", 14, "shell", E_STAND)
 
-    # two auger ground anchors outboard of the south legs, tied to the legs with webbing straps
-    anchors, straps, buckles = [], [], []
+    # webbing straps tie each south leg to its anchor ring (the anchor itself is model.py's)
+    straps, buckles = [], []
     for xs in (-1, 1):
         lx, ly, _ = pts[(xs, -1)]
-        ax_, ay_ = lx + xs * 190, ly
-        eye = Pos(ax_, ay_, 34) * Rot(90, 0, 0) * (Cylinder(22, 7) - Cylinder(15, 9))
-        anchors.append(eye + _zcyl(ax_, ay_, 7, 5.0, 16) + _zcyl(ax_, ay_, 1.5, 16.0, 3.0))
-        a = (ax_ - xs * 18, ay_, 38)
-        b = (lx + xs * 2, ly + 15, 230)
+        ax_, ay_ = xs * (SG[-1]["xr"] + LEG + 190), ly
+        a = (ax_ - xs * 14, ay_, 47)
+        b = (xs * (SG[-1]["xr"] + LEG) - xs * 1, ly, 230)
         straps.append(_band(a, b, 25.0, 2.0))
         m = [(a[i] + b[i]) / 2 for i in range(3)]
         dvec = Vector(b[0] - a[0], b[1] - a[1], b[2] - a[2]).normalized()
         buckles.append(Plane(origin=Vector(*m), z_dir=dvec).location * Box(32, 8, 40))
-    add("Auger ground anchors", _union(anchors), C_GALV, "metal", 1, "shell", E_STAND)
     add("Anchor tie straps", _union(straps), C_STRAP, "fabric", 1, "shell", E_STAND)
     add("Strap ratchets", _union(buckles), C_STEEL, "metal", 1, "shell", E_STAND)
 
     # ------------------------------------------------------------ PV panel on its pole (BOM 11)
     E_PV = (320, 320, 220)
-    px, py, pz = pts[(1, 1)]
     pvx, pvy, pvz = P["pv_size"]
-    PVL = Pos(px - 200, py + 40, P["pv_z"]) * Rot(P["tilt"] + 10, 0, 0)
+    # panel pose as model.py: it sits on the plate of the pole-top bracket, tilted 10 degrees more than the box
+    gN, xr_ = SG[1], SG[1]["xr"]
+    pcx = xr_ + P["leg_t"] + 8.0 + 12.5
+    Yp = gN["Yc"] - 2.0
+    tz = P["pv_z"] - 70 + 6 + 30
+    tilt_pv = P["tilt"] + 10
+    tr = math.radians(tilt_pv)
+    head = Pos(pcx, Yp - 6.0 * math.sin(tr), tz + 6.0 * math.cos(tr)) * Rot(tilt_pv, 0, 0)
+    PVL = head * Pos(0, 0, 6 + pvz / 2)
     pfr = Box(pvx, pvy, pvz)
     pfr = _fillet_try(pfr, _vert(pfr), [3.0, 1.5])
     pfr -= Pos(0, 0, 4) * Box(pvx - 16, pvy - 16, pvz)
@@ -387,21 +356,19 @@ def product_parts(P=PARAMS):
     for j in range(1, 4):
         grid += Pos(0, -(pvy - 16) / 2 + j * (pvy - 16) / 4, pvz / 2 - 1.9) * Box(pvx - 16, 1.2, 0.3)
     add("PV cell busbars", PVL * grid, "#AEB6C2", "metal", 11, "shell", E_PV)
-    jbox = Pos(0, 30, -pvz / 2 - 8) * Box(60, 50, 16)
+    jbox = Pos(0, 92, -pvz / 2 - 8) * Box(60, 40, 16)
     add("PV junction box", PVL * jbox, C_RUBBER, "plastic", 11, "shell", E_PV)
-    pole = _pipe([(px, py + 30, pz), (px, py + 30, P["pv_z"] - 20)], 15.0)
-    pole += _pipe([(px, py + 30, P["pv_z"] - 30), (px - 200, py + 40, P["pv_z"] - 30)], 10.0)
-    pole += _zcyl(px, py + 30, P["pv_z"] - 18, 16.0, 4.0)
-    add("PV pole and arm", pole, C_GALV, "metal", 11, "shell", E_PV)
-    clamps = _zcyl(px, py + 30, pz + 40, 19.0, 18.0) + _zcyl(px, py + 30, pz + 110, 19.0, 18.0)
-    clamps -= _zcyl(px, py + 30, pz + 75, 15.5, 120.0)
-    add("Pole clamps", clamps, C_STEEL, "metal", 14, "shell", E_PV)
+    add("PV square-tube pole on spacers", Cm["pv_pole"].shape, C_GALV, "metal", 11, "shell", E_PV)
+    add("Panel tilt bracket", Cm["pv_bracket"].shape, C_GALV, "metal", 11, "shell", E_PV)
 
     # ------------------------------------------------------------ electronics box (BOM 12) and sensors (BOM 13)
     E_EL = (-480, -260, -120)
-    ex, ey, _ = pts[(-1, 1)]
-    ebx, eby, ebz = P["ebox"]
-    ecx, ecz = ex - 110, 310 + ebz / 2
+    bbe = Cm["ebox"].shape.bounding_box()
+    bbp = Cm["eplate"].shape.bounding_box()
+    ecx, ecz = (bbe.min.X + bbe.max.X) / 2, (bbe.min.Z + bbe.max.Z) / 2
+    ebx, eby, ebz = bbe.max.X - bbe.min.X, bbe.max.Y - bbe.min.Y, bbe.max.Z - bbe.min.Z
+    ey = (bbe.min.Y + bbe.max.Y) / 2
+    zbot = bbe.min.Z
     eb = _box(ecx, ey - 6, ecz, ebx, eby - 12, ebz)
     eb = _fillet_try(eb, eb.edges().filter_by(Axis.Y), [8.0, 5.0, 3.0])
     eb = _fillet_try(eb, eb.faces().sort_by(Axis.Y)[0].edges(), [2.0, 1.0])
@@ -414,8 +381,8 @@ def product_parts(P=PARAMS):
     lscr = []
     for sx in (-1, 1):
         for sz in (-1, 1):
-            s = _ycyl(ecx + sx * (ebx / 2 - 10), fy2 + 0.6, ecz + sz * (ebz / 2 - 10), 3.4, 1.2)
-            lscr.append(s - _box(ecx + sx * (ebx / 2 - 10), fy2 + 1.2, ecz + sz * (ebz / 2 - 10), 4.0, 1.0, 0.8))
+            sc = _ycyl(ecx + sx * (ebx / 2 - 10), fy2 + 0.6, ecz + sz * (ebz / 2 - 10), 3.4, 1.2)
+            lscr.append(sc - _box(ecx + sx * (ebx / 2 - 10), fy2 + 1.2, ecz + sz * (ebz / 2 - 10), 4.0, 1.0, 0.8))
     add("Lid screws", _union(lscr), C_STEEL, "metal", 14, "shell", E_EL)
     ntag = _box(ecx, fy2 + 0.3, ecz + 70, 100, 0.6, 22)
     add("Electronics box label", ntag, C_ACCENT, "painted", 12, "shell", E_EL)
@@ -428,27 +395,34 @@ def product_parts(P=PARAMS):
     add("Status light, green (lit)", led, C_LED, "emissive", 12, "shell", E_EL)
     gl = []
     for gx in (ecx - 40, ecx + 40):
-        g = _hex_z(gx, ey, 310 - 2.5, 20.0, 5.0) + _zcyl(gx, ey, 310 - 9, 8.0, 8.0)
+        g = _hex_z(gx, ey, zbot - 2.5, 20.0, 5.0) + _zcyl(gx, ey, zbot - 9, 8.0, 8.0)
         gl.append(_fillet_try(g, _bottom(g), [2.0, 1.0]))
     add("Cable glands", _union(gl), C_RUBBER, "plastic", 14, "shell", E_EL)
-    brk = _box(ex - 16, ey + 6, ecz, 32, 50, 150)
-    add("Electronics box bracket", brk, C_GALV, "metal", 12, "shell", E_EL)
-    # cable from the gland, up the leg to the rail (then to the fan and the PV panel)
-    cable = _pipe([(ecx + 40, ey, 297), (ecx + 40, ey, 262), (ex + 14, ey + 14, 262),
-                   (ex + 14, ey + 14, pts[(-1, 1)][2] - 40)], 4.0)
+    add("Electronics backing plate", Cm["eplate"].shape, C_GALV, "metal", 12, "shell", E_EL)
+    # cable from the gland down below the plate, along to the north-west leg and up it to the rail
+    lx_, ly_, _lz = pts[(-1, 1)]
+    zc = bbp.min.Z - 14
+    cable = _pipe([(ecx + 40, ey, zbot - 8), (ecx + 40, ey, zc), (lx_ + 4, ey, zc), (lx_ + 4, ly_ - 18, zc),
+                   (lx_ + 4, ly_ - 18, gN["top"] - 330)], 4.0)
     add("Fan and PV cable (sheathed)", cable, C_RUBBER, "rubber", 12, "shell", E_EL)
 
-    # radiation shield: stacked dishes on a post, arm to the leg
-    shx, shz = ex - 110, 700
+    # radiation shield: stacked dishes on a post, arm to the backing plate (arm as model.py)
+    Yb1 = bbp.max.Y
+    bxc = lx_
+    bp_z1 = bbp.max.Z
+    sz0 = bp_z1 + 10
+    shx, shy = bxc - 60, Yb1 + 60
     dishes = []
     for k in range(7):
-        z = shz - 50 + k * 15
-        d = _zcyl(shx, ey, z, 45.0 if k < 6 else 48.0, 3.0)
+        z = sz0 + 5 + k * 15
+        d = _zcyl(shx, shy, z, 45.0 if k < 6 else 48.0, 3.0)
         dishes.append(_fillet_try(d, d.edges(), [1.2, 0.6]))
-    dishes.append(Pos(shx, ey, shz + 44) * Sphere(46.0) & _box(shx, ey, shz + 64, 100, 100, 40))
+    dishes.append(Pos(shx, shy, sz0 + 5 + 7 * 15) * Sphere(46.0) & _box(shx, shy, sz0 + 5 + 7 * 15 + 20, 100, 100, 40))
     add("Radiation shield plates", _union(dishes), C_SHIELD, "plastic", 13, "shell", E_EL)
-    post = _zcyl(shx, ey, shz - 5, 6.0, 110) + _pipe([(shx, ey, 645), (ex - 20, ey, 645), (ex + 5, ey, 645)], 6.0)
-    add("Shield post and arm", post, C_GALV, "metal", 13, "shell", E_EL)
+    arm = (_box(bxc - 60, Yb1 + 1.5, bp_z1 - 30, 20, 3, 60) + _box(bxc - 60, Yb1 + 36.5, bp_z1 - 1.5, 20, 70, 3)
+           + _box(bxc - 60, Yb1 + 60, (bp_z1 + sz0 + 40) / 2, 20, 20, sz0 + 40 - bp_z1))
+    arm += _zcyl(shx, shy, sz0, 6.0, 110)
+    add("Shield post and arm", arm, C_GALV, "metal", 13, "shell", E_EL)
 
     # ------------------------------------------------------------ context (not in the BOM)
     gx0, gx1, gy0, gy1 = -900.0, 840.0, -1040.0, 660.0

@@ -391,6 +391,9 @@ def build_components(P=PARAMS):
     add("plate_screws", "Plate screws, M5 button head, into the bottom battens", fuse(heads), None, "fixing", None, "steel", local=True)
     ins = [zcyl(x, y, pt, 5.0, 20) - zcyl(x, y, pt - 1, 3.0, 22) for (x, y) in bolts]
     add("inserts", "Threaded inserts, M6, in the bottom battens", fuse(ins), None, "fixing", None, "steel", local=True)
+    # "Empty before lifting" label, 150 x 50 x 0.5 mm, on the outside of the east wall above the middle rail bolt
+    # (DWD-DEC-001, 2026-10-02, item 2); a printed outdoor vinyl label, listed in BOM line 14
+    add("label", "Label: empty before lifting", bx(LX / 2, LX / 2 + 0.5, -75, 75, zw0 + 70, zw0 + 120), 14, "fixing", None, "plastic", local=True)
     cs = []
     for sx in (-1, 1):
         for sy in (-1, 1):
@@ -851,6 +854,8 @@ def checks(P=PARAMS, C=None):
     chk("South diagonal clear of the south cross member", S("diag"), S("xm_s"), 5.0)
     chk("Bottle clear of the stand", S("bottle"), S("xm_s") + S("diag") + S("feet"), 20.0)
     chk("PV pole spacers on the north-east leg", S("pv_pole"), S("leg_ne"), "touch")
+    chk("Label on the east wall", S("label"), S("wall_east"), "touch")
+    chk("Label clear of the east rail and the lid frame", S("label"), S("rail_e") + S("lid_frame"), 5.0)
     chk("PV pole clear of the box", S("pv_pole"), S("wall_east") + S("wall_north") + S("lid_frame") + S("plate") + S("rail_e"), 5.0)
     chk("PV pole clear of the side brace", S("pv_pole"), S("braces"), 5.0)
     chk("Panel bracket on the pole", S("pv_bracket"), S("pv_pole"), "touch")

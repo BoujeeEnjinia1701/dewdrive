@@ -7,8 +7,8 @@ R5,Condenser rise,12.1 K (C2),<= 15 K,met
 R6,Water quality,materials food-grade by selection; chloride carry-over needs a water test,food-grade; Cl < 250 mg/L,not verifiable at TRL 3
 R7,Salt containment,pores fill at 71 % RH; 43 % of pore volume after one 90 % RH night; 50 % after three with the fan rule; sumps 0.58 L (E2 to E6),no brine leaves the tray and drip-screen assembly after a 90 % RH night,met
 R8,Two actions per day,"open flaps at dusk, close at dawn; fan on a timer with a humidity cut-out","2 actions, <= 5 min",met
-R9,Portable,"box 35.2 kg with everything inside; 23.4 kg with the trays and deck lifted out; total 60.2 kg (G1, G2)",box <= 35 kg; stand separable,not met
+R9,Portable,"box 35.2 kg with everything inside; 23.4 kg with the trays and deck lifted out; total 60.2 kg (G1, G2)",box <= 35 kg lifted with trays and deck out (restated 2026-10-02); stand separable,met
 R10,Survive the site,two anchors of 98 N (default) or 40 kg ballast for 20 m/s (H2 to H4); UV and 300 cycles need supplier data and test,stable at 20 m/s; UV; 300 cycles,not verifiable at TRL 3
-R11,Cost,$620 (J1),"<= $520 (top-up, 2026-09-26)",not met
+R11,Cost,$639 (J1),"<= $520 (top-up, 2026-09-26)",not met
 R12,Record performance,"8640 records, 0.41 MB (I1)",5 min for 30 days,met
 R13,Protect users,glazing outer about 57 C at stagnation; fins up to 47 C; 12.8 V DC (D1 to D3),touched surfaces <= 60 C; < 60 V DC,met

@@ -356,3 +356,35 @@ The glazing must now be rated 130 °C or more, against a dry-bed stagnation near
 ### Recommended next step
 
 Carry out the follow-up actions above, starting with the BOM line 3 glazing specification and the stagnation vent study. TRL 4 remains on hold by Amish's instruction.
+
+## Approved follow-ups carried out (2026-10-02)
+
+Amish approved all follow-up actions from the 2026-10-02 sign-off. trl stays 3; no build or test work was done.
+
+### Follow-ups
+
+1. Decision 2 (BOM and picture): done. The "Empty before lifting" label is bill of materials line 14 (about $2, estimate), modelled as a 0.5 mm plate on the east wall in `cad/src/model.py` (two new constructability checks; 93 checks in all, all passing), and drawn yellow in the step 16 picture. The step 16 text in the build plan now says where it goes.
+2. Decision 2 (calculations): done. `docs/04-calcs/sizing.py` now tests R9 on the box lifted with the trays and deck out (23.4 kg, met); it was re-run and `results.csv` and the counts [K1] agree: 10 met, 1 not met (R11), 2 not verifiable at TRL 3.
+3. Decision 3 (BOM): done. Line 3 now specifies twin-wall polycarbonate rated 130 °C or more, priced at about $48 per square metre (an estimate, about 50 % above a standard sheet, no supplier quote), so line 3 rises from $65 to $82. A quote is still needed.
+4. Decision 4 (calculations): done. The study is in DWD-CAL-001 section D (D4, D5): about 117 cm² of stack-effect vent would hold a low-emissivity dry bed at 122 °C, but it would have to stay shut in normal operation (bed 130 to 149 °C), so it needs a thermostat and is not a passive, modest-cost fix. The low-emissivity screens are dropped; the black screens stay (recorded in DWD-DEC-001 v0.4).
+5. Decision 6 (appearance model and pictures): done in part. `cad/src/product_model.py` now takes the lid frame and hinges, latches, deck and ledges, gutter and drain, inlet flap hardware, outlet flap, stand, PV pole and bracket, backing plate and bolts from the model, moves the electronics box and shield to the backing plate, and adds the label. Render scenes were exported to `/home/claude/renders/dewdrive` (hero, exploded, detail, and the jobs file). Not done: the photoreal renders, `media/card.png` and `media/social-preview.png`, which are made on Amish's Mac.
+
+### Key results
+
+- Cost: USD 639 against the USD 520 value-engineering target (USD 119 over); USD 620 before these follow-ups (USD 17 for the 130 °C glazing sheet, USD 2 for the label). `budget_usd` is unchanged.
+- Mass: 60.2 kg total, box 35.2 kg, 23.4 kg lifted with the trays and deck out; unchanged.
+- Requirement status changes: R9 now reads met in `results.csv` (it was not met under the first wording; the written status already read met after the restatement). R11 stays over its target, by USD 119 (was USD 100).
+
+### Documents changed
+
+- `docs/04-calcs/01-sizing.md` (DWD-CAL-001 v0.7), `docs/03-requirements.md` (DWD-REQ-001 v0.9), `docs/02-concept.md` (DWD-PRC-001 v0.9), `docs/05-build-plan.md` (DWD-BLD-001 v0.4), `docs/06-design-decisions.md` (DWD-DEC-001 v0.4), `docs/decisions/0003-design-for-construction.md` (DWD-DDR-003 v0.4), `bom/bom.csv`, `bom/bom-notes.md`, `README.md`.
+- `cad/src/model.py` (label), STEP and STL re-exported; `cad/src/sheets.py` and `cad/drawings/DWD-DWG-001` at Rev P5; concept media regenerated; build step 16 picture regenerated; `docs/04-calcs/results.csv` regenerated.
+- PDFs re-rendered with `python3 .kit/render.py`.
+
+### Cross-repo actions
+
+None.
+
+## 2026-10-02: photoreal renders redone on the constructable design
+
+Rendered with Blender Cycles on Amish's Mac from the updated appearance model; captioned with `.kit/photo_caption.py`; `media/card.png` and `media/social-preview.png` regenerated with `.kit/cards.py`. Views: hero, exploded, detail. image_qc passes. Appearance deviations are those logged above as proposed, awaiting Amish.

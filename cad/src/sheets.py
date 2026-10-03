@@ -1,4 +1,4 @@
-"""DewDrive general arrangement sheet DWD-DWG-001, Rev P4 (TRL 3, constructable design of DWD-DDR-003).
+"""DewDrive general arrangement sheet DWD-DWG-001, Rev P5 (TRL 3, constructable design of DWD-DDR-003).
 
 Run from the repo root:  python cad/src/sheets.py
 Writes cad/drawings/DWD-DWG-001.svg, .pdf and .png from the parametric model in
@@ -17,6 +17,7 @@ from model import PARAMS as P, build, derived, world  # noqa: E402
 
 DATE = "2026-09-25"
 DATE4 = "2026-10-01"
+DATE5 = "2026-10-02"
 
 
 def ortho_cells(sheet, views, names=("front", "top", "right")):
@@ -63,13 +64,14 @@ def main():
     asm = build()
     views = project_views(asm, work)
     bb = asm.bounding_box()
-    s = Sheet(project="DewDrive", title="General arrangement", dwg_no="DWD-DWG-001", rev="P4",
-              author="Amish Chadha", date=DATE4, scale=None, theme="technical",
+    s = Sheet(project="DewDrive", title="General arrangement", dwg_no="DWD-DWG-001", rev="P5",
+              author="Amish Chadha", date=DATE5, scale=None, theme="technical",
               material="Plywood and PIR box, twin-wall PC lid, Al trays and finned condenser, galv. steel stand; see bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
               revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC"),
                          ("P2", "Through-flow trays, baffle, raised inlet, drip screens (DDR-002)", DATE, "AC"),
                          ("P3", "Layout and labels tidied", DATE, "AC"),
-                         ("P4", "Constructable design: deck, framed walls, bolted stand (DDR-003)", DATE4, "AC")])
+                         ("P4", "Constructable design: deck, framed walls, bolted stand (DDR-003)", DATE4, "AC"),
+                         ("P5", "Empty-before-lifting label on the east wall (DWD-DEC-001, item 2)", DATE5, "AC")])
     s.add_ortho(views)
     k = s.scale
     c = ortho_cells(s, views)
@@ -107,7 +109,7 @@ def main():
         f"Condenser {P['plate_t']:.0f} Al plate, {P['fin_n']} fins {P['fin_t']:.0f} x {P['fin_h']:.0f} at {P['fin_pitch']:.0f} pitch",
         f"Inlet {P['flap_in'][0]:.0f} x {P['flap_in'][1]:.0f} (S, above deck); outlet slot {P['slot_out'][0]:.0f} x {P['slot_out'][1]:.0f} to fan hood (N)",
         f"Stand L{P['leg']:.0f} x {P['leg_t']:.0f} galv., bolted, braced; feet {P['foot']:.0f} sq; 2 ground anchors",
-        "Mass about 60 kg dry; box about 35 kg (DWD-CAL-001 v0.4, G1)",
+        "Mass about 60 kg dry; box about 35 kg (DWD-CAL-001 v0.7, G1)",
         "Third-angle; front view from south (-Y), right from +X",
     ], x=276, y=158, width=140)
     path = s.save(ROOT / "cad" / "drawings" / "DWD-DWG-001")

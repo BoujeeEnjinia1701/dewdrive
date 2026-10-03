@@ -3,7 +3,7 @@ doc_id: DWD-DDR-003
 title: DewDrive design for construction
 project: DewDrive
 doc_type: Design decision record
-version: "0.3"
+version: "0.4"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -21,6 +21,10 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: Accepted by Amish on 2026-10-02, including the recommendation for A2
+- version: "0.4"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: Consequences updated after the follow-ups (cost USD 639, status from DWD-CAL-001 v0.7, appearance model brought into line)
 ---
 
 # 0003: Design for construction
@@ -75,7 +79,7 @@ Every change below keeps what DewDrive does: the same glazed, insulated 1.1 x 1.
 ## Consequences
 
 - `design_state: constructable` in `project.yaml`. The build plan DWD-BLD-001 shows every component and step in pictures generated from the model (`cad/src/build_plan_media.py`).
-- Cost is reported against the value-engineering target: USD 520 (a hypothetical control target, not a limit) against an estimated USD 620 for the constructable design, USD 100 over; the register lists cost drivers and savings worth trying.
-- Requirement status (DWD-CAL-001 v0.5): 9 met, 1 not met (R9 by 0.2 kg as written), 1 over its value-engineering target (R11, by $100), 2 not verifiable at TRL 3 (R6, R10). With A2 accepted, R9 is restated as a box of 35 kg or less when lifted with the trays and deck taken out, and is met at 23.4 kg; the box carries a label to empty it before lifting (DWD-REQ-001).
-- The photoreal renders (`media/render-*.png`), `media/card.png`, `media/social-preview.png` and the appearance model `cad/src/product_model.py` still show the concept stand, lid and outlet flap; they need updating on Amish's Mac, where Blender is.
+- Cost is reported against the value-engineering target: USD 520 (a hypothetical control target, not a limit) against an estimated USD 639 for the constructable design, USD 119 over (USD 620 as first made buildable, plus USD 19 for the 130 °C glazing sheet and the lifting label decided on 2026-10-02); the register lists cost drivers and savings worth trying.
+- Requirement status (DWD-CAL-001 v0.7): 10 met, 1 over its value-engineering target (R11, by $119), 2 not verifiable at TRL 3 (R6, R10). With A2 accepted, R9 is restated as a box of 35 kg or less when lifted with the trays and deck taken out, and is met at 23.4 kg (it was not met by 0.2 kg as first written); the box carries a label to empty it before lifting (DWD-REQ-001).
+- The appearance model `cad/src/product_model.py` now follows the constructable design (stand, lid, deck, flaps, pole and electronics from `cad/src/model.py`). The photoreal renders (`media/render-*.png`), `media/card.png` and `media/social-preview.png` are made from it on Amish's Mac, where Blender is.
 - Open decisions, and the items to confirm when parts are bought, are kept in the design decisions register (`docs/06-design-decisions.md`, DWD-DEC-001).

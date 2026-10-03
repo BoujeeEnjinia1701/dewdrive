@@ -3,7 +3,7 @@ doc_id: DWD-CAL-001
 title: DewDrive sizing calculations
 project: DewDrive
 doc_type: Calculation
-version: "0.6"
+version: "0.7"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -33,11 +33,15 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: R9 row and counts follow the restated R9; glazing rating decision noted in section D (DWD-DEC-001, items 2 and 3); no computed number changed
+- version: "0.7"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: Script re-run with R9 as restated (computed counts now agree); paper study of a passive stagnation vent (D4, D5); BOM line 3 repriced for a 130 °C sheet and label added; cost USD 639 against the USD 520 target
 ---
 
 # DewDrive sizing calculations
 
-This revision checks the design decided by Amish on 2026-09-25 (DWD-DDR-002): night air drawn down through the sealed, mesh-floored trays; 25 wt % CaCl₂ (1.0 kg in 3.0 kg of gel); a black drip screen under each tray; and a fan that stops above 70 % RH. On paper that design, as made constructable in DWD-DDR-003, meets nine of its thirteen requirements. It collects about 0.57 L per day at 40 % night RH (R1 target 0.5 L) and 0.45 L at 25 % (R2 target 0.25 L), against 0.20 and 0.09 L for the v0.1 layout. The salt stays in the pores after three 90 % RH nights in a row. Making the design buildable added the parts that hold it together (wall battens, a tray deck, screen frames, stand bracing and fixings): the estimated parts cost is now $620 against the $520 value-engineering target (R11 over the target by $100) and the full box weighs 35.2 kg against the 35 kg two-person limit, 23.4 kg once the trays and deck are lifted out (R9 not met as written). R9 is an open decision for Amish in the design decisions register (DWD-DEC-001), which also lists cost drivers and savings for R11. A low-emissivity screen, evaluated here as decided, would lift the yield to 0.82 L per day but let a dry bed stagnate at about 166 °C, beyond the usual rating of polycarbonate glazing, so it is not adopted. Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [B2], is the line of that script's output that carries it.
+This revision checks the design decided by Amish on 2026-09-25 (DWD-DDR-002): night air drawn down through the sealed, mesh-floored trays; 25 wt % CaCl₂ (1.0 kg in 3.0 kg of gel); a black drip screen under each tray; and a fan that stops above 70 % RH. On paper that design, as made constructable in DWD-DDR-003, meets ten of its thirteen requirements. It collects about 0.57 L per day at 40 % night RH (R1 target 0.5 L) and 0.45 L at 25 % (R2 target 0.25 L), against 0.20 and 0.09 L for the v0.1 layout. The salt stays in the pores after three 90 % RH nights in a row. Making the design buildable added the parts that hold it together (wall battens, a tray deck, screen frames, stand bracing and fixings): the estimated parts cost is now $639 against the $520 value-engineering target (R11 over the target by $119) and the full box weighs 35.2 kg against the 35 kg two-person limit, 23.4 kg once the trays and deck are lifted out (R9 was not met as first written; Amish restated it on 2026-10-02 for a lift with the trays and deck out, and it is met). The design decisions register (DWD-DEC-001) lists cost drivers and savings for R11. A low-emissivity screen, evaluated here as decided, would lift the yield to 0.82 L per day but let a dry bed stagnate at about 166 °C, beyond the usual rating of polycarbonate glazing, so it is not adopted; the paper study of a passive vent in section D finds no passive remedy and the screens are dropped. Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [B2], is the line of that script's output that carries it.
 
 > **Safety:** These calculations concern hot surfaces (a bed up to about 122 °C), a corrosive calcium chloride solution, a lithium iron phosphate battery and a 1.1 m² panel in wind. They are first-principles estimates for a paper proof of concept, not a substitute for measured isotherms, supplier data, an engineering review or test. Harvested water must be tested and treated before drinking. See DWD-PRC-001, Safety.
 
@@ -128,6 +132,8 @@ The condenser has 3.86 m² of fins with a natural-convection coefficient of 4.7 
 
 With a dry bed at noon on a 35 °C day, the bed stagnates near 122 °C with black drip screens, 105 °C with no screens and 166 °C with low-emissivity screens [D1]. The glazing inner skin runs cooler than the bed, but the supplier rating of the polycarbonate must be checked against this. Amish decided on 2026-10-02 (DWD-DEC-001, item 3) to specify a sheet rated 130 °C or more, or a 120 °C sheet only if the supplier's data and the inner-skin temperature measured at the TRL 4 stagnation test both show it stays inside its rating. The outer skin of the glazing reaches about 57 °C at stagnation [D2], and the condenser fins, at ankle and hand height, up to 47 °C [D3]. Both are under the 60 °C limit of R13, but the inside of the box is not: the bed and trays are hot enough to burn.
 
+*Passive stagnation vent study (decided on 2026-10-02, DWD-DEC-001, item 4).* The low-emissivity screens would raise the dry-bed stagnation temperature to 166 °C. A vent at the high north edge of the box, with its inlet low on the south side 100 mm below, would let hot gap air leave by stack effect. Taking the gap air at the mean of bed and ambient temperature, a discharge coefficient of 0.6 and the same heat balance as D1, holding the dry bed at 122 °C needs about 117 cm² of opening, about a 15 mm tall slot along the 800 mm inlet width; the same vent would bring the black screens to 103 °C [D4]. The vent would have to stay shut in normal operation, because with low-emissivity screens the bed already reaches 130 °C at noon and 149 °C at its peak, above the 122 °C it must hold, and any open vent would let water vapour escape that the condenser should collect [D5]. A passive flap therefore cannot do the job; it would need a thermostat that tells a dry bed from a working one, which is an active part with its own cost (a wax actuator, flap and seal, about $20 as an estimate) on top of a design that is already over its cost target, and the benefit has not been shown beyond the paper gain in yield (0.82 L per day against 0.57 L per day at 40 % RH, C10). The study therefore concludes that the vent cannot hold a dry bed near 122 °C passively at a modest cost, and the low-emissivity screens are dropped, as the 2026-10-02 decision provides. The first prototype keeps the black screens.
+
 ## E. Salt containment
 
 A calcium chloride solution stays in the beads only while its volume is less than the pore volume. At equilibrium at 40 % RH the solution fills 58 % of the 3.00 L of pores; at 90 % RH it would be 6.35 L, twice the pore volume [E1]. At 25 wt % the pores fill at 71 % RH at 20 °C, against 51 % RH at the v0.1 loading of 32.5 wt % (81 % RH at 20 wt %) [E2].
@@ -152,11 +158,11 @@ Five channels every 5 min for 30 days are 8,640 records, about 0.41 MB as CSV [I
 
 ## J. Cost
 
-The BOM has 16 lines and totals $620 against the $520 value-engineering target (`budget_usd`, a hypothetical control target, not a limit) [J1], so R11 is over the target by $100. The v0.3 total was $515. The difference is the cost of making the design buildable (DWD-DDR-003): new line 16, the tray deck and wall ledges ($35); wall battens, inserts and paint ($13 more on line 2); the lid's U-channel frame, hinges and latches priced in full ($15 more); trays with a perforated floor under the mesh ($10 more in all); fin feet, rivets and epoxy ($4); a proper drain fitting ($7); stand bracing, foot plates and straps ($3); screen frames ($4 in all); pole, bracket and backing plate ($6); the fan hood ($1); and fixings ($7). Cost drivers and savings worth trying are in the Value engineering section of the design decisions register. Over 5 years at the design point the parts cost about $0.59 per litre of water [J2].
+The BOM has 16 lines and totals $639 against the $520 value-engineering target (`budget_usd`, a hypothetical control target, not a limit) [J1], so R11 is over the target by $119. The v0.3 total was $515. The difference is the cost of making the design buildable (DWD-DDR-003): new line 16, the tray deck and wall ledges ($35); wall battens, inserts and paint ($13 more on line 2); the lid's U-channel frame, hinges and latches priced in full ($15 more); trays with a perforated floor under the mesh ($10 more in all); fin feet, rivets and epoxy ($4); a proper drain fitting ($7); stand bracing, foot plates and straps ($3); screen frames ($4 in all); pole, bracket and backing plate ($6); the fan hood ($1); and fixings ($7). The 2026-10-02 decisions added $19: a glazing sheet rated 130 °C or more, estimated at about $48 per square metre against $32 for a standard sheet ($17 more on line 3), and the printed "Empty before lifting" label ($2 on line 14). Cost drivers and savings worth trying are in the Value engineering section of the design decisions register. Over 5 years at the design point the parts cost about $0.59 per litre of water [J2].
 
 ## K. Requirements
 
-*Table 4. Requirement status (DWD-REQ-001 v0.7). Also written to `docs/04-calcs/results.csv`.*
+*Table 4. Requirement status (DWD-REQ-001 v0.9). Also written to `docs/04-calcs/results.csv`.*
 
 | ID | Requirement | Value | Target | Status |
 | --- | --- | --- | --- | --- |
@@ -170,11 +176,11 @@ The BOM has 16 lines and totals $620 against the $520 value-engineering target (
 | R8 | Two actions per day | Open the flaps at dusk, close them at dawn; the fan runs on the logger timer with a humidity cut-out | 2 actions, 5 min or less | Met |
 | R9 | Portable | Box 35.2 kg with everything inside; 23.4 kg with the trays and deck lifted out; total 60.2 kg | Box 35 kg or less when lifted with the trays and deck taken out (restated 2026-10-02, DWD-DEC-001 item 2); stand separable | Met (was not met by 0.2 kg against the first wording) |
 | R10 | Survive the site | Two anchors of 98 N (default) or 40 kg of ballast at 20 m/s; UV life and 300 cycles need supplier data and test | Stable at 20 m/s; UV-stable; 300 cycles | Not verifiable at TRL 3 |
-| R11 | Cost | $620 | $520 or less | **Over the value-engineering target by $100** |
+| R11 | Cost | $639 | $520 or less | **Over the value-engineering target by $119** |
 | R12 | Record performance | 8,640 records, 0.41 MB | Every 5 min for 30 days | Met |
 | R13 | Protect users | Glazing outer skin about 57 °C at stagnation; fins up to 47 °C; 12.8 V DC | Touched surfaces 60 °C or less; below 60 V DC | Met |
 
-Counts: 10 met, 1 over its value-engineering target (R11), 2 not verifiable at TRL 3 (R6, R10), with R9 as restated on 2026-10-02. The computed counts [K1] in `results.csv` still use the first wording of R9 until `sizing.py` is re-run.
+Counts: 10 met, 1 over its value-engineering target (R11), 2 not verifiable at TRL 3 (R6, R10), with R9 as restated on 2026-10-02. The computed counts [K1] in `results.csv` now agree (10 met, 1 not met, 2 not verifiable at TRL 3).
 
 ## L. Numbers changed from v0.1
 
@@ -207,6 +213,14 @@ Counts: 10 met, 1 over its value-engineering target (R11), 2 not verifiable at T
 | Ballast; anchor rating | 46 kg; 114 N | 40 kg; 98 N | H2, H4 |
 | Parts cost | $515 | $620 | J1 |
 | Water cost over 5 years | $0.49 per litre | $0.59 per litre | J2 |
+
+*Table 7. Numbers changed by the decisions of 2026-10-02 (DWD-DEC-001). Mass, water, heat and wind figures are unchanged.*
+
+| Quantity | v0.6 | v0.7 | Tag |
+| --- | --- | --- | --- |
+| Parts cost; over the $520 target | $620; $100 | $639; $119 | J1 |
+| Water cost over 5 years | $0.59 per litre | $0.61 per litre | J2 |
+| Computed count for R9 | not met (first wording) | met (restated) | K1 |
 
 ## M. Limits of this note
 

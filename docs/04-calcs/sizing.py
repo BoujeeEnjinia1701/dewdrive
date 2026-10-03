@@ -517,6 +517,46 @@ say("D2", f"Glazing outer skin at stagnation: about {T_out:.0f} C (includes 5 % 
 T_cond_touch = T_DAY + cD40["dTc_max"]
 say("D3", f"Condenser fins (touchable, ankle and hand height): up to {T_cond_touch:.0f} C at the peak of desorption", T_cond_touch)
 
+
+
+# D4. Passive stagnation vent study (DWD-DEC-001, open item 4): can a vent hold a dry bed near 122 C with
+# low-emissivity screens, at a modest cost?  A vent at the high (north) edge lets hot gap air leave by stack
+# effect while cooler air enters low on the south side. Gap air is taken at the mean of bed and ambient.
+CD_VENT, H_STACK = 0.6, 0.10     # discharge coefficient; height between low and high openings, m (assumed)
+
+
+def stagnation_vent(screen, a_vent):
+    Ts = T_DAY
+    eps = eps_bed_cond(screen)
+    for _ in range(600):
+        q_in = TAU_ALPHA * G_pk * G["tray_m2"]
+        T_air = T_DAY + 0.5 * (Ts - T_DAY)
+        v = CD_VENT * math.sqrt(2 * 9.81 * H_STACK * max(T_air - T_DAY, 0) / (T_air + 273.15))
+        q_v = RHO_AIR * CP_AIR * v * a_vent * (T_air - T_DAY)
+        q_out = U_TOP * G["tray_m2"] * (Ts - T_DAY) + eps * SIGMA * G["tray_m2"] * ((Ts + 273.15) ** 4 - (T_DAY + 5 + 273.15) ** 4) \
+            + K_AIR / G["gap_under_m"] * G["tray_m2"] * (Ts - T_DAY - 5) + q_v
+        Ts += (q_in - q_out) / 50
+    return Ts
+
+
+T_TARGET_VENT = 122.0
+a_lo, a_hi = 0.0, 0.5
+for _ in range(60):
+    a_mid = 0.5 * (a_lo + a_hi)
+    if stagnation_vent(EPS_SCR_LOWE, a_mid) > T_TARGET_VENT:
+        a_lo = a_mid
+    else:
+        a_hi = a_mid
+A_VENT = a_hi
+say("D4", f"Passive stagnation vent study: with low-emissivity screens a dry bed stagnates at {Ts_le:.0f} C; holding it at "
+          f"{T_TARGET_VENT:.0f} C needs a stack-effect vent of about {A_VENT * 1e4:.0f} cm2 (about {100 * A_VENT / (G['tray_m2']):.0f} % "
+          f"of the tray area; a {1e3 * A_VENT / 0.8:.0f} mm tall slot along the 800 mm inlet width) with openings {H_STACK * 1e3:.0f} mm apart in height; "
+          f"for reference, black screens with the same vent reach {stagnation_vent(EPS_SCR, A_VENT):.0f} C", A_VENT)
+T_noon_le, T_peak_le = cL40["Tb_noon"], cL40["Tb_max"]
+say("D5", f"A vent that opens only when the bed is above {T_TARGET_VENT:.0f} C would also open in normal operation with "
+          f"low-emissivity screens (bed {T_noon_le:.0f} C at noon, peak {T_peak_le:.0f} C), venting water vapour that the "
+          f"condenser should collect; so it needs a thermostat tied to the vapour state, not a passive flap, which is an "
+          f"active part", T_peak_le)
 print("\nE. Salt containment (R7), 25 wt % CaCl2")
 v_sol40 = sol_volume(W40)
 W90 = W_eq(0.90, T_N)
@@ -653,12 +693,12 @@ say("I1", f"{chans} channels every 5 min for 30 days: {n_rec} records, about {n_
 print("\nJ. Cost (R11)")
 bom = list(csv.DictReader((ROOT / "bom" / "bom.csv").open()))
 cost = sum(float(r["qty"]) * float(r["unit_cost_usd"]) for r in bom)
-say("J1", f"BOM: {len(bom)} lines, total ${cost:.2f}; budget $520 (top-up approved by Amish, 2026-09-26)", cost)
+say("J1", f"Value-engineering target: USD 520. Estimated cost of the constructable design: USD {cost:.0f} (USD {abs(cost - 520):.0f} {'over' if cost > 520 else 'under'} the target); BOM {len(bom)} lines, total ${cost:.2f}", cost)
 life_l = cD40["collected"] * 365 * 5
 say("J2", f"Water cost over 5 years at the design point: {life_l:.0f} L, ${cost / life_l:.2f} per litre", cost / life_l)
 
 # ============================================================================================
-print("\nK. Requirements (DWD-REQ-001 v0.6)")
+print("\nK. Requirements (DWD-REQ-001 v0.9)")
 R = []
 
 
@@ -684,7 +724,7 @@ req("R7", "Salt containment", f"pores fill at {100 * rh_fill:.0f} % RH; {100 * f
     "no brine leaves the tray and drip-screen assembly after a 90 % RH night", "met" if r7_ok else "at risk")
 req("R8", "Two actions per day", "open flaps at dusk, close at dawn; fan on a timer with a humidity cut-out", "2 actions, <= 5 min", "met")
 req("R9", "Portable", f"box {box:.1f} kg with everything inside; {box_no_trays:.1f} kg with the trays and deck lifted out; total {total:.1f} kg (G1, G2)",
-    "box <= 35 kg; stand separable", "met" if box <= 35 else "not met")
+    "box <= 35 kg lifted with trays and deck out (restated 2026-10-02); stand separable", "met" if box_no_trays <= 35 else "not met")
 req("R10", "Survive the site", f"two anchors of {anchor:.0f} N (default) or {ballast:.0f} kg ballast for 20 m/s (H2 to H4); UV and 300 cycles need supplier data and test",
     "stable at 20 m/s; UV; 300 cycles", "not verifiable at TRL 3")
 req("R11", "Cost", f"${cost:.0f} (J1)", "<= $520 (top-up, 2026-09-26)", "met" if cost <= 520 else "not met")

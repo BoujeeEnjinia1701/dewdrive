@@ -3,7 +3,7 @@ doc_id: DWD-BLD-001
 title: DewDrive prototype build plan
 project: DewDrive
 doc_type: Build plan
-version: "0.3"
+version: "0.4"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -21,6 +21,10 @@ revisions:
     date: '2026-10-02'
     author: Amish Chadha
     change: 'Decisions of 2026-10-02 carried in: glazing rated 130 °C or more (sections 3.9, 3.19, stop S3); box labelled to be emptied before lifting (step 16, stop S4) (DWD-DEC-001, items 2 and 3)'
+  - version: "0.4"
+    date: '2026-10-02'
+    author: Amish Chadha
+    change: 'Follow-ups of the 2026-10-02 decisions: the "Empty before lifting" label drawn and fitted in step 16 (bill of materials line 14); glazing line repriced for a 130 °C sheet; parts cost updated'
 ---
 
 # DewDrive prototype build plan
@@ -33,7 +37,7 @@ revisions:
 
 *Figure 1. Every component pulled apart and numbered in build order: the box in the middle, the stand on the left, power, logging and water on the right.*
 
-The prototype is one DewDrive: a glazed, insulated box 1,100 x 1,000 mm, tilted 20° toward the sun on a bolted steel stand. Inside the box, four black trays of sorbent sit on a removable deck, with a drip screen hung under each tray; the box's aluminium floor is the condenser, with fins underneath. A small fan in a hood on the north wall draws night air through the beds; a 10 W panel and a battery box on the stand's north legs run the fan and the logger. Figure 1 shows the 31 components in the order you make or fit them. Twenty are made in a home or small workshop from plywood, softwood, foam board, aluminium sheet, bar and angle, and galvanized steel angle: the four wall panels, the condenser plate and fins, the gutter, the ledges, the tray deck and baffle, the drip screens, the trays, the lid frame, both flaps, the fan hood, and every stand part. The sorbent is mixed by hand. Everything else is bought and fitted. The work is woodworking with glue and screws, cutting, folding, drilling and riveting thin aluminium, drilling and bolting steel angle, and wiring bought 12 V modules. The parts cost about $620 from the bill of materials.
+The prototype is one DewDrive: a glazed, insulated box 1,100 x 1,000 mm, tilted 20° toward the sun on a bolted steel stand. Inside the box, four black trays of sorbent sit on a removable deck, with a drip screen hung under each tray; the box's aluminium floor is the condenser, with fins underneath. A small fan in a hood on the north wall draws night air through the beds; a 10 W panel and a battery box on the stand's north legs run the fan and the logger. Figure 1 shows the 31 components in the order you make or fit them. Twenty are made in a home or small workshop from plywood, softwood, foam board, aluminium sheet, bar and angle, and galvanized steel angle: the four wall panels, the condenser plate and fins, the gutter, the ledges, the tray deck and baffle, the drip screens, the trays, the lid frame, both flaps, the fan hood, and every stand part. The sorbent is mixed by hand. Everything else is bought and fitted. The work is woodworking with glue and screws, cutting, folding, drilling and riveting thin aluminium, drilling and bolting steel angle, and wiring bought 12 V modules. The parts cost about $639 from the bill of materials.
 
 > **Safety:** The sorbent is made with calcium chloride, which irritates eyes and skin and gets hot as it dissolves; wear gloves and eye protection. In sun the inside of the box passes 110 °C: open the lid and handle trays only when cool. The 12.8 V lithium iron phosphate battery must be fused at the battery. The tilted lid catches the wind: anchor the stand before the box goes on it. Cut aluminium and steel edges are sharp; deburr everything. Harvested water must be tested and treated before anyone drinks it.
 
@@ -528,7 +532,7 @@ Buy to specification, not brand. Line numbers are those of the bill of materials
 - **Electronics (line 12).** IP65 box about 160 x 110 x 220; 12 V PWM solar charge controller with a LiFePO4 setting; 12.8 V 6 Ah LiFePO4 battery with built-in battery management and a 10 A inline fuse; ESP32 logger board with clock and microSD; 12 V to 5 V converter; logic-level MOSFET switch module; 3 A blade fuse; cable glands.
 - **Sensors (line 13).** SHT4x-class air temperature and humidity sensor with a radiation shield; two waterproof DS18B20 probes.
 - **Anchors (line 1).** Two auger ground anchors rated for 100 N or more of uplift in the site's soil, with two ratchet straps.
-- **Fixings (line 14).** About 22 galvanized M8 bolts (25 to 50 long) with nuts and washers, and four countersunk M8 bolts for the feet; six M6 x 40 bolts and six M6 threaded inserts for wood; 24 M5 x 30 stainless button-head screws; 12 stainless 5 x 65 wood screws; 8 stainless 4 x 25 countersunk screws; 3.2 mm aluminium rivets (closed-end for the fins); food-grade silicone; polyurethane construction adhesive; high-temperature epoxy; EPDM gasket tape and lip seal; cable glands and ties.
+- **Fixings (line 14).** About 22 galvanized M8 bolts (25 to 50 long) with nuts and washers, and four countersunk M8 bolts for the feet; six M6 x 40 bolts and six M6 threaded inserts for wood; 24 M5 x 30 stainless button-head screws; 12 stainless 5 x 65 wood screws; 8 stainless 4 x 25 countersunk screws; 3.2 mm aluminium rivets (closed-end for the fins); food-grade silicone; polyurethane construction adhesive; high-temperature epoxy; EPDM gasket tape and lip seal; cable glands and ties; one outdoor vinyl label, 150 x 50, printed "Empty before lifting: remove trays, sorbent and deck".
 
 ## 4. Putting it together
 
@@ -628,7 +632,7 @@ Screw each anchor in 190 outside a south leg and strap it to the leg with a ratc
 
 ![Step 16](05-build-plan/step-16.png)
 
-Two people, with the trays and the deck taken out of the box first, as the label on the box says. Lower the box onto the rails so the rail holes line up with the inserts, and drive the six M6 bolts up into the inserts. Then put the deck and trays back.
+Take the trays, the sorbent and the deck out of the box first. Stick the label that reads "Empty before lifting" on the outside of the east wall, above the middle bolt position, where both lifters can read it (the small yellow patch in the picture). Then two people lower the box onto the rails so the rail holes line up with the inserts, and drive the six M6 bolts up into the inserts. Then put the deck, the sorbent and the trays back.
 
 ### Step 17: PV pole and panel
 
@@ -694,7 +698,7 @@ Stop at each point. Carry on only when everything listed is true.
 
 - Model and constructability checks: `cad/src/model.py` (`python cad/src/model.py --check`, 91 checks); STEP and STL exports in `cad/step/` and `cad/stl/`.
 - Pictures: `cad/src/build_plan_media.py`, using `.kit/build_views.py`; written to `docs/05-build-plan/` and `cad/drawings/DWD-DWG-101` to `DWD-DWG-122`.
-- General arrangement: `cad/drawings/DWD-DWG-001.pdf`, Rev P4.
+- General arrangement: `cad/drawings/DWD-DWG-001.pdf`, Rev P5.
 - Calculations: `docs/04-calcs/01-sizing.md` (DWD-CAL-001 v0.5) and `docs/04-calcs/sizing.py`; mass [G1], [G2], fan duty [F3], wind [H1] to [H4], sorbent and bed [A5], salt containment [E1] to [E6].
 - Bill of materials: `bom/bom.csv`.
 - Decisions: `docs/decisions/0003-design-for-construction.md` (DWD-DDR-003), with DWD-DDR-001 and DWD-DDR-002.

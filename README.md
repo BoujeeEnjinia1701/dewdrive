@@ -63,7 +63,7 @@ A glazed, insulated box 1.1 x 1.0 m, tilted 20° toward the sun, holds 4 kg of s
 | Water at 40 % night RH | about 0.57 L per day (target 0.5 L) |
 | Water at 25 % night RH | about 0.45 L per day (target 0.25 L) |
 | Mass | about 60 kg dry; box about 35 kg, 23 kg with the trays and deck lifted out |
-| Parts cost | Estimated $620 for the buildable design, $100 over the $520 value-engineering target (a hypothetical control target, not a limit) |
+| Parts cost | Estimated $639 for the buildable design, $119 over the $520 value-engineering target (a hypothetical control target, not a limit) |
 
 One unit is a supplement: about one fifth of one person's survival drinking need.
 

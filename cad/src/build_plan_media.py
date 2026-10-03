@@ -864,8 +864,9 @@ def steps(group):
         boxw = part("Box (with its flaps and fan)", S("wall_north", "wall_south", "wall_east", "wall_west", "plate", "fins", "gutter",
                                                       "drain_fit", "lid_frame", "glazing", "lid_hinges", "lid_latches", "flap", "flap_hw",
                                                       "hood", "fan", "oflap"), COL["wall"])
-        st(16, stand2, [mv(boxw, (0, 0, 450)), part("M6 bolts (6)", S("rail_bolts"), COL["bolt"], (0, 0, -200))],
-           "box onto the stand", "Two people; trays and deck out. Lower the box onto the rails; six M6 bolts up into the inserts",
+        st(16, stand2, [mv(boxw, (0, 0, 450)), part("M6 bolts (6)", S("rail_bolts"), COL["bolt"], (0, 0, -200)),
+                        part("Label: empty before lifting", S("label"), "#F2C94C", (0, 0, 450))],
+           "box onto the stand", "Two people; trays, sorbent and deck out, label on the east wall. Lower the box onto the rails; six M6 bolts up into the inserts",
            elev=18, azim=-55, label_done=False)
         full = stand2 + [boxw]
         st(17, full, [part("PV pole and spacers", S("pv_pole", "pv_bolts"), COL["pole"], (250, 0, 0)),
