@@ -3,9 +3,9 @@ doc_id: DWD-PRB-001
 title: DewDrive problem statement
 project: DewDrive
 doc_type: Problem statement
-version: "0.7"
+version: "0.8"
 status: Draft
-date: '2026-10-02'
+date: '2026-10-25'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -37,11 +37,15 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: First partner type and region decided on 2026-10-02 (DWD-DEC-001, item 5)
+- version: "0.8"
+  date: '2026-10-25'
+  author: Amish Chadha
+  change: "Kit 1.8 pipeline: users-and-needs table and stakeholders table (STANDARDS section 22); cost figure from DWD-CAL-001 v0.8 after the STEM check fixes"
 ---
 
 # DewDrive problem statement
 
-Arid households without surface water or groundwater within reach depend on carried or trucked water; the air above them is an untapped supplementary source. A small, open, solar-powered harvester could turn that moisture into a daily supplement of drinking water, but the physics limits it to well under a litre per square metre per day in dry air (DWD-CAL-001 v0.2 estimates about 0.57 L per day for the design decided on 2026-09-25, with night air drawn through the sorbent trays), so the realistic aim is a supplementary drinking-water source that a household or school can build and repair, not a replacement for a well or a water truck. Design with, not for: requirements must come from co-design sessions and field trials with the intended users through a local partner.
+Arid households without surface water or groundwater within reach depend on carried or trucked water; the air above them is an untapped supplementary source. A small, open, solar-powered harvester could turn that moisture into a daily supplement of drinking water, but the physics limits it to well under a litre per square metre per day in dry air (DWD-CAL-001 v0.8 estimates about 0.44 L per day for the design decided on 2026-09-25, with night air drawn through the sorbent trays and, after the STEM check of 2026-10-25, black absorber plates on the beds and an open tray floor), so the realistic aim is a supplementary drinking-water source that a household or school can build and repair, not a replacement for a well or a water truck. Design with, not for: requirements must come from co-design sessions and field trials with the intended users through a local partner.
 
 ## The problem
 
@@ -57,14 +61,26 @@ Three gaps keep this from reaching the people who need it:
 
 ## Users and context
 
-Table 1. Intended users (to be confirmed through co-design).
+The user requirements in DWD-URS-001 are drawn from Tables 1 and 2. Both are proposals until co-design sessions with the partner confirm them.
 
-| User | Need | Context |
+Table 1. Users and needs (to be confirmed through co-design).
+
+| User type | Goals and needs | Typical use scenario | Pain points and challenges |
+| --- | --- | --- | --- |
+| Rural household in an arid or semi-arid area | A daily supplement of safe drinking water, especially in the dry season, for little daily effort and no fuel | Opens the flaps at dusk and shuts them at dawn; weighs and empties the jerrycan; treats the water before drinking | Water carried or bought; nights of 25 to 40 % RH; cannot afford a commercial hydropanel; no grid; children near the device |
+| School or clinic | Drinking water for children or patients when the delivered supply runs short | Staff run the twice-daily routine; the unit stands in a yard or on a flat roof | Staff time; device must be safe around children; water must be treated and tested |
+| Local technician or maker | A design they can build from local materials and repair with common tools | Builds the box, stand and trays from the build plan; replaces the fan, battery or seals | Sheet-metal, woodwork and basic electronics skills; parts from general suppliers only; no special tooling |
+| Researcher or NGO | Open, logged yield data across climates, and a device to compare sorbents | Installs several units at partner sites; downloads the logger each month | Yields in the literature vary tenfold; closed products give no data |
+
+Table 2. Stakeholders.
+
+| Stakeholder group | Role or interest | Engagement needed |
 | --- | --- | --- |
-| Rural household in an arid or semi-arid area | A daily supplement of safe drinking water, especially in the dry season | Water carried or bought; sun is plentiful; nights are cooler and more humid than days |
-| School or clinic | Drinking water for children or patients when the delivered supply runs short | Some staff time for a twice-daily routine; roof or yard space |
-| Local technician or maker | A design they can build from local materials and repair | Basic sheet-metal, woodwork and electronics skills |
-| Researcher or NGO | Open, logged yield data across climates | Wants comparable measurements between sites |
+| First partner: university dryland field station (candidate type decided 2026-10-02, not yet agreed) | Hosts the first prototype, supplies the weather record and runs the TRL 4 tests | Agreement, site data, co-design of the user requirements |
+| Water and sanitation NGO (later community trial) | Brings the household and school users, owns water-quality testing in the community | Co-design sessions, water testing and treatment plan |
+| Local water and health authority | Sets drinking-water rules where the water is used | To assess per country (DWD-REG-001) |
+| Local workshops and suppliers | Build, repair and supply the parts | Check of the build plan and part availability |
+| Amish Chadha (Design Molecule) | Design owner; decides scope, budget and safety trade-offs | Decisions recorded in DWD-DEC-001 |
 
 Operating environment (proposed design envelope):
 
@@ -75,7 +91,7 @@ Operating environment (proposed design envelope):
 
 ## Constraints
 
-- Garage-buildable research prototype, a value-engineering target of $520 USD in parts (`project.yaml`; a hypothetical control target, not a limit; moved from $400 to $500 by Amish on 2026-09-25, DWD-DDR-001, D1, and to $520 on 2026-09-26, DWD-DDR-002, D15). The TRL 3 estimate was $515, within the target; after the design for construction it is $620, $100 over the target (DWD-DDR-003).
+- Garage-buildable research prototype, a value-engineering target of $520 USD in parts (`project.yaml`; a hypothetical control target, not a limit; moved from $400 to $500 by Amish on 2026-09-25, DWD-DDR-001, D1, and to $520 on 2026-09-26, DWD-DDR-002, D15). The TRL 3 estimate was $515, within the target; after the design for construction it was $639, and after the STEM check fixes of 2026-10-25 it is $695, $175 over the target (DWD-CAL-001 v0.8).
 - Regeneration heat from the sun only. Any electricity (fan, logger) comes from the device's own small solar panel.
 - Common, low-cost sorbents: silica gel and calcium chloride, both sold as desiccants and food-grade chemicals.
 - Everything in contact with the water must be food-grade.
@@ -84,7 +100,7 @@ Operating environment (proposed design envelope):
 
 ## Out of scope
 
-- Providing all of a household's water. One unit is sized as a supplement (see DWD-REQ-001).
+- Providing all of a household's water. One unit is sized as a supplement (see DWD-PRS-001).
 - Refrigeration or compressor-based dehumidifiers.
 - MOF or other specialty sorbents in the first prototype (possible later upgrade).
 - Treating the water to a certified potable standard. The design keeps the water clean in the device, but the documents require testing and treatment before drinking until tests show otherwise.
@@ -102,7 +118,7 @@ The gap DewDrive targets is an open, documented and locally buildable device usi
 ## Open questions
 
 - [ ] What are the real night humidity and solar figures at the partner's site? The partner and region were decided by Amish on 2026-10-02 (DWD-DEC-001, item 5): the first candidate type to approach, not yet agreed, is a university dryland field station in a hot semi-arid region with night humidity of about 25 to 40 % and an existing weather record, with a water and sanitation NGO for the later community trial.
-- [ ] Is about 0.5 L per day per unit worth a household's time and money, compared with carrying or buying water? DWD-CAL-001 v0.2 puts the parts cost at about $0.49 per litre over five years.
+- [ ] Is about 0.5 L per day per unit worth a household's time and money, compared with carrying or buying water? DWD-CAL-001 v0.8 puts the parts cost at about $0.87 per litre over five years.
 - [ ] How will households test and treat the water, and who pays for the tests?
 - [ ] Would a school or clinic, with staff on site twice a day, be a better first user than a household?
 

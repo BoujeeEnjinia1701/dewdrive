@@ -1,4 +1,4 @@
-"""DewDrive sizing calculations, DWD-CAL-001 v0.4.
+"""DewDrive sizing calculations, DWD-CAL-001 v0.8.
 
 Run from the repo root:  python docs/04-calcs/sizing.py
 Prints every number quoted in docs/04-calcs/01-sizing.md, tagged [A1], [B2] and so on,
@@ -12,12 +12,17 @@ v0.2 checks the design of record after DWD-DDR-002 (recommendations accepted by 
 2026-09-25): night air drawn down through the sealed, mesh-floored trays; 25 wt % CaCl2
 (1.0 kg in 3.0 kg of gel); a louvred drip screen under each tray; the fan stopped above 70 % RH.
 
+v0.8 (2026-10-25, STEM check DWD-STM-001 row S5, fix DWD-DEC-001 D16): the white sorbent beads are not a
+black absorber, so a black perforated aluminium plate rests on each bed; the day model uses the plate's
+effective absorptance and heat capacity (C2, C11), and C12 checks the temperature drop through the bed.
+
 v0.4 takes its geometry and mass from the constructable model of DWD-DDR-003 (build_components):
 mass by component and material (G1, G2), the outlet slot in the fan duty (F3), the new leg span in
 the wind check (H1 to H4) and the repriced BOM (J1).
 """
 import csv
 import math
+import os
 import sys
 from pathlib import Path
 
@@ -160,7 +165,7 @@ def h_sorption(W, T):
 
 
 # ============================================================================================
-print("DewDrive sizing, DWD-CAL-001 v0.4 (all values are estimates)\n")
+print("DewDrive sizing, DWD-CAL-001 v0.8 (all values are estimates)\n")
 print("A. Air, sorbent and bed")
 T_N, RH_N, RH_DRY = 20.0, 0.40, 0.25
 T_DAY = 35.0
@@ -245,7 +250,10 @@ say("B3", f"Through-flow, design of record (DDR-002; air drawn down through the 
           f"bed pressure drop {dP_B:.2f} Pa", ntu_B)
 
 U_TOP = 3.2           # W/(m2 K), bed to ambient through gap and twin-wall glazing (assumed)
-C_DRY = M_SG * 920 + M_SALT * 670 + 4 * 0.60 * 900   # J/K, sorbent plus four aluminium trays
+# Black perforated absorber plates on the beds (DWD-DEC-001 D16): 1 mm aluminium, 22.7 % open
+ABS_A = (PARAMS["tray_x"] - 2 * PARAMS["tray_sheet"] - 2 * PARAMS["abs_clear"]) * (PARAMS["tray_y"] - 2 * PARAMS["tray_sheet"] - 2 * PARAMS["abs_clear"]) / 1e6
+M_ABS = 4 * ABS_A * PARAMS["abs_t"] / 1e3 * 2700 * (1 - PARAMS["abs_open"])    # kg, all four plates
+C_DRY = M_SG * 920 + M_SALT * 670 + 4 * 0.60 * 900 + M_ABS * 900   # J/K, sorbent, four aluminium trays and absorbers
 
 
 def night(W0, T_air, rh, hours=H_NIGHT, mode="A", flow=FLOW, dt=60.0, rh_scale=1.0):
@@ -277,8 +285,23 @@ def night(W0, T_air, rh, hours=H_NIGHT, mode="A", flow=FLOW, dt=60.0, rh_scale=1
 # ============================================================================================
 # Day: sealed box, sun on the black tray tops, vapour diffuses down to the condenser plate
 H_TILT = 6.0          # kWh/m2 per day on the tilted aperture
-TAU_ALPHA = 0.78 * 0.95
-EPS_BED_UNDER = OPEN_MESH * 0.90 + (1 - OPEN_MESH) * 0.10     # beads through the mesh, bare aluminium
+TAU_PC = 0.78         # solar transmittance of 10 mm twin-wall polycarbonate (typical)
+ALPHA_PAINT = 0.95    # high-temperature matt black coating on the absorber plates and tray rims
+ALPHA_HOLE = float(os.environ.get("DWD_ALPHA_HOLE", "0.70"))     # light through the holes: beads absorb some, the rest scatters up onto the black plate underside (estimate)
+ALPHA_BED_BARE = 0.30  # white silica gel and CaCl2 beads seen directly by the sun (estimate; the v0.7 model wrongly took 0.95)
+ALPHA_ABS = (1 - PARAMS["abs_open"]) * ALPHA_PAINT + PARAMS["abs_open"] * ALPHA_HOLE
+TAU_ALPHA = TAU_PC * ALPHA_ABS
+K_BED = 0.20          # W/(m K), packed silica gel beads with salt solution (literature range about 0.1 to 0.2)
+GRAD = False          # C12 sensitivity: desorb at the mid-depth bed temperature, below the plate on top
+# Tray floor of the design (v0.8, independent review; D19): the vapour passes the PTFE-coated glass-fibre mesh and then
+# the gaps between the floor bars, so its open share is the product of the two (v0.7 took 0.60 for a 50 % perforated
+# sheet under a fine mesh, which is about 0.25); the underside seen by the condenser is
+# the floor sheet (bare aluminium) with the mesh and beads (about 0.9) showing through its holes. OPEN_MESH above
+# (0.60) is kept only for the v0.1 layout figures.
+OPEN_FLOOR = float(os.environ.get("DWD_OPEN_FLOOR", "0.975"))  # floor open share: seven 1.5 mm bars at 60 mm pitch (D19)
+OPEN_CLOTH = float(os.environ.get("DWD_OPEN_CLOTH", "0.60"))   # PTFE-coated glass-fibre mesh, about 1.8 mm aperture, open share (estimate)
+OPEN_VAP = OPEN_FLOOR * OPEN_CLOTH
+EPS_BED_UNDER = OPEN_FLOOR * 0.90 + (1 - OPEN_FLOOR) * 0.10     # mesh and beads through the floor holes, bare aluminium
 EPS_PLATE = 0.90
 ALPHA_PLATE = 0.50
 # Drip screen (DDR-002): two staggered layers of aluminium channels; no line of sight, so it acts as a
@@ -288,7 +311,8 @@ ALPHA_PLATE = 0.50
 EPS_SCR = 0.90
 EPS_SCR_LOWE = 0.15
 TAU_SCR = 1.5
-FAN_RH_OFF = 0.70     # logger rule: fan stops above 70 % RH (DDR-002)
+FAN_RH_OFF = 0.65     # logger rule: fan stops above 65 % RH (DDR-002 D11 at 70 %; lowered by Amish 2026-10-25, DWD-DEC-001 item 3)
+FAN_RH_ON = 0.60      # and restarts below 60 % RH (DWD-DEC-001 item 3)
 FLOW_NAT = 0.10 * 40.0 / 3600   # natural airflow through the open flaps with the fan off, assumed 10 % of the fan
 
 
@@ -303,7 +327,7 @@ def eps_bed_cond(screen=EPS_SCR):
 
 def vapour_path(screen=EPS_SCR):
     """Equivalent still-air diffusion length from the bed underside to the condenser, m."""
-    L = G["gap_under_m"]
+    L = G["bed_under_m"]
     if screen:
         L += G["screen_t_m"] * (TAU_SCR / G["screen_open"] - 1)
     return L
@@ -335,7 +359,7 @@ def day(W0, T_amb=T_DAY, dt=60.0, t0=7.0, t1=19.0, trace=False, screen=EPS_SCR):
     W, Tb = W0, 20.0 + 4.0
     delta = vapour_path(screen)
     eps = eps_bed_cond(screen)
-    a_d = G["bed_m2"] * OPEN_MESH
+    a_d = G["bed_m2"] * OPEN_VAP
     cond = 0.0
     rec = {"Tb_max": 0.0, "dTc_max": 0.0, "Qc_max": 0.0, "Tb_noon": None, "E_sun": 0.0, "E_win": 0.0,
            "E_des": 0.0, "E_loss": 0.0, "E_bc": 0.0, "rate_max": 0.0, "Tc_max": 0.0}
@@ -347,8 +371,11 @@ def day(W0, T_amb=T_DAY, dt=60.0, t0=7.0, t1=19.0, trace=False, screen=EPS_SCR):
         G_t = sun(t)
         q_abs = TAU_ALPHA * G_t * G["tray_m2"]
         q_gap = 0.78 * ALPHA_PLATE * G_t * max(G["inner_m2"] - G["tray_m2"], 0)
-        aw = aw_of_W(W, Tb)
-        pb = aw * psat(Tb)
+        Tbd = Tb
+        if GRAD:   # heat enters at the plate on top; the mid-depth bed runs half the conduction drop cooler
+            Tbd = Tb - 0.5 * max(q_abs - U_TOP * G["tray_m2"] * (Tb - T_amb), 0.0) / G["bed_m2"] * G["bed_depth_m"] / K_BED
+        aw = aw_of_W(W, Tbd)
+        pb = aw * psat(Tbd)
         # iterate the condenser temperature
         for _ in range(30):
             pc = psat(Tc)
@@ -358,15 +385,15 @@ def day(W0, T_amb=T_DAY, dt=60.0, t0=7.0, t1=19.0, trace=False, screen=EPS_SCR):
                 mdot = M_W * cmol * D_v(Tm) / delta * a_d * math.log((P_ATM - pc) / (P_ATM - pb))
             else:
                 mdot = 0.0
-            q_rad = eps * SIGMA * G["bed_m2"] * ((Tb + 273.15) ** 4 - (Tc + 273.15) ** 4)
-            q_cond = K_AIR / G["gap_under_m"] * G["bed_m2"] * (Tb - Tc)
+            q_rad = eps * SIGMA * G["bed_m2"] * ((Tbd + 273.15) ** 4 - (Tc + 273.15) ** 4)
+            q_cond = K_AIR / G["bed_under_m"] * G["bed_m2"] * (Tbd - Tc)
             q_c = mdot * H_FG + q_rad + q_cond + q_gap
             ua, eta, hc = condenser_ua(Tc - T_amb)
             Tc_new = T_amb + q_c / ua
             if abs(Tc_new - Tc) < 0.01:
                 break
             Tc = 0.5 * Tc + 0.5 * Tc_new
-        hs = h_sorption(W, Tb)
+        hs = h_sorption(W, Tbd)
         q_loss = U_TOP * G["tray_m2"] * (Tb - T_amb)
         C = C_DRY + 4186 * W
         Tb += (q_abs - q_loss - q_rad - q_cond - mdot * hs) / C * dt
@@ -456,6 +483,34 @@ say("C8", f"Condenser: {G['fin_n']} fins {1e3 * G['fin_t_m']:.0f} x {1e3 * G['fi
 sens = {n: cycle(RH_N, rh_scale=n / ntu_B)["collected"] for n in (2.0, 1.0)}
 say("C9", f"Sensitivity, design at 40 % RH, if grain kinetics cut the night NTU from {ntu_B:.0f} to 2 or 1: "
           f"collected {sens[2.0]:.2f} or {sens[1.0]:.2f} L per day", sens)
+# C11: the v0.7 design without absorber plates, with the sun on white beads (STEM S5, before the fix)
+_ta = TAU_ALPHA
+TAU_ALPHA = TAU_PC * ALPHA_BED_BARE
+cB40 = cycle(RH_N)
+TAU_ALPHA = _ta
+say("C11", f"Absorber (DWD-DEC-001 D16): effective absorptance {ALPHA_ABS:.2f} ({100 * PARAMS['abs_open']:.1f} % open plate, "
+           f"paint {ALPHA_PAINT}, light through the holes {ALPHA_HOLE}), transmittance-absorptance {TAU_ALPHA:.2f}; the four plates "
+           f"weigh {M_ABS:.2f} kg. Without them (sun on white beads, absorptance {ALPHA_BED_BARE}, transmittance-absorptance "
+           f"{TAU_PC * ALPHA_BED_BARE:.2f}) the design would collect {cB40['collected']:.2f} L per day at 40 % RH, bed "
+           f"{cB40['Tb_noon']:.0f} C at noon", cB40["collected"])
+# C12: heat enters at the top plate and conducts down through the 9.3 mm bed
+GRAD = True
+cG40 = cycle(RH_N)
+GRAD = False
+dTg = (TAU_ALPHA * sun(12) * G["tray_m2"] - U_TOP * G["tray_m2"] * (cD40["Tb_noon"] - T_DAY)) / G["bed_m2"] * G["bed_depth_m"] / K_BED
+# C13: the pessimistic corners of the independent review together: bed temperature drop and half the light
+# through the absorber holes absorbed (0.5 in place of 0.7)
+_ah, _ta = ALPHA_HOLE, TAU_ALPHA
+ALPHA_HOLE = 0.50
+TAU_ALPHA = TAU_PC * ((1 - PARAMS["abs_open"]) * ALPHA_PAINT + PARAMS["abs_open"] * ALPHA_HOLE)
+GRAD = True
+cP40 = cycle(RH_N)
+GRAD = False
+ALPHA_HOLE, TAU_ALPHA = _ah, _ta
+say("C13", f"Pessimistic combination (independent review): temperature drop through the bed and 0.5 of the light through the "
+           f"absorber holes absorbed: {cP40['collected']:.2f} L per day at 40 % RH", cP40["collected"])
+say("C12", f"Sensitivity, temperature drop through the bed (k {K_BED} W/(m K)): about {dTg:.0f} K top to bottom at noon; "
+           f"desorbing at the mid-depth temperature the design collects {cG40['collected']:.2f} L per day at 40 % RH", cG40["collected"])
 dd = day(cD40["W_dawn"], trace=True)
 print("      hour   sun W/m2   bed C   cond C   aw     g/h   bed water kg")
 for r in dd["rows"]:
@@ -498,7 +553,7 @@ def stagnation(screen=EPS_SCR):
     for _ in range(400):
         q_in = TAU_ALPHA * G_pk * G["tray_m2"]
         q_out = U_TOP * G["tray_m2"] * (Ts - T_DAY) + eps * SIGMA * G["tray_m2"] * ((Ts + 273.15) ** 4 - (T_DAY + 5 + 273.15) ** 4) \
-            + K_AIR / G["gap_under_m"] * G["tray_m2"] * (Ts - T_DAY - 5)
+            + K_AIR / G["bed_under_m"] * G["tray_m2"] * (Ts - T_DAY - 5)
         Ts += (q_in - q_out) / 50
     return Ts
 
@@ -514,7 +569,28 @@ q = (Ts - T_DAY) / (1 / h_in + R_pc + 1 / h_out)
 T_out = T_DAY + q / h_out + 0.05 * G_pk / h_out
 say("D2", f"Glazing outer skin at stagnation: about {T_out:.0f} C (includes 5 % solar absorption in the skins); "
           f"wall and plywood surfaces stay near ambient plus solar gain on paint", T_out)
+T_in = Ts - q / h_in
 T_cond_touch = T_DAY + cD40["dTc_max"]
+
+
+def stagnation_peak(G_in, T_a, dTc, screen=EPS_SCR):
+    """Dry bed at a given irradiance and air temperature, condenser dTc above air; returns bed and glazing inner skin."""
+    Tb = T_a
+    eps = eps_bed_cond(screen)
+    for _ in range(600):
+        q_in = TAU_ALPHA * G_in * G["tray_m2"]
+        q_out = U_TOP * G["tray_m2"] * (Tb - T_a) + eps * SIGMA * G["tray_m2"] * ((Tb + 273.15) ** 4 - (T_a + dTc + 273.15) ** 4) \
+            + K_AIR / G["bed_under_m"] * G["tray_m2"] * (Tb - T_a - dTc)
+        Tb += (q_in - q_out) / 50
+    hi = 4 * 0.9 * SIGMA * (273.15 + (Tb + T_a) / 2) ** 3 + 2.5
+    qq = (Tb - T_a) / (1 / hi + R_pc + 1 / h_out)
+    return Tb, Tb - qq / hi
+
+
+Ts6, Tin6 = stagnation_peak(1000.0, 40.0, 12.0)
+say("D6", f"Stagnation on a peak day (independent review): 1000 W/m2 on the aperture, 40 C air, condenser 12 K above air: dry bed "
+          f"about {Ts6:.0f} C, glazing inner skin about {Tin6:.0f} C; at the design point the inner skin is about {T_in:.0f} C. "
+          f"The glazing rating (130 C or more) applies to the skin", Tin6)
 say("D3", f"Condenser fins (touchable, ankle and hand height): up to {T_cond_touch:.0f} C at the peak of desorption", T_cond_touch)
 
 
@@ -534,7 +610,7 @@ def stagnation_vent(screen, a_vent):
         v = CD_VENT * math.sqrt(2 * 9.81 * H_STACK * max(T_air - T_DAY, 0) / (T_air + 273.15))
         q_v = RHO_AIR * CP_AIR * v * a_vent * (T_air - T_DAY)
         q_out = U_TOP * G["tray_m2"] * (Ts - T_DAY) + eps * SIGMA * G["tray_m2"] * ((Ts + 273.15) ** 4 - (T_DAY + 5 + 273.15) ** 4) \
-            + K_AIR / G["gap_under_m"] * G["tray_m2"] * (Ts - T_DAY - 5) + q_v
+            + K_AIR / G["bed_under_m"] * G["tray_m2"] * (Ts - T_DAY - 5) + q_v
         Ts += (q_in - q_out) / 50
     return Ts
 
@@ -590,7 +666,7 @@ spell_fan = humid_spell(FLOW)
 spell_rule = humid_spell(FLOW_NAT)
 say("E4", "Three 90 % RH nights in a row, fan left running (rule failed): pores "
           + ", ".join(f"{100 * fill(w):.0f} %" for w in spell_fan) + " full after nights 1 to 3", fill(spell_fan[-1]))
-say("E5", f"Same spell with the fan stopped above {100 * FAN_RH_OFF:.0f} % RH (natural airflow assumed "
+say("E5", f"Same spell with the fan stopped above {100 * FAN_RH_OFF:.0f} % RH, restarting below {100 * FAN_RH_ON:.0f} % (natural airflow assumed "
           f"{FLOW_NAT * 3600:.0f} m3/h): pores " + ", ".join(f"{100 * fill(w):.0f} %" for w in spell_rule)
           + " full", fill(spell_rule[-1]))
 excess = {k: max(sol_volume(v[-1]) - v_pore, 0.0) for k, v in (("fan", spell_fan), ("rule", spell_rule))}
@@ -621,7 +697,8 @@ dens = {  # g/cm3
     "ply": 0.60, "softwood": 0.45, "pir": 0.035,
     "al": 2.70, "steel": 7.85,
     "pc": 0.17,           # 10 mm twin-wall PC, 1.7 kg/m2
-    "mesh": 2.3,          # 1 mm perforated aluminium (about 50 % open) with a fine stainless woven mesh, modelled as 0.8 mm
+    "perf": 2.70 * (1 - PARAMS["abs_open"]),   # absorber plates, 1 mm perforated aluminium, 22.7 % open
+    "mesh": 0.6,          # PTFE-coated glass-fibre open mesh (D17, D19), modelled as a 0.8 mm slab (estimate, about 0.5 kg/m2)
     "screens": 2.70 * 0.6,  # channels modelled 1 mm thick, made from 0.5 mm flashing; frames 1 to 2 mm
     "plastic": 1.2, "silicone": 1.2 * 0.45,  # tube modelled solid, 12 mm bore in 16 mm
 }
@@ -656,8 +733,8 @@ box_no_trays = box - lift_out
 say("G2", f"Box lifted with the trays, sorbent and the deck with its drip screens taken out first: {box_no_trays:.1f} kg "
           f"(those parts {lift_out:.1f} kg: trays {mass['trays']:.1f}, sorbent {mass['bed']:.1f}, deck {mass['deck']:.1f}, screens {mass['screens']:.1f})", box_no_trays)
 
-print("\nH. Wind (R10), 20 m/s")
-V = 20.0
+print("\nH. Wind (R10), 25 m/s gust (design wind speed decided by Amish 2026-10-25, DWD-DEC-001 item 4)")
+V = 25.0              # design gust until the site value is known from the national wind annex (DWD-REG-001 G12)
 q_w = 0.5 * 1.2 * V ** 2
 CF = 1.2
 A_p = G["aperture_m2"]
@@ -682,7 +759,14 @@ say("H2", f"Overturning moment {M_ot:.0f} N m against a restoring {M_rs:.0f} N m
 say("H3", f"Sliding (friction 0.5): margin {slide_margin:.0f} N without ballast; ballast for 1.5 against sliding "
           f"{ballast_slide:.0f} kg", ballast_slide)
 anchor = max(SF * M_ot - M_rs, 0) / (2 * 2 * a)
-say("H4", f"Alternative: two upwind ground anchors, each rated for {anchor:.0f} N or more in uplift", anchor)
+k20 = (20.0 / V) ** 2
+M_ot20 = (F_up * (a + e) + F_h * h_cp) * k20
+anchor20 = max(SF * M_ot20 - M_rs, 0) / (2 * 2 * a)
+ballast20 = max(SF * M_ot20 - M_rs, 0) / (9.81 * a)
+say("H4", f"Alternative: two upwind ground anchors, each rated for {anchor:.0f} N or more in uplift at 25 m/s; "
+          f"specified at 250 N or more each in the site soil (DWD-DEC-001 D20)", anchor)
+say("H5", f"For reference, the earlier 20 m/s design wind (no gust allowance): normal force {F_n * k20:.0f} N, each anchor "
+          f"{anchor20:.0f} N, or {ballast20:.0f} kg of ballast; sliding is resisted by friction (H3) and the anchor straps", anchor20)
 
 print("\nI. Logging (R12)")
 rec_bytes, chans = 48, 5
@@ -698,7 +782,7 @@ life_l = cD40["collected"] * 365 * 5
 say("J2", f"Water cost over 5 years at the design point: {life_l:.0f} L, ${cost / life_l:.2f} per litre", cost / life_l)
 
 # ============================================================================================
-print("\nK. Requirements (DWD-REQ-001 v0.9)")
+print("\nK. Product requirements (DWD-PRS-001 v1.0; the R number in brackets is the DWD-REQ-001 number)")
 R = []
 
 
@@ -706,37 +790,67 @@ def req(rid, name, value, target, status):
     R.append((rid, name, value, target, status))
 
 
-req("R1", "Water at the design point", f"{cD40['collected']:.2f} L/day (C3)",
+req("PR-001", "(R1) Water at the design point", f"{cD40['collected']:.2f} L/day (C3)",
     ">= 0.5 L/day", "not met" if cD40["collected"] < 0.5 else "met")
-req("R2", "Water in dry nights", f"{cD25['collected']:.2f} L/day at 25 % RH (C4)",
+req("PR-002", "(R2) Water in dry nights", f"{cD25['collected']:.2f} L/day at 25 % RH (C4)",
     ">= 0.25 L/day at 25 % RH", "not met" if cD25["collected"] < 0.25 else "met")
-req("R3", "Sun-only regeneration", f"bed {cD40['Tb_noon']:.0f} C at noon (C2)", ">= 75 C by midday",
+req("PR-003", "(R3) Sun-only regeneration", f"bed {cD40['Tb_noon']:.0f} C at noon (C2)", ">= 75 C by midday",
     "met" if cD40["Tb_noon"] >= 75 else "not met")
-req("R4", "Own electrical loads", f"{E_day:.1f} Wh/day against {E_pv:.0f} Wh/day PV; {auto:.1f} days autonomy (F1, F2)",
+req("PR-004", "(R4) Own electrical loads", f"{E_day:.1f} Wh/day against {E_pv:.0f} Wh/day PV; {auto:.1f} days autonomy (F1, F2)",
     "<= 30 Wh/day; >= 2 days", "met" if E_day <= 30 and auto >= 2 else "not met")
-req("R5", "Condenser rise", f"{cD40['dTc_max']:.1f} K (C2)",
+req("PR-005", "(R5) Condenser rise", f"{cD40['dTc_max']:.1f} K (C2)",
     "<= 15 K", "met" if cD40["dTc_max"] <= 15 else "not met")
-req("R6", "Water quality", "materials food-grade by selection; chloride carry-over needs a water test", "food-grade; Cl < 250 mg/L",
+req("PR-006", "(R6) Water quality", "materials food-grade by selection; chloride carry-over needs a water test", "food-grade; Cl < 250 mg/L",
     "not verifiable at TRL 3")
 r7_ok = fill(Wn90) < 1.0 and excess["rule"] <= G["sump_l"] / 1e3
-req("R7", "Salt containment", f"pores fill at {100 * rh_fill:.0f} % RH; {100 * fill(Wn90):.0f} % of pore volume after one 90 % RH night; "
+req("PR-007", "(R7) Salt containment", f"pores fill at {100 * rh_fill:.0f} % RH; {100 * fill(Wn90):.0f} % of pore volume after one 90 % RH night; "
     f"{100 * fill(spell_rule[-1]):.0f} % after three with the fan rule; sumps {G['sump_l']:.2f} L (E2 to E6)",
     "no brine leaves the tray and drip-screen assembly after a 90 % RH night", "met" if r7_ok else "at risk")
-req("R8", "Two actions per day", "open flaps at dusk, close at dawn; fan on a timer with a humidity cut-out", "2 actions, <= 5 min", "met")
-req("R9", "Portable", f"box {box:.1f} kg with everything inside; {box_no_trays:.1f} kg with the trays and deck lifted out; total {total:.1f} kg (G1, G2)",
+req("PR-008", "(R8) Two actions per day", "open flaps at dusk, close at dawn; fan on a timer with a humidity cut-out", "2 actions, <= 5 min", "met")
+req("PR-009", "(R9) Portable", f"box {box:.1f} kg with everything inside; {box_no_trays:.1f} kg with the trays and deck lifted out; total {total:.1f} kg (G1, G2)",
     "box <= 35 kg lifted with trays and deck out (restated 2026-10-02); stand separable", "met" if box_no_trays <= 35 else "not met")
-req("R10", "Survive the site", f"two anchors of {anchor:.0f} N (default) or {ballast:.0f} kg ballast for 20 m/s (H2 to H4); UV and 300 cycles need supplier data and test",
-    "stable at 20 m/s; UV; 300 cycles", "not verifiable at TRL 3")
-req("R11", "Cost", f"${cost:.0f} (J1)", "<= $520 (top-up, 2026-09-26)", "met" if cost <= 520 else "not met")
-req("R12", "Record performance", f"{n_rec} records, {n_rec * rec_bytes / 1e6:.2f} MB (I1)", "5 min for 30 days", "met")
-req("R13", "Protect users", f"glazing outer about {T_out:.0f} C at stagnation; fins up to {T_cond_touch:.0f} C; 12.8 V DC (D1 to D3)",
+req("PR-010", "(R10) Survive the site", f"two anchors of {anchor:.0f} N each (specified 250 N) or {ballast:.0f} kg ballast for a 25 m/s gust (H2 to H4); UV and 300 cycles need supplier data and test",
+    "stable in a 25 m/s gust until the site value is known (DWD-DEC-001 item 4); UV; 300 cycles", "not verifiable at TRL 3")
+req("PR-011", "(R11) Cost", f"${cost:.0f} (J1)", "<= $520 value-engineering target", "met" if cost <= 520 else "over target")
+req("PR-012", "(R12) Record performance", f"{n_rec} records, {n_rec * rec_bytes / 1e6:.2f} MB (I1)", "5 min for 30 days", "met")
+req("PR-013", "(R13) Protect users", f"glazing outer about {T_out:.0f} C at stagnation; fins up to {T_cond_touch:.0f} C; 12.8 V DC (D1 to D3)",
     "touched surfaces <= 60 C; < 60 V DC", "met" if T_out <= 60 and T_cond_touch <= 60 else "not met")
-with (Path(__file__).parent / "results.csv").open("w", newline="") as f:
+VARIANT = bool(os.environ.get("DWD_VARIANT"))   # exploration runs write nothing
+with (Path(__file__).parent / ("results_variant.csv" if VARIANT else "results.csv")).open("w", newline="") as f:
     w = csv.writer(f)
     w.writerow(["id", "requirement", "value", "target", "status"])
     w.writerows(R)
 for r in R:
-    print(f"  {r[0]:4s} {r[4]:24s} {r[2]}")
+    print(f"  {r[0]:7s} {r[4]:24s} {r[2]}")
 from collections import Counter
 cnt = Counter(r[4] for r in R)
 say("K1", "Counts: " + ", ".join(f"{v} {k}" for k, v in sorted(cnt.items())), dict(cnt))
+
+# Tagged values for the STEM check (docs/04-calcs/stem_check.py reads this file)
+import json  # noqa: E402
+
+
+def _plain(v):
+    if isinstance(v, dict):
+        return {str(k): _plain(x) for k, x in v.items()}
+    if isinstance(v, (list, tuple)):
+        return [_plain(x) for x in v]
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return str(v)
+
+
+EXTRA = {"uptake40": cD40["uptake"], "uptake25": cD25["uptake"], "W40_eq": W40, "Tb_noon": cD40["Tb_noon"],
+         "Tb_max": cD40["Tb_max"], "Tc_max": cD40["Tc_max"], "dTc_max": cD40["dTc_max"], "Qc_max": cD40["Qc_max"],
+         "rate_max_kg_h": cD40["rate_max"], "collected40": cD40["collected"], "collected25": cD25["collected"],
+         "E_win": eD["E_win"], "E_des": eD["E_des"], "E_loss": eD["E_loss"], "E_bc": eD["E_bc"], "E_sun": eD["E_sun"],
+         "eff": effD, "supply40": supply, "dP_bed": dP_B, "ua12": ua12, "hc12": hc12, "Ts_stag": Ts, "T_glaz_out": T_out,
+         "T_fin": T_cond_touch, "fill_90": fill(Wn90), "fill_3n_rule": fill(spell_rule[-1]), "rh_fill": rh_fill,
+         "E_day_Wh": E_day, "E_pv_Wh": E_pv, "autonomy_d": auto, "anchor_N": anchor20, "M_ot": M_ot, "M_rs": M_rs,
+         "box_kg": box, "box_out_kg": box_no_trays, "total_kg": total, "cost": cost, "tau_alpha": TAU_ALPHA,
+         "alpha_abs": ALPHA_ABS, "collected_bare": cB40["collected"], "Tb_noon_bare": cB40["Tb_noon"],
+         "collected_grad": cG40["collected"], "dT_grad": dTg, "M_ABS": M_ABS, "collected_pess": cP40["collected"],
+         "Ts_peak": Ts6, "T_glaz_in_peak": Tin6, "T_glaz_in": T_in, "anchor25_N": anchor, "ballast25_kg": ballast, "rh_off": FAN_RH_OFF, "rh_on": FAN_RH_ON, "open_vap": OPEN_VAP,
+         "open_floor": OPEN_FLOOR}
+(Path(__file__).parent / ("sizing_variant.json" if VARIANT else "sizing_out.json")).write_text(json.dumps({"tags": _plain(OUT), "values": _plain(EXTRA)}, indent=1))

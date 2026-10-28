@@ -1,22 +1,23 @@
-"""DewDrive concept media (TRL 3, constructable design of DWD-DDR-003), generated from the parametric model in cad/src/model.py.
+"""DewDrive concept media (TRL 3, kit 1.9), generated from the detailed model components("A") in cad/src/model.py.
 
-Run from the repo root:  python cad/src/concept_media.py
-Massing-plus model: main dimensions and interfaces; not for fabrication.
+Run from the repo root after the sizing script:  python cad/src/concept_media.py
+                                                  python cad/src/concept_media.py --web   (only model.glb and viewer.html)
+Every part of option A at detail level D3, grouped by BOM line (fasteners with the sub-assembly they fix); not for
+fabrication. Numbers on the media are read from docs/04-calcs/sizing_out.json (DWD-CAL-001 v0.8).
 
 Coordinates in mm. X runs east to west across the collector, Y runs south to north, Z is up.
 Every part carries its BOM line number from bom/bom.csv. Numbers on the media come from
 docs/04-calcs/sizing.py (DWD-CAL-001) and are estimates.
 """
-import contextlib
-import io
+import json
 import math
 import sys
 from pathlib import Path
 HERE = Path(__file__).resolve()
 sys.path[:0] = [str(HERE.parents[2] / ".kit"), str(HERE.parent), str(HERE.parents[2] / "docs" / "04-calcs")]
-from build123d import Box, Pos  # noqa: E402
-from concept import Part, render_all, human_figure, _render  # noqa: E402
-from model import PARAMS, build_parts, world, derived  # noqa: E402
+from build123d import Box, Compound, Pos  # noqa: E402
+from concept import Part, render_all, human_figure, _render, export_web_model  # noqa: E402
+from model import PARAMS, BOM_NAMES, components, world, derived  # noqa: E402
 
 TILT = PARAMS["tilt"]
 L_X, L_Y, WALL = PARAMS["box_x"], PARAMS["box_y"], PARAMS["wall_t"]
@@ -38,13 +39,25 @@ EXPLODE = {"stand": (0, 0, -450), "walls": along_n(120), "glazing": along_n(1850
            "screens": along_n(700, (2300, 700, 900)), "deck": along_n(230, (1350, 0, 0)),
            "gutter": (0, -420, -120), "bottle": (250, -520, -80), "flap": (-150, -700, 150),
            "fan": (1300, 900, -700), "pv": (1400, 900, -900), "ebox": (2300, -700, -150), "shield": (2300, -700, 0)}
-parts = [Part(name, shape, COLORS[k], bom, EXPLODE[k]) for k, name, shape, bom in build_parts()]
+BOM_KEY = {1: "stand", 2: "walls", 3: "glazing", 4: "trays", 5: "bed", 6: "condenser", 7: "gutter", 8: "bottle", 9: "flap",
+           10: "fan", 11: "pv", 12: "ebox", 13: "shield", 15: "screens", 16: "deck"}
+GROUP_BOM = {"walls": 2, "box": 6, "condenser": 6, "water": 7, "deck": 16, "screens": 15, "trays": 4, "lid": 3, "flap": 9,
+             "fan": 10, "stand": 1, "pv": 11, "ebox": 12, "shield": 13}
+_by = {}
+for q in components("A"):
+    if q["kind"] == "context":
+        continue
+    b = q["bom"] if q["bom"] not in (None, 14) else GROUP_BOM.get(q["group"], 1)
+    if q["bom"] == 14 and q["group"] == "walls":
+        b = 2
+    _by.setdefault(b, []).append(q["shape"])
+parts = [Part(BOM_NAMES[b], Compound(children=sh), COLORS[BOM_KEY[b]], b, EXPLODE[BOM_KEY[b]]) for b, sh in sorted(_by.items())]
+COLORS["trays"] = "#1F2937"
 _stand_pts = {(xs, ys): world(xs * (L_X / 2 - 20), ys * (L_Y / 2 - 60), PARAMS["wall_z0"] - 3)
               for xs in (-1, 1) for ys in (-1, 1)}
 pts = _stand_pts
 
-with contextlib.redirect_stdout(io.StringIO()):
-    import sizing as C  # noqa: E402
+_J = json.loads((HERE.parents[2] / "docs" / "04-calcs" / "sizing_out.json").read_text())["values"]
 
 # Scale reference: a 1.75 m person standing clear of the stand (placed by hand so that it does not
 # overlap the collector in the hero or the blueprint isometric view)
@@ -147,23 +160,26 @@ def cutaway(out="media/cutaway.png"):
 
 
 if __name__ == "__main__":
-    A = C.cD40
+    if "--web" in sys.argv:
+        export_web_model(parts, "media", title="DewDrive: Solar desiccant water harvester concept")
+        sys.exit(0)
+    V = _J
     render_all(
         parts, project="DewDrive", title="Solar desiccant water harvester concept", dwg_no="DWD-DWG-010",
         key_figures=[f"{derived()['aperture_m2']:.1f} m2 glazed lid, tilted {TILT:.0f} deg to the sun",
-                     "4 kg composite sorbent (silica gel with 25 % CaCl2)",
-                     f"About {A['collected']:.2f} L/day at 40 % night RH, air drawn through the beds (estimate)",
-                     f"Bed about {A['Tb_noon']:.0f} C at noon by sun only; fan {C.P_FAN * C.H_NIGHT:.0f} Wh/night",
+                     "4 kg composite sorbent (silica gel with 25 % CaCl2), black absorber plates",
+                     f"About {V['collected40']:.2f} L/day at 40 % night RH, air drawn through the beds (estimate)",
+                     f"Bed about {V['Tb_noon']:.0f} C at noon by sun only; fan {V['E_day_Wh'] - 3.6:.0f} Wh/night",
                      f"Collector 1.1 x 1.0 m, top edge {derived()['top_edge_m']:.2f} m high",
-                     f"About {sum(C.mass.values()):.0f} kg dry; box about {C.box:.0f} kg (estimate)",
-                     f"Parts ${C.cost:.0f} (budget $520)"],
-        cut=False, scale_figure=False, context=[person],
+                     f"About {V['total_kg']:.0f} kg dry; box about {V['box_kg']:.0f} kg (estimate)",
+                     f"Parts ${V['cost']:.0f} (value-engineering target $520)"],
+        cut=False, scale_figure=False, context=[person], web_model=False,
         flow={"title": "water per day at the design point, g (estimates; 40 % night RH, 20 C)",
               "unit": "g",
-              "stages": [("Vapour in night air", round(1e3 * C.supply)), ("Adsorbed overnight", round(1e3 * A["uptake"])),
-                         ("Condensed by day", round(1e3 * A["condensed"])), ("In the bottle", round(1e3 * A["collected"]))],
-              "losses": [(0, "Leaves in the outlet air", round(1e3 * (C.supply - A["uptake"]))),
-                         (2, "Films and drops", round(1e3 * (A["condensed"] - A["collected"])))]},
+              "stages": [("Vapour in night air", round(1e3 * V["supply40"])), ("Adsorbed overnight", round(1e3 * V["uptake40"])),
+                         ("Condensed by day", round(1e3 * (V["collected40"] + 0.030))), ("In the bottle", round(1e3 * V["collected40"]))],
+              "losses": [(0, "Leaves in the outlet air", round(1e3 * (V["supply40"] - V["uptake40"]))),
+                         (2, "Films and drops", 30)]},
     )
     cutaway()
     import shutil

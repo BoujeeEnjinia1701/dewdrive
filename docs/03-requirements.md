@@ -1,11 +1,11 @@
 ---
-doc_id: DWD-REQ-001
-title: DewDrive requirements
+doc_id: DWD-PRS-001
+title: DewDrive product requirements and specifications
 project: DewDrive
-doc_type: Requirements
-version: "0.9"
+doc_type: Product requirements and specifications
+version: '1.1'
 status: Draft
-date: '2026-10-02'
+date: '2026-10-25'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -45,11 +45,19 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: Status from DWD-CAL-001 v0.7 (script re-run; R9 met as restated); R11 over the target by $119 after the 130 °C glazing and the label
+- version: "1.0"
+  date: '2026-10-25'
+  author: Amish Chadha
+  change: "Kit 1.8 pipeline: DWD-REQ-001 migrated to DWD-PRS-001 (each R becomes a PR with the old number under Was, tolerance, units and the user requirement it traces to); PR-014 added for UR-009; status from DWD-CAL-001 v0.8 after the STEM check fixes and independent review (D16 to D20); PR-001 not met"
+- version: '1.1'
+  date: '2026-10-25'
+  author: Amish Chadha
+  change: 'Amish''s decisions of 2026-10-25: PR-010 design wind a 25 m/s gust (item 4); fan cut-out 65 % RH in the assumptions (item 3)'
 ---
 
-# DewDrive requirements
+# DewDrive product requirements and specifications
 
-These requirements were checked by calculation at TRL 3 in DWD-CAL-001 v0.7, for the design decided by Amish on 2026-09-25 (DWD-DDR-002) as made buildable in DWD-DDR-003: night air drawn down through the sealed trays, 25 wt % CaCl₂, a drip screen under each tray and a fan cut-out above 70 % RH. The design meets ten of thirteen. Making it buildable added parts: R11 (cost) is over its value-engineering target, at an estimated $639 against $520, and R9 (portability) was not met as first written, the full box being 35.2 kg against 35 kg. Amish restated R9 on 2026-10-02 for a lift with the trays and deck taken out (DWD-DEC-001, item 2), and it is met at 23.4 kg. The design decisions register (DWD-DEC-001) lists R11's cost drivers and savings. R6 and R10 can only be verified by test. The yield targets R1 and R2, missed by the v0.1 design, are now met. Targets are still proposals for review, not user-validated needs, and will be revised after co-design sessions.
+What the design must do, each requirement traced to a user need in DWD-URS-001. This document replaces DWD-REQ-001 (v0.9); the old R number is kept under "Was". The requirements were checked by calculation at TRL 3 in DWD-CAL-001 v0.8, for the design decided by Amish on 2026-09-25 (DWD-DDR-002), made buildable in DWD-DDR-003 and corrected by the STEM check and its independent review on 2026-10-25 (DWD-DEC-001, D16 to D20): black absorber plates on the beds, PTFE-coated brine-wetted parts, an open tray floor of mesh on bars, a painted condenser underside and stronger ground anchors. On paper the design meets 10 of 14 requirements. **PR-001 is not met:** the design collects about 0.44 L per day at the design point against 0.5 L, and 0.37 to 0.41 L under the calculation's sensitivities (C9, C12, C13); the ways to recover it are for Amish (DWD-DEC-001, open item 2). PR-011 (cost) is over its value-engineering target, at an estimated $695 against $520. PR-006 and PR-010 can only be verified by test, and PR-005 is at risk if the fins shed less heat than the correlation says. Targets are proposals for review with a co-design partner, not user-validated needs. Method: STANDARDS section 22.
 
 ## Design point
 
@@ -61,29 +69,34 @@ Decided by Amish on 2026-09-25 (DWD-DDR-001, D8). Unless a requirement says othe
 
 ## Requirements
 
-Table 1. Requirements and TRL 3 status. Values and tags are from DWD-CAL-001 v0.5, Table 4.
+Table 1. Product requirements and specifications. Values and tags are from DWD-CAL-001 v0.8.
 
-| ID | Requirement | Target | Verification | TRL 3 status |
-| --- | --- | --- | --- | --- |
-| R1 | Produce water at the design point | 0.5 L per day or more collected, per unit | Cyclic mass and heat balance (DWD-CAL-001); later field test | Met: 0.57 L per day (C3); v0.1 design 0.20 L |
-| R2 | Produce water in dry nights | 0.25 L per day or more at 25 % night RH | Same | Met: 0.45 L per day (C4); v0.1 design 0.09 L |
-| R3 | Use only the sun for regeneration | No fuel or grid power; bed reaches 75 °C or more by midday on a clear day at 35 °C ambient | Collector heat balance | Met: bed about 112 °C at noon (C2) |
-| R4 | Run its own electrical loads | Fan and logger need 30 Wh per day or less, supplied by the on-board PV panel, with 2 days or more of battery autonomy | Energy budget | Met: 23.6 Wh per day against 35 Wh per day; 2.6 days of autonomy (F1, F2) |
-| R5 | Keep the condenser cool | Condenser 15 K or less above ambient at the peak of desorption | Condenser heat balance | Met: 12.1 K (C2) |
-| R6 | Keep the water clean | All wetted parts food-grade; no salt carry-over (chloride in the collected water below 250 mg/L) | Materials review; later laboratory water test | **Not verifiable at TRL 3.** Materials chosen to meet it |
-| R7 | Contain the salt | No liquid CaCl₂ solution leaves the tray and drip-screen assembly or reaches the condenser, even after a night at 90 % RH (restated by DWD-DDR-002, D11; was "leaves the trays") | Pore volume against solution volume; sump volume; later chamber test | Met on paper: the pores fill only above 71 % RH (E2); one 90 % RH night fills 43 % of them (E3), three in a row 50 % with the fan rule and 63 % without it (E4, E5); the sumps hold 0.58 L as a backstop (E6) |
-| R8 | Be simple to operate | Two user actions per day (open flaps in the evening, close them in the morning), 5 min per day or less | Task analysis; co-design sessions | Met by design; the fan timer and humidity cut-out need no user action |
-| R9 | Be portable and quick to set up | Box 35 kg or less when lifted with the trays and deck taken out (two-person lift), and labelled to be emptied before lifting; stand separable; set up by two people in 30 min or less. Restated by Amish on 2026-10-02 (DWD-DEC-001, item 2; DWD-DDR-003, A2); was "box 35 kg or less" | Mass from model components; later trial | Met: 23.4 kg with the trays, sorbent, deck and screens lifted out; 35.2 kg with everything inside; total 60.2 kg (G1, G2). Set-up time needs a trial |
-| R10 | Survive the site | Stable in 20 m/s (72 km/h) wind with two ground anchors (default, DWD-DDR-002, D13) or ballast; UV-stable glazing; sorbent 300 cycles or more with 20 % or less loss of capacity | Wind load calculation; supplier data; later cycling test | **Not verifiable at TRL 3.** Wind: two anchors of 98 N each, or 40 kg of ballast (H2 to H4) |
-| R11 | Cost | Parts $520 or less (`project.yaml` value-engineering target, moved from $400 to $500 by Amish on 2026-09-25, DWD-DDR-001 D1, and to $520 on 2026-09-26, DWD-DDR-002 D15) | Priced BOM | **Over the value-engineering target by $119:** $639 (J1) against $520; the buildable design added parts (DWD-DDR-003) and the decisions of 2026-10-02 added a 130 °C glazing sheet and the label |
-| R12 | Record performance | Log air temperature and RH, bed and condenser temperature every 5 min for 30 days or more; daily water mass recorded by weighing | Storage estimate; design review | Met: 8,640 records, 0.41 MB (I1) |
-| R13 | Protect users | External surfaces a person would touch in normal use stay at 60 °C or less; the glazing is labelled hot; no exposed conductor above 60 V DC | Surface temperature estimate; design review | Met: glazing outer skin about 57 °C at stagnation, fins up to 47 °C (D2, D3); 12.8 V DC |
+| ID | Traces to | Category | Title | Requirement | Target | Tolerance | Units | Verification | Status | Was |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| PR-001 | UR-001 | Performance | Water at the design point | The unit shall collect water from night air at the design point | 0.5 | min | L/day | Analysis (DWD-CAL-001 cyclic balance), TRL 3; field test at TRL 4 | Not met: 0.44 (C3); 0.37 to 0.41 under the sensitivities (C9, C12, C13) | R1 |
+| PR-002 | UR-002, UR-001 | Performance | Water in dry nights | The unit shall collect water when the night air is at 25 % RH | 0.25 | min | L/day | Analysis (DWD-CAL-001), TRL 3; field test at TRL 4 | Met on paper: 0.31 (C4) | R2 |
+| PR-003 | UR-008 | Performance | Sun-only regeneration | The bed shall be regenerated by the sun alone and reach the target temperature by midday on a clear day at 35 °C | 75 | min | °C | Analysis (collector balance), TRL 3; logged at TRL 4 | Met on paper: 105 °C at noon (C2) | R3 |
+| PR-004 | UR-008 | Electrical | Own electrical loads | The fan and logger shall use no more than the target energy per day, supplied by the on-board PV panel, with at least 2 days of battery autonomy | 30 | max | Wh/day | Analysis (energy budget), TRL 3; measurement at TRL 4 | Met on paper: 23.6 against 35 Wh/day; 2.6 days (F1, F2) | R4 |
+| PR-005 | UR-001 | Performance | Condenser rise | The condenser shall stay within the target rise above ambient at the peak of desorption | 15 | max | K | Analysis (condenser balance, painted underside D18), TRL 3; logged at TRL 4 | At risk: 11.9 K on the correlation (C2); about 14 to 16 K if the fins under the floor shed less heat (independent review) | R5 |
+| PR-006 | UR-004 | Materials | Water quality | Every wetted part shall be food-grade, and chloride in the collected water shall stay below the target | 250 | max | mg/L | Inspection (materials review), TRL 3; laboratory water test at TRL 4 | To verify at TRL 4; materials chosen to meet it | R6 |
+| PR-007 | UR-012, UR-004 | Safety | Salt containment | No CaCl₂ solution shall leave the tray and drip-screen assembly or reach the condenser after a night at 90 % RH; the pores shall stay below the target fill | 100 | max | % of pore volume | Analysis (pore and sump volumes, DWD-CAL-001 E), TRL 3; chamber test at TRL 4 | Met on paper: 47 % after one night, 54 % after three with the fan rule; sumps 0.58 L (E2 to E6) | R7 |
+| PR-008 | UR-003 | Usability | Two actions per day | Daily operation shall need no more than two user actions (open the flaps at dusk, close them at dawn) taking the target time | 5 | max | min/day | Analysis (task analysis), TRL 3; co-design sessions at TRL 4 | Met by design | R8 |
+| PR-009 | UR-007 | Packaging and transport | Portable | The box, lifted with the trays and deck taken out, shall weigh no more than the target (two-person lift), carry an "Empty before lifting" label and be separable from the stand; two people shall set it up in 30 min or less. Restated by Amish on 2026-10-02 (DWD-DEC-001, item 2) | 35 | max | kg | Analysis (mass from model components), TRL 3; trial at TRL 4 | Met on paper: 23.4 kg; 36.1 kg with everything inside; 61.1 kg in all (G1, G2) | R9 |
+| PR-010 | UR-006 | Physical architecture | Survive the site | The unit shall stay put in the target wind gust with two ground anchors (or ballast), use UV-stable glazing, and keep the sorbent at 80 % or more of its capacity over 300 cycles; the target is a 25 m/s gust until the site value is known from the national wind annex (decided by Amish, 2026-10-25, DWD-DEC-001 item 4; was 20 m/s) | 25 | min | m/s | Analysis (wind load), TRL 3; supplier data and cycling test at TRL 4 | To verify at TRL 4: two anchors of 234 N each at 25 m/s, specified 250 N, or 96 kg of ballast (H2 to H4) | R10 |
+| PR-011 | UR-010 | Physical architecture | Cost | The parts cost shall not exceed the value-engineering target in `project.yaml` (a hypothetical control target, not a limit) | 520 | max | USD | Analysis (priced BOM), TRL 3 | Over target by $175: $695 (J1) | R11 |
+| PR-012 | UR-011 | Software | Record performance | The logger shall record air temperature and RH and the bed and condenser temperatures at the target interval for 30 days or more; the daily water mass is recorded by weighing | 5 | max | min | Analysis (storage estimate), TRL 3; demonstration at TRL 4 | Met on paper: 8,640 records, 0.41 MB (I1) | R12 |
+| PR-013 | UR-005 | Safety | Protect users | Surfaces a person touches in normal use shall stay at or below the target; the glazing is labelled hot; no exposed conductor above 60 V DC | 60 | max | °C | Analysis (surface temperatures), TRL 3; logged at TRL 4 | Met on paper: glazing outer skin 55 °C, fins 47 °C; 12.8 V DC (D1 to D3) | R13 |
+| PR-014 | UR-009 | Physical architecture | Local build and repair | Every made part shall be made with hand tools, a drill, a rivet tool, a small press brake or folding bar and a coating shop, and every bought part shall come from a general supplier; no part needs special tooling | 0 | max | parts needing special tooling | Inspection (build plan DWD-BLD-001 and BOM), TRL 3; build at TRL 4 | Met by design | none |
+
+Categories: physical architecture, performance, materials, usability, packaging and transport, safety, electrical, software. Status: met on paper, met by design, at risk, not met, over target, withdrawn, to verify at TRL 4.
 
 ## Assumptions
 
 - The composite (25 wt % CaCl₂: 1.0 kg in 3.0 kg of mesoporous silica gel) is modelled from bulk salt thermodynamics: at equilibrium it holds 0.397 g/g at 40 % RH and 0.258 g/g at 25 % RH (DWD-CAL-001, A4). The yield is set by how fast the bed takes up and gives off water, not by these capacities. Measured isotherms and uptake rates of the actual composite must replace the model.
+- The black absorber plates (DWD-DEC-001, D16) give an effective absorptance of about 0.89; the share of light passing the holes that the white beads and the plate underside absorb (0.70) is an estimate to measure at TRL 4 (DWD-CAL-001, C11).
 - The day ends with the salt dried to about the dihydrate; the night starts with the bed at air temperature.
-- With the fan stopped above 70 % RH, natural airflow through the open flaps is taken as 4 m³/h (10 % of the fan flow); this is an assumption to check by test.
-- One unit is a supplement: about 0.57 L per day is about one fifth of one person's survival drinking need of 2.5 to 3 L per day (WHO technical note 9).
+- With the fan stopped above 65 % RH (restarting below 60 %, DWD-DEC-001 item 3), natural airflow through the open flaps is taken as 4 m³/h (10 % of the fan flow); this is an assumption to check by test.
+- The tray floor's open share for the vapour (0.59: a mesh about 60 % open on bars 97.5 % open) is an estimate to confirm from the supplier's mesh data (DWD-DEC-001, D19).
+- One unit is a supplement: about 0.44 L per day is about one sixth of one person's survival drinking need of 2.5 to 3 L per day (WHO technical note 9).
 
-> **Safety:** Requirements R6, R7, R10 and R13 exist because of hazards: untreated water, a corrosive salt solution, wind loads on a 1.1 m² panel, and hot surfaces. They cannot be waived without a documented decision by Amish.
+> **Safety:** PR-006, PR-007, PR-010 and PR-013 exist because of hazards: untreated water, a corrosive salt solution, wind loads on a 1.1 m² panel, and hot surfaces. They cannot be waived without a documented decision by Amish.

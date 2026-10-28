@@ -1,8 +1,14 @@
 """DewDrive parametric model (build123d), constructable design (DWD-DDR-003, from the DWD-DDR-002 concept).
 
 Run from the repo root:
-    python cad/src/model.py            export STEP and STL, print key sizes and the constructability checks
+    python .kit/cad_check.py --export  kit 1.9 detail check (D3, every option) and STEP files in cad/step/
+    python cad/src/model.py            part counts, STL of the chosen design (cad/stl/), key sizes, constructability checks
     python cad/src/model.py --check    print the constructability checks only
+
+Kit 1.9 (STANDARDS section 24): PARAMS, OPTIONS, PRINCIPLES, CHOSEN, OPTION_VIEWS, ALLOWED_CONTACTS and components(option)
+are defined at the end of this file; option A is built from build_components() with every fastener as its own part,
+options B and C are in dwd_options.py and the fastener helpers in dwd_parts.py. The black absorber plates on the beds
+(DWD-DEC-001 D16) are part of the design from DWD-CAL-001 v0.8.
 
 Every made or bought piece is its own component (build_components), with the faces it shares with
 its neighbours, its fixings and its material, so the drawings, the build plan pictures and the mass
@@ -21,6 +27,8 @@ import math
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+
+sys.path[:0] = [str(Path(__file__).resolve().parent), str(Path(__file__).resolve().parents[2] / ".kit")]
 
 # ---------------------------------------------------------------------------------------------
 # Top-level parameters (mm unless noted). Edit these, not the geometry below.
@@ -52,8 +60,15 @@ PARAMS = {
     "tray_z0": 110.0,        # local height of the tray floor (the underside of its bottom lip)
     "tray_rim": 8.0,         # tray bottom lip width (sets the bed area)
     "tray_sheet": 1.0,       # tray sheet thickness
-    "mesh_t": 0.8,           # stainless mesh on expanded-metal floor
+    "mesh_t": 0.8,           # PTFE-coated glass-fibre mesh, about 1.8 mm aperture (DWD-DEC-001 D17, D19)
+    "floor_bar": (6.0, 1.5),  # tray floor support bars on edge, height x thickness, aluminium, PTFE-coated (D19)
+    "floor_bar_pitch": 60.0,  # seven bars across each tray, running north-south on the lip
     "bed_depth": 9.3,        # sorbent bed depth, 3.0 kg gel + 1.0 kg CaCl2 (DDR-002); checked in DWD-CAL-001 A5
+    "abs_t": 1.0,            # black perforated absorber plate resting on each bed (DWD-DEC-001 D16, STEM fix S5)
+    "abs_open": 0.227,       # open share: 3 mm holes at 6 mm staggered pitch, stock R3 T6 (0.9069 x (3/6)^2)
+    "abs_hole": 3.0,
+    "abs_pitch": 6.0,
+    "abs_clear": 2.0,        # clearance to the tray walls all round
     "baffle_t": 1.0,         # sealing baffle sheet on top of the tray deck, top at the tray floor (DDR-002)
     "deck_bar": (20.0, 5.0),  # tray deck bars on edge: height x thickness (DDR-003 P3)
     "deck_gap": 2.0,         # deck to wall clearance, closed by an EPDM lip seal
@@ -182,7 +197,8 @@ def derived(P=PARAMS):
         "inner_x_m": ix / 1e3, "inner_y_m": iy / 1e3,
         "tray_m2": 4 * P["tray_x"] * P["tray_y"] / 1e6,          # tray footprint (black tops)
         "bed_m2": 4 * bed_x * bed_y / 1e6,                       # sorbent surface
-        "gap_under_m": (P["tray_z0"] - P["plate_top"]) / 1e3,    # bed underside to condenser
+        "gap_under_m": (P["tray_z0"] - P["plate_top"]) / 1e3,    # tray floor to condenser
+        "bed_under_m": (P["tray_z0"] + P["tray_sheet"] + P["floor_bar"][0] + P["mesh_t"] - P["plate_top"]) / 1e3,  # bed underside to condenser (D19)
         "gap_over_m": (glaz_bot - P["tray_z0"] - P["tray_h"]) / 1e3,  # tray rim to glazing
         "bed_depth_m": P["bed_depth"] / 1e3,
         "plate_m2": P["plate_xy"][0] * P["plate_xy"][1] / 1e6,
@@ -335,9 +351,13 @@ def wall_layers(P=PARAMS):
     return out
 
 
+SPECS = {}   # fixing positions recorded by build_components() for the kit 1.9 fasteners in components()
+
+
 def build_components(P=PARAMS):
     """Every component in world coordinates, as {key: Comp}."""
     b = _b()
+    SPECS.clear()
     s, c = _trig(P)
     W = b.Pos(0, 0, P["z0"]) * b.Rot(P["tilt"], 0, 0)
     LX, LY, WT = P["box_x"], P["box_y"], P["wall_t"]
@@ -368,6 +388,7 @@ def build_components(P=PARAMS):
     bolt_y = [-400.0, 0.0, 400.0]              # box to rail bolts
     screws = [(x, -ys_w) for x in ns_x] + [(x, ys_w) for x in nn_x] + [(sx * xs_w, y) for sx in (-1, 1) for y in ew_y]
     bolts = [(sx * xs_w, y) for sx in (-1, 1) for y in bolt_y]
+    SPECS.update(plate_screws=screws, rail_bolts=bolts)
     dx_, dy_ = P["drain_x"], -LY / 2 + WT + 17.0
     plate = bx(-px_ / 2, px_ / 2, -py_ / 2, py_ / 2, pt - ptk, pt)
     for (x, y) in screws:
@@ -494,19 +515,39 @@ def build_components(P=PARAMS):
     add("screens", "Drip screens (4)", b.Compound(children=scr), 15, "made", "screens", "screens", local=True)
 
     # ---------------------------------------------------------------- 4 trays and 5 sorbent
-    trays, mesh, bed = [], [], []
+    trays, mesh, bed, fbars = [], [], [], []
     tz0, th, tsh = P["tray_z0"], P["tray_h"], P["tray_sheet"]
+    fbh, fbt = P["floor_bar"]
     for (x, y) in tray_centres(P):
         ox0, ox1, oy0, oy1 = x - P["tray_x"] / 2, x + P["tray_x"] / 2, y - P["tray_y"] / 2, y + P["tray_y"] / 2
         walls_ = bx(ox0, ox1, oy0, oy1, tz0, tz0 + th) - bx(ox0 + tsh, ox1 - tsh, oy0 + tsh, oy1 - tsh, tz0 - 1, tz0 + th + 1)
         lip_ = bx(ox0 + tsh, ox1 - tsh, oy0 + tsh, oy1 - tsh, tz0, tz0 + tsh) - bx(x - bed_x / 2, x + bed_x / 2, y - bed_y / 2, y + bed_y / 2, tz0 - 1, tz0 + 2)
         trays.append(walls_ + lip_)
-        mesh.append(bx(ox0 + tsh, ox1 - tsh, oy0 + tsh, oy1 - tsh, tz0 + tsh, tz0 + tsh + P["mesh_t"]))
-        zb0 = tz0 + tsh + P["mesh_t"]
+        nb = int((P["tray_x"] - 2 * tsh) // P["floor_bar_pitch"])
+        for i in range(nb):     # floor bars on edge, resting on the lip at their north and south ends (D19)
+            xb = x + (i - (nb - 1) / 2) * P["floor_bar_pitch"]
+            fbars.append(bx(xb - fbt / 2, xb + fbt / 2, oy0 + tsh, oy1 - tsh, tz0 + tsh, tz0 + tsh + fbh))
+        zm = tz0 + tsh + fbh
+        mesh.append(bx(ox0 + tsh, ox1 - tsh, oy0 + tsh, oy1 - tsh, zm, zm + P["mesh_t"]))
+        zb0 = zm + P["mesh_t"]
         bed.append(bx(x - bed_x / 2, x + bed_x / 2, y - bed_y / 2, y + bed_y / 2, zb0, zb0 + P["bed_depth"]))
     add("trays", "Sorbent trays (4)", fuse(trays), 4, "made", "trays", "al", local=True)
-    add("mesh", "Tray floors, stainless mesh on expanded metal (4)", fuse(mesh), 4, "bought", "trays", "mesh", local=True)
+    add("floor_bars", "Tray floor bars, 6 x 1.5 mm aluminium on edge (28)", fuse(fbars), 4, "made", "trays", "al", local=True)
+    add("mesh", "Tray floors, PTFE-coated glass-fibre mesh (4)", fuse(mesh), 4, "bought", "trays", "mesh", local=True)
     add("bed", "Composite sorbent", fuse(bed), 5, "made", "bed", "sorbent", local=True)
+    # black perforated absorber plates resting on the beds (DWD-DEC-001 D16): the beads are white, so the sun
+    # is absorbed on a black plate that the night air passes through (3 mm holes at 6 mm pitch, not drawn here)
+    absb = []
+    ac = P["abs_clear"]
+    for (x, y) in tray_centres(P):
+        ax0, ax1 = x - P["tray_x"] / 2 + tsh + ac, x + P["tray_x"] / 2 - tsh - ac
+        ay0, ay1 = y - P["tray_y"] / 2 + tsh + ac, y + P["tray_y"] / 2 - tsh - ac
+        zt0 = tz0 + tsh + fbh + P["mesh_t"] + P["bed_depth"]
+        pl = bx(ax0, ax1, ay0, ay1, zt0, zt0 + P["abs_t"])
+        for yy in (ay0 + 25, ay1 - 25):            # two finger holes to lift it off the bed
+            pl = pl - zcyl(x, yy, zt0 - 1, 12.5, P["abs_t"] + 2)
+        absb.append(pl)
+    add("absorbers", "Absorber plates, perforated aluminium, black (4)", fuse(absb), 4, "made", "trays", "perf", local=True)
 
     # ---------------------------------------------------------------- 3 glazing lid
     fd, fwt = P["lid_frame"]
@@ -635,6 +676,8 @@ def build_components(P=PARAMS):
         sbolts.append((("x", sx), ps, sx * xr, sx * (xr + 2 * t)))
         sbolts.append((("x", sx), pn, sx * xr, sx * (xr + 2 * t)))
     bolt_shapes, cutters = [], []
+    SPECS["stand_x"] = [(Y, Z, min(xa_, xb_), max(xa_, xb_)) for (ax_, sx), (Y, Z), xa_, xb_ in sbolts]
+    SPECS["stand_y"], SPECS["stand_z"] = [], []
     for (ax_, sx), (Y, Z), xa_, xb_ in sbolts:
         x0b, x1b = min(xa_, xb_), max(xa_, xb_)
         bolt_shapes.append(xcyl(x0b - 0.0, Y, Z, 4, x1b - x0b) + hexx(x1b, Y, Z, 13, 5.5) + hexx(x0b - 6.5, Y, Z, 13, 6.5))
@@ -646,16 +689,19 @@ def build_components(P=PARAMS):
             y0b, y1b = sorted((Yo - ys * t, Yo + ys * t))
             bolt_shapes.append(ycyl(X, y0b, Z, 4, y1b - y0b) + hexy(X, y1b, Z, 13, 5.5) + hexy(X, y0b - 6.5, Z, 13, 6.5))
             cutters.append(ycyl(X, y0b - 1, Z, hole8, y1b - y0b + 2))
+            SPECS["stand_y"].append((X, Z, y0b, y1b))
     for (X, Z) in (pw_, pe_):
         Yo = SG[-1]["Yc"] - a / 2
         y0b, y1b = Yo - t, Yo + t
         bolt_shapes.append(ycyl(X, y0b, Z, 4, 2 * t) + hexy(X, y1b, Z, 13, 5.5) + hexy(X, y0b - 6.5, Z, 13, 6.5))
         cutters.append(ycyl(X, y0b - 1, Z, hole8, 2 * t + 2))
+        SPECS["stand_y"].append((X, Z, y0b, y1b))
     for ys in (-1, 1):                              # cleat to foot: countersunk bolt up through the plate
         for sx in (-1, 1):
             X = sx * (xr - a / 2 - 2)
             Y = SG[ys]["Yc"]
             bolt_shapes.append(zcyl(X, Y, 0, 4, P["foot_t"] + t) + hexz(X, Y, P["foot_t"] + t, 13, 6.5))
+            SPECS["stand_z"].append((X, Y, 0.0, P["foot_t"] + t))
             cutters.append(zcyl(X, Y, -1, hole8, P["foot_t"] + t + 2))
     cut = fuse(cutters)
 
@@ -694,6 +740,7 @@ def build_components(P=PARAMS):
     pbolts = fuse([xcyl(xr, Yp, z, 4, t + sp_ + pq) + hexx(xr - 5.5, Yp, z, 13, 5.5) + hexx(px0 + pq, Yp, z, 13, 6.5)
                    for z in pzb])
     pcut = fuse([xcyl(xr - 2, Yp, z, hole8, t + sp_ + pq + 4) for z in pzb])
+    SPECS["pv_bolts"] = [(Yp, z, xr, px0 + pq) for z in pzb]
     C["leg_ne"].shape = C["leg_ne"].shape - pcut
     pvx, pvy, pvz = P["pv_size"]
     pcx = px0 + pq / 2
@@ -726,8 +773,12 @@ def build_components(P=PARAMS):
     ebolts = fuse([ycyl(bxc, Yb0 - t, z, 4, t + 3) + hexy(bxc, Yb1, z, 13, 5.5) + hexy(bxc, Yb0 - t - 6.5, z, 13, 6.5)
                    for z in (bp_z0 + 30, bp_z1 - 30)])
     C["leg_nw"].shape = C["leg_nw"].shape - ecut
+    SPECS["ebolts"] = [(bxc, z, Yb0 - t, Yb1) for z in (bp_z0 + 30, bp_z1 - 30)]
     add("eplate", "Electronics backing plate", bplate - ecut, 12, "made", "ebox", "al")
     ez0 = bp_z0 + 60
+    SPECS["ebox"] = (bxc - 20, Yb1, ez0)
+    SPECS["shield"] = (bxc - 60, Yb1 + 60, bp_z1 + 10)
+    SPECS["pv"] = (pcx, Yp, tz, tilt_pv, rp)
     ebox = bx(bxc - 20 - ebx / 2, bxc - 20 + ebx / 2, Yb1, Yb1 + eby, ez0, ez0 + ebz)
     add("ebox", "Electronics box", ebox, 12, "bought", "ebox", "ebox")
     add("ebolts", "Backing plate bolts, M8", ebolts, None, "fixing", None, "steel")
@@ -825,9 +876,12 @@ def checks(P=PARAMS, C=None):
     chk("Trays on the baffle", S("trays"), S("baffle"), "touch")
     chk("Trays clear of the walls", S("trays"), fuse([S(w) for w in walls]), 5.0)
     chk("Trays clear of the deck frame", S("trays"), S("deck_frame"), 0.5)
-    chk("Tray floors on the tray lips", S("mesh"), S("trays"), "touch")
+    chk("Floor bars on the tray lips", S("floor_bars"), S("trays"), "touch")
+    chk("Tray floor mesh on the floor bars", S("mesh"), S("floor_bars"), "touch")
     chk("Sorbent on the tray floors", S("bed"), S("mesh"), "touch")
     chk("Trays clear of the glazing", S("trays"), S("glazing"), 30.0)
+    chk("Absorber plates on the sorbent", S("absorbers"), S("bed"), "touch")
+    chk("Absorber plates clear of the tray walls", S("absorbers"), S("trays"), 1.5)
     chk("Glazing in the lid frame", S("glazing"), S("lid_frame"), "touch")
     chk("Lid hinges on the north wall and lid frame", S("lid_hinges"), S("wall_north") + S("lid_frame"), "touch")
     chk("Lid latches on the south wall and lid frame", S("lid_latches"), S("wall_south") + S("lid_frame"), "touch")
@@ -882,31 +936,340 @@ def print_checks(P=PARAMS, C=None):
     return bad
 
 
+
+# =============================================================================================================
+# Kit 1.9 interface (STANDARDS section 24): OPTIONS, PRINCIPLES, CHOSEN, OPTION_VIEWS, ALLOWED_CONTACTS and
+# components(option), a list of cad_parts.part() dicts at detail level D3 for every option. Option A is the
+# design of record above, part for part, with every screw, bolt, nut, washer, insert and rivet as its own part.
+# Options B and C (DWD-OPT-001) are in cad/src/dwd_options.py.
+# =============================================================================================================
+TITLE = "DewDrive"
+OPTIONS = {"A": "Solar desiccant box", "B": "Radiative dew condenser", "C": "Liquid-desiccant glazed still"}
+PRINCIPLES = {
+    "A": "A fan draws night air down through trays of silica gel and CaCl2; by day the sealed, glazed box heats "
+         "the beds and the vapour condenses on the box's shaded, finned floor.",
+    "B": "An insulated, sky-facing panel with a high-emissivity coating cools below the air by radiating to the "
+         "night sky, so dew forms on it once the panel is below the dew point; no sorbent, no power.",
+    "C": "Black cloth soaked in CaCl2 brine absorbs vapour from night air let in through two gable vent doors; by day "
+         "the closed glazed still heats the cloth and the vapour condenses on the inside of the glazing.",
+}
+CHOSEN = "A"
+OPTION_VIEWS = {k: {"el": 22, "az": -50, "scale": "person", "ground_z": 0.0} for k in OPTIONS}
+ALLOWED_CONTACTS = [("threaded insert", "M6x25 hex bolt"), ("Composite sorbent", "Absorber plate")]
+
+_MAT = {"al": "aluminium", "steel": "galvanised", "plastic": "hdpe_natural", "silicone": "hdpe_natural",
+        "bottle": "hdpe_natural", "pc": "polycarbonate"}
+
+
+def _w(P=PARAMS):
+    b = _b()
+    return b.Pos(0, 0, P["z0"]) * b.Rot(P["tilt"], 0, 0)
+
+
+def _twin_wall(P=PARAMS):
+    """10 mm twin-wall polycarbonate: two 0.8 mm skins and 0.5 mm ribs every 10.5 mm, flutes down the slope."""
+    LX, LY = P["box_x"], P["box_y"]
+    fwt = P["lid_frame"][1]
+    gz0, gt = P["glaz_z0"], P["glaz_t"]
+    x0, x1, y0, y1 = -LX / 2 + fwt, LX / 2 - fwt, -LY / 2 + fwt, LY / 2 - fwt
+    sk = 0.8
+    items = [bx(x0, x1, y0, y1, gz0, gz0 + sk), bx(x0, x1, y0, y1, gz0 + gt - sk, gz0 + gt)]
+    n = int((x1 - x0) // 10.5)
+    for i in range(n + 1):
+        x = x0 + 0.25 + i * (x1 - x0 - 0.5) / n
+        items.append(bx(x - 0.25, x + 0.25, y0, y1, gz0 + sk, gz0 + gt - sk))
+    return fuse(items)
+
+
+def _fan(P, fx, y_front, zc):
+    """120 mm axial fan: frame with corner screw holes, hub and seven blades (one bought part)."""
+    b = _b()
+    frame = bx(fx - 60, fx + 60, y_front - 25, y_front, zc - 60, zc + 60) - ycyl(fx, y_front - 26, zc, 56, 27)
+    for sx in (-1, 1):
+        for sz in (-1, 1):
+            frame = frame - ycyl(fx + sx * 52.5, y_front - 26, zc + sz * 52.5, 2.2, 27)
+    hub = ycyl(fx, y_front - 24, zc, 20, 22)
+    blades = []
+    for i in range(7):
+        bl = b.Pos(fx, y_front - 13, zc) * b.Rot(0, i * 360 / 7, 0) * b.Pos(37, 0, 0) * b.Rot(25, 0, 0) * b.Box(34, 1.6, 18)
+        blades.append(bl)
+    return fuse([frame, hub] + blades)
+
+
+def _ebox_parts(P):
+    """IP65 enclosure with its lid, LiFePO4 battery, PWM charge controller, logger PCB with the ESP32 module and
+    terminal block, battery fuse holder and three cable glands (BOM line 12), in world coordinates."""
+    from cad_parts import part
+    cx, yb, ez0 = SPECS["ebox"]
+    ebx, eby, ebz = P["ebox"]
+    w = 2.5
+    out = []
+    body = bx(cx - ebx / 2, cx + ebx / 2, yb, yb + eby - 10, ez0, ez0 + ebz) \
+        - bx(cx - ebx / 2 + w, cx + ebx / 2 - w, yb + w, yb + eby, ez0 + w, ez0 + ebz - w)
+    glands = [cx - 45, cx, cx + 45]
+    for gx in glands:
+        body = body - zcyl(gx, yb + 45, ez0 - 1, 8.0, w + 2)
+    out.append(part("Enclosure body, IP65, 160 x 110 x 220", body, "hdpe_natural", kind="bought", bom=12, group="ebox"))
+    lid = bx(cx - ebx / 2, cx + ebx / 2, yb + eby - 10, yb + eby, ez0, ez0 + ebz) \
+        - bx(cx - ebx / 2 + w, cx + ebx / 2 - w, yb + eby - 11, yb + eby - w, ez0 + w, ez0 + ebz - w)
+    out.append(part("Enclosure lid with gasket", lid, "hdpe_natural", kind="bought", bom=12, group="ebox"))
+    yi = yb + w
+    bat = bx(cx - 75.5, cx + 75.5, yi, yi + 65, ez0 + w, ez0 + w + 94)
+    bat = bat + bx(cx - 60, cx - 50, yi + 20, yi + 30, ez0 + w + 94, ez0 + w + 100) + bx(cx + 50, cx + 60, yi + 20, yi + 30, ez0 + w + 94, ez0 + w + 100)
+    out.append(part("LiFePO4 battery, 12.8 V 6 Ah, with BMS", bat, "hdpe_black", kind="bought", bom=12, group="ebox"))
+    ctl = bx(cx - 75, cx + 5, yi, yi + 25, ez0 + 105, ez0 + 175)
+    out.append(part("PWM solar charge controller, 12 V", ctl, "hdpe_black", kind="bought", bom=12, group="ebox", color="#2E3A46"))
+    fuse_h = bx(cx + 20, cx + 50, yi, yi + 15, ez0 + 102, ez0 + 114)
+    out.append(part("Battery fuse holder, 5 A", fuse_h, "hdpe_black", kind="bought", bom=12, group="ebox", color="#B3261E"))
+    pz0, pz1, px0, px1 = ez0 + 125, ez0 + 175, cx + 10, cx + 74
+    pcb = bx(px0, px1, yi + 8, yi + 9.6, pz0, pz1)
+    for (x, z) in ((px0 + 4, pz0 + 4), (px1 - 4, pz0 + 4), (px0 + 4, pz1 - 4), (px1 - 4, pz1 - 4)):
+        pcb = pcb - ycyl(x, yi + 7, z, 1.6, 4)
+    out.append(part("Logger PCB, FR4 1.6 mm (ESP32, RTC, microSD, MOSFET fan switch)", pcb, "hdpe_recycled", kind="bought", bom=12, group="ebox", color="#1F5130"))
+    for i, (x, z) in enumerate(((px0 + 4, pz0 + 4), (px1 - 4, pz0 + 4), (px0 + 4, pz1 - 4), (px1 - 4, pz1 - 4))):
+        so = ycyl(x, yi, z, 2.5, 8) - ycyl(x, yi - 1, z, 1.25, 10)
+        out.append(part(f"PCB standoff M2.5 x 8 ({i + 1})", so, "brass", kind="fastener", group="ebox"))
+        out.append(part(f"M2.5 x 6 pan screw, PCB ({i + 1})", ycyl(x, yi + 9.6, z, 2.25, 1.8) + ycyl(x, yi + 6.0, z, 1.25, 3.6),
+                        "stainless", kind="fastener", group="ebox"))
+    esp = bx(px0 + 6, px0 + 31.5, yi + 9.6, yi + 12.8, pz0 + 22, pz0 + 40) + bx(px0 + 8, px0 + 29.5, yi + 12.8, yi + 15.2, pz0 + 24, pz0 + 34)
+    out.append(part("ESP32 module with shield can", esp, "stainless", kind="bought", bom=12, group="ebox"))
+    tb = bx(px1 - 22, px1 - 6, yi + 9.6, yi + 19.6, pz0 + 6, pz0 + 18)
+    for k in range(3):
+        tb = tb - ycyl(px1 - 19 + k * 5, yi + 15, pz0 + 18.5, 1.2, 6)
+    out.append(part("Terminal block, 3-way, 5 mm pitch", tb, "hdpe_black", kind="bought", bom=12, group="ebox", color="#2563EB"))
+    for i, gx in enumerate(glands):
+        g = zcyl(gx, yb + 45, ez0 - 14, 7.9, 14 + w) + hexz(gx, yb + 45, ez0 - 14, 22, 8) - zcyl(gx, yb + 45, ez0 - 15, 3.5, 30)
+        out.append(part(f"Cable gland M16, IP68 ({i + 1})", g, "hdpe_black", kind="bought", bom=14, group="ebox"))
+    return out
+
+
+def _shield_parts(P):
+    """Stacked-plate radiation shield on its arm (BOM line 13): seven louvre plates on three rods round the
+    sensor."""
+    from cad_parts import part
+    sx, sy, sz0 = SPECS["shield"]
+    out = []
+    plates = []
+    for i in range(7):
+        z = sz0 + 8 + i * 14
+        pl = zcyl(sx, sy, z, 45, 3)
+        if i < 6:
+            pl = pl - zcyl(sx, sy, z - 1, 24, 5)
+        for a in range(3):
+            ang = math.radians(90 + a * 120)
+            pl = pl - zcyl(sx + 36 * math.cos(ang), sy + 36 * math.sin(ang), z - 1, 3.1, 5)
+        plates.append(pl)
+    rods = [zcyl(sx + 36 * math.cos(math.radians(90 + a * 120)), sy + 36 * math.sin(math.radians(90 + a * 120)), sz0, 3.0, 100) for a in range(3)]
+    base = zcyl(sx, sy, sz0, 30, 8) - zcyl(sx, sy, sz0 - 1, 6, 10)
+    sensor = zcyl(sx, sy, sz0 + 8, 6, 40)
+    out.append(part("Radiation shield, seven plates on three rods", fuse(plates + rods + [base]), "hdpe_natural", kind="bought", bom=13, group="shield"))
+    out.append(part("Air temperature and RH sensor, SHT4x class, in its probe", sensor, "stainless", kind="bought", bom=13, group="shield"))
+    return out
+
+
+def option_a(P=PARAMS):
+    """Option A, the design of record, as kit 1.9 parts."""
+    import copy
+    from cad_parts import part, break_edges, hex_nut
+    import dwd_parts as dp
+    b = _b()
+    C = build_components(P)
+    W = _w(P)
+    s_, c_ = _trig(P)
+    LX, LY, WT = P["box_x"], P["box_y"], P["wall_t"]
+    pt, ptk = P["plate_top"], P["plate_t"]
+    zw0 = P["wall_z0"]
+    out = []
+
+    def add(name, shape, material, kind="made", bom=None, group="box", color=None):
+        out.append(part(name, shape, material, kind=kind, bom=bom, group=group, color=color))
+
+    # ---- local cutters: plate-screw pilots in the bottom battens, fin rivet holes
+    pilots = fuse([zcyl(x, y, zw0 - 1, 2.5, 28) for (x, y) in SPECS["plate_screws"]])
+    corner = fuse([b.Pos(sx * (LX / 2 - WT / 2), sy * (LY / 2 - 32.5), z) * b.Rot(90, 0, 0) * b.Cylinder(2.5, 65)
+                   for sx in (-1, 1) for sy in (-1, 1) for z in (zw0 + 22, zw0 + 67, zw0 + 100)])
+    fl = LY - 80
+    x0 = -(P["fin_n"] - 1) / 2 * P["fin_pitch"]
+    rivets_xy = []
+    for i in range(P["fin_n"]):
+        x = x0 + i * P["fin_pitch"]
+        d = -1 if x > 0 else 1
+        for k in range(7):
+            rivets_xy.append((x + d * (P["fin_t"] / 2 + P["fin_foot"] / 2), -fl / 2 + 40 + k * 140))
+    rcut = fuse([zcyl(x, y, pt - ptk - P["fin_t"] - 1, 2.05, ptk + P["fin_t"] + 2) for (x, y) in rivets_xy])
+
+    # ---- 2 walls: plywood skins, softwood battens and PIR foam, each its own part
+    WL = wall_layers(P)
+    for side, (sk, bat, foam) in WL.items():
+        nm = side.capitalize()
+        add(f"{nm} wall skins, 6 mm exterior plywood", W * (sk - corner), "plywood", bom=2, group="walls", color="#E3DFD7")
+        add(f"{nm} wall battens and posts, softwood", W * (bat - corner - pilots), "timber", bom=2, group="walls")
+        add(f"{nm} wall core, 25 mm PIR foam", W * break_edges(foam - corner, 1.0), "insulated_white", bom=2, group="walls", color="#E8D9A8")
+    # ---- 6 condenser
+    add("Condenser plate, 2 mm aluminium", C["plate"].shape - W * rcut, "aluminium", bom=6, group="condenser")
+    for i, f in enumerate(sorted(dp.solids(C["fins"].shape), key=lambda q: q.center().X)):
+        add(f"Condenser fin {i + 1:02d}, 1 mm aluminium with folded foot", f - W * rcut, "aluminium", bom=6, group="condenser")
+    for (x, y) in rivets_xy:
+        for q in dp.rivet(4, ptk + P["fin_t"], (x, y, pt), "+z", label="fin to plate", group="condenser"):
+            q["shape"] = W * q["shape"]; out.append(q)
+    for (x, y) in SPECS["plate_screws"]:
+        for q in dp.button_screw(5, 25, (x, y, pt - ptk), "-z", label="plate to wall batten", group="condenser"):
+            q["shape"] = W * q["shape"]; out.append(q)
+    for i, ins in enumerate(dp.solids(C["inserts"].shape)):
+        out.append(part(f"M6 threaded insert for wood ({i + 1})", ins, "brass", kind="fastener", group="box"))
+    zr_bot = pt - ptk - P["leg_t"]
+    for (x, y) in SPECS["rail_bolts"]:
+        for q in dp.hex_bolt_only(6, 25, (x, y, zr_bot), "-z", label="box to rail", group="stand"):
+            q["shape"] = W * q["shape"]; out.append(q)
+    add("Label: EMPTY BEFORE LIFTING, outdoor vinyl 150 x 50 mm", break_edges(C["label"].shape, 0.15), "label", kind="bought", bom=14, group="walls", color="#F2C94C")
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            for z in (zw0 + 22, zw0 + 67, zw0 + 100):
+                for q in dp.wood_screw(5, 65, (sx * (LX / 2 - WT / 2), sy * LY / 2, z), "+y" if sy > 0 else "-y", label="wall corner", group="walls"):
+                    q["shape"] = W * q["shape"]; out.append(q)
+    # ---- 7, 8 water path
+    add("Gutter, 1 mm aluminium, folded", C["gutter"].shape, "aluminium", bom=7, group="water")
+    add("Drain bulkhead fitting with 12 mm hose barb, food grade", C["drain_fit"].shape, "hdpe_natural", kind="bought", bom=7, group="water")
+    add("Drain tube, food-grade silicone, 12 mm bore", C["drain_tube"].shape, "hdpe_natural", kind="bought", bom=7, group="water", color="#E8E6DF")
+    add("Collection jerrycan, 10 L food-grade HDPE", C["bottle"].shape, "hdpe_natural", kind="bought", bom=8, group="water", color="#E9ECEE")
+    # ---- 16 deck, 15 drip screens, 4 trays, 5 sorbent
+    for i, l in enumerate(sorted(dp.solids(C["ledges"].shape), key=lambda q: q.center().X)):
+        add(f"Wall ledge, 15 x 15 x 2 mm aluminium angle ({'west' if i == 0 else 'east'})", l, "aluminium", bom=16, group="deck")
+    add("Tray deck frame, 20 x 5 mm aluminium bar with riveted corner brackets", C["deck_frame"].shape, "aluminium", bom=16, group="deck")
+    add("Sealing baffle, 1 mm aluminium", C["baffle"].shape, "aluminium", bom=16, group="deck")
+    names = {(-1, -1): "south-west", (1, -1): "south-east", (-1, 1): "north-west", (1, 1): "north-east"}
+
+    def by_tray(shape):
+        ss = dp.solids(shape)
+        res = {}
+        for q in ss:
+            c = q.center()
+            lx = c.X
+            ly = c.Y * c_ + (c.Z - P["z0"]) * s_
+            res.setdefault((1 if lx > 0 else -1, 1 if ly > 0 else -1), []).append(q)
+        return {k: (v[0] if len(v) == 1 else b.Compound(children=v)) for k, v in res.items()}
+
+    for k, q in by_tray(C["screens"].shape).items():
+        add(f"Drip screen with brine sump, {names[k]}, black PTFE-coated aluminium", q, "matte_black", bom=15, group="screens")
+    for k, q in by_tray(C["trays"].shape).items():
+        add(f"Sorbent tray, {names[k]}, 1 mm aluminium, PTFE-coated inside", q, "matte_black", bom=4, group="trays")
+    for k, q in by_tray(C["floor_bars"].shape).items():
+        add(f"Tray floor bars, {names[k]}, seven 6 x 1.5 mm aluminium bars, PTFE-coated", q, "aluminium", bom=4, group="trays")
+    for k, q in by_tray(C["mesh"].shape).items():
+        add(f"Tray floor mesh, {names[k]}, PTFE-coated glass fibre", break_edges(q, 0.3), "canvas", kind="bought", bom=4, group="trays", color="#CFC6AE")
+    for k, q in by_tray(C["bed"].shape).items():
+        add(f"Composite sorbent bed, {names[k]}, 1 kg of silica gel and CaCl2", q, "pe_tank_white", bom=5, group="trays", color="#E6E0CC")
+    for k, q in by_tray(C["absorbers"].shape).items():
+        add(f"Absorber plate, {names[k]}, perforated 1 mm aluminium, black PTFE", break_edges(q, 0.3), "matte_black", bom=4, group="trays")
+    # ---- 3 glazing lid
+    add("Lid frame, 12 mm aluminium U-channel, mitred", C["lid_frame"].shape, "aluminium", bom=3, group="lid")
+    add("Twin-wall polycarbonate, 10 mm, rated 130 C", W * _twin_wall(P), "polycarbonate", kind="bought", bom=3, group="lid")
+    for i, h in enumerate(sorted(dp.solids(C["lid_hinges"].shape), key=lambda q: q.center().X)):
+        add(f"Lid hinge, stainless butt hinge ({i + 1})", h, "stainless", kind="bought", bom=3, group="lid")
+    for i, h in enumerate(sorted(dp.solids(C["lid_latches"].shape), key=lambda q: q.center().X)):
+        add(f"Lid latch, over-centre ({i + 1})", h, "stainless", kind="bought", bom=3, group="lid")
+    # ---- 9 inlet flap, 10 fan
+    add("Inlet flap, 1.5 mm aluminium", break_edges(C["flap"].shape, 0.4), "aluminium", bom=9, group="flap")
+    for i, h in enumerate(sorted(dp.solids(C["flap_hw"].shape), key=lambda q: -q.volume)):
+        add("Inlet flap piano hinge" if i == 0 else f"Inlet flap latch ({i})", h, "stainless", kind="bought", bom=9, group="flap")
+    add("Fan hood, 1 mm aluminium, folded", C["hood"].shape, "aluminium", bom=10, group="fan")
+    hwid, hdep, hht = P["fan_hood"]
+    fzc_ = zw0 + hht / 2
+    add("Night fan, 12 V 120 mm, IP55", W * _fan(P, P["fan_x"], LY / 2 + hdep - 1, fzc_), "hdpe_black", kind="bought", bom=10, group="fan")
+    add("Outlet flap with hinge, 1.5 mm aluminium", C["oflap"].shape, "aluminium", bom=10, group="fan")
+    # ---- 1 stand
+    for k in ("rail_w", "rail_e", "leg_sw", "leg_se", "leg_nw", "leg_ne", "xm_s", "xm_n", "diag"):
+        add(f"{C[k].name}, galvanized angle 30 x 30 x 3", C[k].shape, "galvanised", bom=1, group="stand")
+    for i, q in enumerate(sorted(dp.solids(C["braces"].shape), key=lambda q: q.center().X)):
+        add(f"Side brace, {'west' if i == 0 else 'east'}, galvanized angle 30 x 30 x 3", q, "galvanised", bom=1, group="stand")
+    csk_cuts = []
+    csk_parts = []
+    for (X, Y, z0_, z1_) in SPECS["stand_z"]:
+        ps, cut = dp.countersunk_screw(8, 16, (X, Y, 0.0), "-z", label="cleat to foot plate", group="stand")
+        nut = part("M8 hex nut (ISO 4032), cleat to foot plate", dp.orient(hex_nut(8), (X, Y, z1_), "+z"),
+                   "galvanised", kind="fastener", group="stand")
+        csk_parts += ps + [nut]
+        csk_cuts.append(cut)
+    ccut = fuse(csk_cuts)
+    for i, q in enumerate(sorted(dp.solids(C["feet"].shape), key=lambda q: (q.center().Y, q.center().X))):
+        add(f"Foot plate 120 x 120 x 5 mm, galvanized ({i + 1})", break_edges(q - ccut, 0.8), "galvanised", bom=1, group="stand")
+    for i, q in enumerate(sorted(dp.solids(C["cleats"].shape), key=lambda q: (q.center().Y, q.center().X))):
+        add(f"Foot cleat, galvanized angle ({i + 1})", q, "galvanised", bom=1, group="stand")
+    for i, q in enumerate(sorted(dp.solids(C["anchors"].shape), key=lambda q: q.center().X)):
+        add(f"Auger ground anchor with eye ({i + 1})", q, "galvanised", kind="bought", bom=1, group="stand")
+    out += csk_parts
+    for (Y, Z, xa, xb) in SPECS["stand_x"]:      # head on the outer side, nut inside
+        out += dp.bolt_set(8, ((xb if xb > 0 else xa), Y, Z), "+x" if xb > 0 else "-x", xb - xa, label="stand", group="stand")
+    for (X, Z, ya, yb) in SPECS["stand_y"]:
+        out += dp.bolt_set(8, (X, yb if yb > 0 else ya, Z), "+y" if yb > 0 else "-y", yb - ya, label="stand", group="stand")
+    # ---- 11 PV
+    add("PV pole, 25 x 25 x 2 mm steel tube, with spacers", C["pv_pole"].shape, "galvanised", bom=11, group="pv")
+    add("Panel tilt bracket with pin", C["pv_bracket"].shape, "galvanised", kind="bought", bom=11, group="pv")
+    for (Y, Z, xa, xb) in SPECS["pv_bolts"]:
+        out += dp.bolt_set(8, (xb, Y, Z), "+x", xb - xa, label="PV pole", group="pv")
+    pcx, Yp, tz, tilt_pv, rp = SPECS["pv"]
+    pvx, pvy, pvz = P["pv_size"]
+    nrm = (0.0, -math.sin(math.radians(tilt_pv)), math.cos(math.radians(tilt_pv)))
+    head = b.Pos(pcx, Yp + rp * nrm[1], tz + rp * nrm[2]) * b.Rot(tilt_pv, 0, 0)
+    frame = b.Pos(0, 0, 6 + pvz / 2) * (b.Box(pvx, pvy, pvz) - b.Pos(0, 0, -3) * b.Box(pvx - 30, pvy - 30, pvz - 5)) \
+        - b.Pos(0, 0, 6 + pvz - 1.6) * b.Box(pvx - 20, pvy - 20, 3.21)
+    lam = b.Pos(0, 0, 6 + pvz - 1.6) * b.Box(pvx - 20.4, pvy - 20.4, 3.2)
+    jb = b.Pos(0, 40, 6 + pvz - 5.5 - 7.5) * b.Box(60, 50, 15)
+    add("PV panel frame, aluminium", head * frame, "aluminium", kind="bought", bom=11, group="pv")
+    add("PV laminate, 10 W monocrystalline", head * lam, "glass", kind="bought", bom=11, group="pv", color="#1B2436")
+    add("PV junction box with lead", head * jb, "hdpe_black", kind="bought", bom=11, group="pv")
+    # ---- 12, 13 electronics and sensors
+    add("Electronics backing plate, 3 mm aluminium", break_edges(C["eplate"].shape, 0.5), "aluminium", bom=12, group="ebox")
+    for (X, Z, ya, yb) in SPECS["ebolts"]:
+        out += dp.bolt_set(8, (X, yb, Z), "+y", yb - ya, label="backing plate", group="ebox")
+    out += _ebox_parts(P)
+    sx_, sy_, sz0 = SPECS["shield"]
+    bxc_, Yb1_, bz1 = sx_ + 60, sy_ - 60, sz0 - 10
+    arm = (bx(bxc_ - 70, bxc_ - 50, Yb1_, Yb1_ + 3, bz1 - 60, bz1) + bx(bxc_ - 70, bxc_ - 50, Yb1_ + 3, Yb1_ + 70, bz1 - 3, bz1)
+           + bx(bxc_ - 70, bxc_ - 50, Yb1_ + 50, Yb1_ + 70, bz1, sz0))
+    add("Sensor shield arm, 20 x 3 mm aluminium flat bar, bent", arm, "aluminium", bom=13, group="shield")
+    out += _shield_parts(P)
+    return out
+
+
+def components(option=CHOSEN):
+    """Kit 1.9: the parts of one concept option (cad_parts.part() dicts), ground level at z = 0."""
+    if option == "A":
+        return option_a()
+    import dwd_options
+    return {"B": dwd_options.option_b, "C": dwd_options.option_c}[option]()
+
 if __name__ == "__main__":
     if "--check" in sys.argv:
         sys.exit(1 if print_checks() else 0)
-    from build123d import Compound, export_step, export_stl
+    # STEP files come from the kit: python .kit/cad_check.py --export (cad/step/A/, cad/step/<option>-assembly.step).
+    # Here: the constructability checks, the part counts and masses, and STL of the chosen design's made and bought parts
+    # (fasteners left out) at a 0.2 mm chord error.
+    import copy
+    from build123d import Compound, export_stl
+    import cad_parts as cp
     root = Path(__file__).resolve().parents[1]
-    (root / "step").mkdir(exist_ok=True)
     (root / "stl").mkdir(exist_ok=True)
-    C = build_components()
-    by_group = lambda gs: [c.shape for c in C.values() if c.group in gs]  # noqa: E731
+    allp = [q for q in components(CHOSEN) if q["kind"] != "context"]
+    parts = [q for q in allp if q["kind"] in ("made", "bought")]   # STL for printing and viewing: fasteners are catalogue parts
+    for opt in OPTIONS:
+        ps = allp if opt == CHOSEN else [q for q in components(opt) if q["kind"] != "context"]
+        print(f"option {opt} ({OPTIONS[opt]}): {len(ps)} parts, {sum(cp.mass_kg(q) for q in ps):.1f} kg at library densities")
     groups = {
-        "dewdrive-assembly": [c.shape for c in C.values()],
-        "collector-box": by_group(["walls", "glazing", "deck", "trays", "bed", "screens", "condenser", "gutter", "flap", "fan"]),
-        "condenser": by_group(["condenser"]),
-        "sorbent-trays": by_group(["deck", "trays", "bed", "screens"]),
-        "stand": by_group(["stand"]),
-        "power-and-logging": by_group(["pv", "ebox", "shield"]),
+        "dewdrive-assembly": None,
+        "collector-box": ("walls", "box", "condenser", "water", "deck", "screens", "trays", "lid", "flap", "fan"),
+        "condenser": ("condenser",),
+        "sorbent-trays": ("deck", "screens", "trays"),
+        "stand": ("stand",),
+        "power-and-logging": ("pv", "ebox", "shield"),
     }
-    for name, shapes in groups.items():
-        comp = Compound(children=shapes)
-        export_step(comp, str(root / "step" / f"{name}.step"))
-        export_stl(comp, str(root / "stl" / f"{name}.stl"), tolerance=0.5, angular_tolerance=0.5)
-        print(f"exported {name}: {len(shapes)} components")
+    for name, gs in groups.items():
+        sel = [copy.copy(q["shape"]) for q in parts if gs is None or q["group"] in gs]
+        if name == "collector-box":
+            sel = [copy.copy(q["shape"]) for q in parts if q["group"] in gs and q["name"] != "Collection jerrycan, 10 L food-grade HDPE"
+                   and not q["name"].startswith("Drain tube")]
+        export_stl(Compound(sel), str(root / "stl" / f"{name}.stl"), tolerance=0.2, angular_tolerance=0.3)
+        print(f"exported stl/{name}.stl: {len(sel)} parts")
     d = derived()
     print("aperture {aperture_m2:.3f} m2, bed {bed_m2:.3f} m2, top edge {top_edge_m:.3f} m, low edge {low_edge_m:.3f} m".format(**d))
-    SG = stand_geometry()
-    for ys, g in SG.items():
-        print(f"{'north' if ys > 0 else 'south'} legs: Y {g['Yc']:.1f}, top {g['top']:.1f}, rail bolt at {g['bolt_z']:.1f} (band {g['band'][0]:.1f} to {g['band'][1]:.1f})")
-    print_checks(C=C)
+    print_checks()

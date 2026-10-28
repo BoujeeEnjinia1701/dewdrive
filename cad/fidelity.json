@@ -1,0 +1,58 @@
+{
+ "level": "D3",
+ "stage": "P3",
+ "hash": "3e796bb7b1f3b633",
+ "options": {
+  "A": {
+   "title": "Solar desiccant box",
+   "parts": 427,
+   "made_or_bought": 122,
+   "fasteners": 305,
+   "welds": 0,
+   "bare": [
+    "Composite sorbent bed, south-west, 1 kg of silica gel and CaCl2",
+    "Composite sorbent bed, south-east, 1 kg of silica gel and CaCl2",
+    "Composite sorbent bed, north-west, 1 kg of silica gel and CaCl2",
+    "Composite sorbent bed, north-east, 1 kg of silica gel and CaCl2",
+    "Inlet flap piano hinge",
+    "PV laminate, 10 W monocrystalline",
+    "PV junction box with lead",
+    "PWM solar charge controller, 12 V",
+    "Battery fuse holder, 5 A",
+    "Air temperature and RH sensor, SHT4x class, in its probe"
+   ],
+   "bare_share": 0.082,
+   "interference": [],
+   "mass_kg": 77.8,
+   "step_files": 122
+  },
+  "B": {
+   "title": "Radiative dew condenser",
+   "parts": 102,
+   "made_or_bought": 27,
+   "fasteners": 67,
+   "welds": 8,
+   "bare": [],
+   "bare_share": 0.0,
+   "interference": [],
+   "mass_kg": 44.1,
+   "step_files": 0
+  },
+  "C": {
+   "title": "Liquid-desiccant glazed still",
+   "parts": 169,
+   "made_or_bought": 49,
+   "fasteners": 112,
+   "welds": 8,
+   "bare": [],
+   "bare_share": 0.0,
+   "interference": [],
+   "mass_kg": 71.4,
+   "step_files": 0
+  }
+ },
+ "failures": [],
+ "warnings": [],
+ "passed": true,
+ "seconds": 273.1
+}

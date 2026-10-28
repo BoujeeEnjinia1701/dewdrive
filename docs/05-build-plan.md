@@ -3,9 +3,9 @@ doc_id: DWD-BLD-001
 title: DewDrive prototype build plan
 project: DewDrive
 doc_type: Build plan
-version: "0.4"
+version: '0.6'
 status: Draft
-date: '2026-10-02'
+date: '2026-10-25'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,6 +25,14 @@ revisions:
     date: '2026-10-02'
     author: Amish Chadha
     change: 'Follow-ups of the 2026-10-02 decisions: the "Empty before lifting" label drawn and fitted in step 16 (bill of materials line 14); glazing line repriced for a 130 °C sheet; parts cost updated'
+  - version: "0.5"
+    date: '2026-10-25'
+    author: Amish Chadha
+    change: 'STEM check fixes (DWD-DDR-005): black absorber plates on the beds (sections 3.7, 3.8, step 9), an open tray floor of mesh on bars, black PTFE coatings and a PTFE-coated glass-fibre floor mesh (sections 3.6, 3.7, 3.19), 250 N anchors (section 3.19), painted condenser underside and 4 mm fin rivets at 140 pitch (section 3.2); fastener lengths matched to the kit 1.9 model; requirement numbers from DWD-PRS-001'
+  - version: '0.6'
+    date: '2026-10-25'
+    author: Amish Chadha
+    change: 'Safety stop S4 ballast 96 kg for the 25 m/s design gust (item 4); fan humidity cut-out added to the first checks (item 3); Amish''s decisions of 2026-10-25'
 ---
 
 # DewDrive prototype build plan
@@ -37,7 +45,7 @@ revisions:
 
 *Figure 1. Every component pulled apart and numbered in build order: the box in the middle, the stand on the left, power, logging and water on the right.*
 
-The prototype is one DewDrive: a glazed, insulated box 1,100 x 1,000 mm, tilted 20° toward the sun on a bolted steel stand. Inside the box, four black trays of sorbent sit on a removable deck, with a drip screen hung under each tray; the box's aluminium floor is the condenser, with fins underneath. A small fan in a hood on the north wall draws night air through the beds; a 10 W panel and a battery box on the stand's north legs run the fan and the logger. Figure 1 shows the 31 components in the order you make or fit them. Twenty are made in a home or small workshop from plywood, softwood, foam board, aluminium sheet, bar and angle, and galvanized steel angle: the four wall panels, the condenser plate and fins, the gutter, the ledges, the tray deck and baffle, the drip screens, the trays, the lid frame, both flaps, the fan hood, and every stand part. The sorbent is mixed by hand. Everything else is bought and fitted. The work is woodworking with glue and screws, cutting, folding, drilling and riveting thin aluminium, drilling and bolting steel angle, and wiring bought 12 V modules. The parts cost about $639 from the bill of materials.
+The prototype is one DewDrive: a glazed, insulated box 1,100 x 1,000 mm, tilted 20° toward the sun on a bolted steel stand. Inside the box, four black trays of sorbent, each covered by a black perforated absorber plate, sit on a removable deck, with a drip screen hung under each tray; the box's aluminium floor is the condenser, with fins underneath. A small fan in a hood on the north wall draws night air through the beds; a 10 W panel and a battery box on the stand's north legs run the fan and the logger. Figure 1 shows the 31 components in the order you make or fit them. Twenty are made in a home or small workshop from plywood, softwood, foam board, aluminium sheet, bar and angle, and galvanized steel angle: the four wall panels, the condenser plate and fins, the gutter, the ledges, the tray deck and baffle, the drip screens, the trays, the lid frame, both flaps, the fan hood, and every stand part. The sorbent is mixed by hand. Everything else is bought and fitted. The work is woodworking with glue and screws, cutting, folding, drilling and riveting thin aluminium, drilling and bolting steel angle, and wiring bought 12 V modules. The parts cost about $695 from the bill of materials. A coating shop applies the black PTFE coating to the trays, floor bars, absorber plates and drip screens.
 
 > **Safety:** The sorbent is made with calcium chloride, which irritates eyes and skin and gets hot as it dissolves; wear gloves and eye protection. In sun the inside of the box passes 110 °C: open the lid and handle trays only when cool. The 12.8 V lithium iron phosphate battery must be fused at the battery. The tilted lid catches the wind: anchor the stand before the box goes on it. Cut aluminium and steel edges are sharp; deburr everything. Harvested water must be tested and treated before anyone drinks it.
 
@@ -61,6 +69,18 @@ The concept showed what DewDrive does; many of its parts could not be made or fi
 | Stand | Rails running through the box, no joints, no bracing | Rails under the box edges bolted into the walls; legs, braces, cross members and a diagonal, all bolted (Figures 24 to 35) | Every joint is face to face and bolted; the frame cannot rack |
 | PV pole, electronics | The pole through the box; the electronics in mid-air | A square tube on spacers on the north-east leg; a backing plate on the north-west leg (Figures 36 to 39) | Fixed to the stand, clear of the box |
 | Trays | Thick blocks with a sagging mesh floor | Folded 1 mm pans with a perforated floor under the mesh (Figure 17) | Same size and bed; the floor carries the sorbent |
+
+The first STEM check (DWD-STM-001, 2026-10-25) and its independent review found five details where the drawn design did not do what the calculation assumed. They are fixed as below and recorded in decision record DWD-DDR-005.
+
+*Table 1a. Changes from the STEM check.*
+
+| Component | The design had | It now has | Why |
+| --- | --- | --- | --- |
+| Absorber | The sun falling on the bare beads, which are white | A black perforated aluminium plate resting on each bed (Figure 17) | The beads reflect most of the sun; without the plates the box makes almost no water |
+| Tray, floor and drip-screen finish | Bare or painted aluminium and a stainless woven mesh in contact with hot brine | Black PTFE coating on the brine-wetted faces and a PTFE-coated glass-fibre mesh (Figures 15 and 17) | Hot calcium chloride brine pits aluminium and cracks stainless steel |
+| Condenser underside | Bare aluminium fins | Fins and plate underside painted with a matt, high-emissivity paint (Figure 7) | Bare aluminium hardly radiates; painted fins shed the heat the calculation counts on |
+| Tray floor | A perforated sheet under a fine mesh | A coarser PTFE-coated glass-fibre mesh on seven thin aluminium bars on edge (Figure 17) | The sheet let only about a quarter of the bed area breathe; the bars leave nearly all of it open |
+| Ground anchors | Rated 100 N | Rated 250 N or more each in the site soil | A gust of 25 m/s needs about 234 N per anchor |
 
 ## 3. Making the components
 
@@ -117,10 +137,11 @@ The east and west panels fit between the north and south panels. At each corner,
 **How to make it.**
 
 1. Cut the plate square. Mark and drill the holes of Figure 6, all 10 in from the edges: 24 holes of 5.5 mm for the wall screws, six of 6.5 mm for the stand bolts (three along each east and west edge, at 90, 490 and 890 from the south edge), and the 17 mm drain hole 910 from the west edge and 47 from the south edge. Deburr.
-2. Cut 21 fin blanks 920 x 110. Fold a 10 mm foot along one long edge of each, at 90°. Drill seven 3.3 mm holes through each foot, 5 from the fold, at 150 pitch, the first 20 from each end.
+2. Cut 21 fin blanks 920 x 110. Fold a 10 mm foot along one long edge of each, at 90°. Drill seven 4.1 mm holes through each foot, 5 from the fold, at 140 pitch, the first 40 from each end.
 3. Turn the plate over (top face down) on a clean bench. Mark the fin lines at 50 pitch, the outer two 40 from the east and west edges; each fin runs 30 short of the north and south edges. The feet point toward the centre line.
-4. Bond each foot with high-temperature epoxy (rated 120 °C or more), drill through the plate from the foot's holes, and fix with 3.2 mm closed-end aluminium rivets, heads on the top face.
+4. Bond each foot with high-temperature epoxy (rated 120 °C or more), drill through the plate from the foot's holes, and fix with 4 mm closed-end aluminium rivets, heads on the top face.
 5. Once the epoxy has cured, clean the top face and coat it, rivet heads included, with a food-safe coating.
+6. Paint the fins and the plate underside with a matt, high-emissivity exterior paint (any light colour). Bare aluminium hardly radiates; the painted fins shed about a third of the condenser's heat to the shaded ground.
 
 **How it fits the parts next to it.**
 
@@ -216,7 +237,7 @@ The east and west bars rest on the ledges. The lip seal closes the 2 mm gap to t
 2. Cut two side plates 449.5 x 24 and four cross straps 472 long. Bend 10 at each strap end down 90°. Rivet the upper pair of straps on the side plate tops and the lower pair 12 lower between the plates, 120 each side of the screen's centre.
 3. Fold the sump, 470 x 30 x 12 deep, with a tab 422 x 29 rising from its outer (low) wall; seal its corners with silicone. Fold the end plate, 472 x 24, with a tab 422 x 17. Rivet the sump between the side plates at the low end and the end plate at the high end.
 4. Lay 16 channels on the upper straps at 30 pitch and 15 on the lower straps, offset half a pitch, all with their low ends over the sump; rivet each to its straps.
-5. Paint the whole screen matt black with high-temperature paint.
+5. Have the whole screen coated with black PTFE (fluoropolymer) at a coating shop. Paint does not survive hot calcium chloride brine.
 
 **How it fits the parts next to it.**
 
@@ -234,19 +255,20 @@ Each screen hangs under its opening by two tabs: the sump tab riveted to the fac
 
 *Figure 17. Sorbent tray (DWD-DWG-110).*
 
-**What it is and what it is made from.** Shallow black pans that hold the sorbent, with a floor that lets air through. Pan: aluminium sheet 1 mm. Floor: 1 mm perforated aluminium, about 50 % open, with a fine stainless woven mesh (1 mm aperture) on top.
+**What it is and what it is made from.** Shallow black pans that hold the sorbent, with a floor that lets air and vapour through, and a black absorber plate that lies on the sorbent and takes up the sun. Pan: aluminium sheet 1 mm. Floor: seven aluminium flat bars 6 x 1.5 mm on edge, with a PTFE-coated glass-fibre open mesh (about 1.8 mm aperture, about 60 % open) on top. Absorber plate: 1 mm perforated aluminium with 3 mm holes at 6 mm staggered pitch (22.7 % open).
 
 **How to make it.**
 
 1. Cut a blank 540 x 480 and cut out its centre to leave an 8 mm rim: inner 474 x 414.
 2. Fold the four sides up 25 on the 490 x 430 lines; the rim becomes an inward bottom lip. Notch the corners, rivet the overlaps and seal them with silicone.
-3. Paint the inside and the top edge matt black (high-temperature); leave the underside bare.
-4. Cut the perforated sheet and the mesh 488 x 428 and lay them on the lip, mesh on top.
+3. Cut seven floor bars 428 long from 6 x 1.5 mm aluminium flat bar. Send the pan and the bars to a coating shop for a black PTFE coating on the pan's inside and top edge and on the bars; the pan underside stays bare.
+4. Stand the bars on edge on the lip at 60 pitch, running the 428 mm way (north to south), the middle one on the centre line; lay the PTFE-coated mesh, cut 488 x 428, on top.
 5. Stick EPDM gasket tape under the lip, all round.
+6. Absorber plate: cut 484 x 424 from the 1 mm perforated sheet with 3 mm holes at 6 mm pitch. Drill two 25 mm finger holes on the long centre line, 25 in from the 424 mm ends. Deburr, and have it coated black PTFE on both faces with the pan.
 
-**How it fits the parts next to it.** The tray's lip sits on the gasket round its opening in the baffle (Figure 14), 13 to 23 from the walls and 14 from the next tray. The tray is lifted out by its sides.
+**How it fits the parts next to it.** The tray's lip sits on the gasket round its opening in the baffle (Figure 14), 13 to 23 from the walls and 14 from the next tray. The tray is lifted out by its sides. The absorber plate rests flat on the levelled sorbent, 2 mm clear of the tray walls all round; night air passes down through its holes.
 
-**Check before moving on.** With 1 kg spread on the floor, the floor sags less than 3 mm.
+**Check before moving on.** With 1 kg spread on the floor, the mesh sags less than 3 mm between bars and no bar tips over.
 
 ### 3.8 Composite sorbent
 
@@ -258,7 +280,7 @@ Each screen hangs under its opening by two tabs: the sump tab riveted to the fac
 2. Add the calcium chloride slowly to about 3 L of clean water, stirring; it gets hot. Let it cool.
 3. Pour the cooled solution slowly over the gel while turning the beads, until the beads have taken it all up and no liquid stands in the tub. Cover and leave for 24 hours.
 4. Dry the beads in thin layers at 120 to 150 °C (an oven, or the closed collector in sun) until they stop losing mass: they should then weigh about 4.0 kg.
-5. Spread 1.0 kg evenly in each tray: about 9 mm deep.
+5. Spread 1.0 kg evenly in each tray, about 9 mm deep, level it with a straight edge, and lay the absorber plate on top.
 
 **How it fits the parts next to it.** It lies loose on the tray's mesh floor.
 
@@ -522,7 +544,7 @@ The logger needs firmware, which is TRL 4 work; for the first checks the fan is 
 Buy to specification, not brand. Line numbers are those of the bill of materials.
 
 - **Glazing sheet (line 3).** 10 mm UV-stabilized twin-wall polycarbonate, 1,096 x 996, rated 130 °C or more (a 120 °C sheet only if the supplier's data and the inner-skin temperature measured at the first stagnation test both show it stays inside its rating), with breather and aluminium flute tape, EPDM seal, three 60 mm stainless butt hinges and two over-centre latches.
-- **Tray floors (line 4).** 1 mm perforated aluminium, about 50 % open; stainless woven mesh, 1 mm aperture; EPDM gasket tape.
+- **Tray floors and absorbers (line 4).** Aluminium flat bar 6 x 1.5 mm for the floor bars; 1 mm perforated aluminium, 3 mm holes at 6 mm staggered pitch, for the absorber plates; PTFE-coated glass-fibre open mesh, about 1.8 mm aperture and about 60 % open, rated 260 °C (sold as conveyor or baking mesh); black PTFE coating from a coating shop; EPDM gasket tape.
 - **Silica gel and salt (line 5).** Mesoporous silica gel beads, 2 to 5 mm, about 1.0 cm³/g pore volume; food-grade anhydrous calcium chloride (E509).
 - **Drain (line 7).** Food-grade bulkhead fitting with a 12 mm hose barb, for a 17 mm hole; 1 m of food-grade silicone tube, 12 mm bore.
 - **Bottle (line 8).** 10 L food-grade HDPE jerrycan with a screw cap; fit a grommet in the cap for the tube.
@@ -531,8 +553,8 @@ Buy to specification, not brand. Line numbers are those of the bill of materials
 - **PV (line 11).** 10 W 12 V monocrystalline panel, about 340 x 250; pole-top tilt bracket for a 25 mm square pole.
 - **Electronics (line 12).** IP65 box about 160 x 110 x 220; 12 V PWM solar charge controller with a LiFePO4 setting; 12.8 V 6 Ah LiFePO4 battery with built-in battery management and a 10 A inline fuse; ESP32 logger board with clock and microSD; 12 V to 5 V converter; logic-level MOSFET switch module; 3 A blade fuse; cable glands.
 - **Sensors (line 13).** SHT4x-class air temperature and humidity sensor with a radiation shield; two waterproof DS18B20 probes.
-- **Anchors (line 1).** Two auger ground anchors rated for 100 N or more of uplift in the site's soil, with two ratchet straps.
-- **Fixings (line 14).** About 22 galvanized M8 bolts (25 to 50 long) with nuts and washers, and four countersunk M8 bolts for the feet; six M6 x 40 bolts and six M6 threaded inserts for wood; 24 M5 x 30 stainless button-head screws; 12 stainless 5 x 65 wood screws; 8 stainless 4 x 25 countersunk screws; 3.2 mm aluminium rivets (closed-end for the fins); food-grade silicone; polyurethane construction adhesive; high-temperature epoxy; EPDM gasket tape and lip seal; cable glands and ties; one outdoor vinyl label, 150 x 50, printed "Empty before lifting: remove trays, sorbent and deck".
+- **Anchors (line 1).** Two auger ground anchors rated for 250 N or more of uplift each in the site's soil, with two ratchet straps.
+- **Fixings (line 14).** About 22 galvanized M8 bolts (25 to 50 long) with nuts and washers, and four countersunk M8 x 16 bolts with nuts for the feet; six M6 x 25 bolts with washers and six M6 threaded inserts for wood; 24 M5 x 25 stainless button-head screws; 12 stainless 5 x 65 wood screws; 8 stainless 4 x 25 countersunk screws; 3.2 mm aluminium rivets, and 147 closed-end 4 mm aluminium rivets for the fins; matt high-emissivity exterior paint for the condenser underside; food-grade silicone; polyurethane construction adhesive; high-temperature epoxy; EPDM gasket tape and lip seal; cable glands and ties; one outdoor vinyl label, 150 x 50, printed "Empty before lifting: remove trays, sorbent and deck".
 
 ## 4. Putting it together
 
@@ -590,7 +612,7 @@ Lower the deck, screens down, level onto the two ledges. The lip seal should tou
 
 ![Step 9](05-build-plan/step-09.png)
 
-Fill each tray with 1.0 kg of dry sorbent (section 3.8) and set it on the gasket round its opening. **Hold point:** wear gloves; trays that have been in sun are hot.
+Fill each tray with 1.0 kg of dry sorbent (section 3.8), lay its absorber plate on the levelled bed and set the tray on the gasket round its opening. **Hold point:** wear gloves; trays that have been in sun are hot.
 
 ### Step 10: the lid
 
@@ -654,32 +676,32 @@ Push the tube onto the fitting's barb and run it down over the diagonal brace to
 
 ## 5. First checks
 
-These are the checks a TRL 4 test report would record; this plan only lists them. Requirement numbers are those of DWD-REQ-001.
+These are the checks a TRL 4 test report would record; this plan only lists them. Requirement numbers are those of DWD-PRS-001.
 
 *Table 2. First checks.*
 
 | Check | Requirement | How | Pass when |
 | --- | --- | --- | --- |
-| Box sealed by day | R1, R2 | Lid and flaps shut; smoke pencil round the lid seal, flaps and hood with a little fan suction | No smoke drawn in anywhere except at the fan |
-| Air passes through the beds | R1, R2 | Flaps open, fan on from the bench at 12 V; smoke at the inlet | Smoke is drawn in at the inlet and leaves at the fan; none rises past the deck edge |
-| Fan supply | R4 | Measure the fan current at 12.8 V | About 0.15 A (2 W) or less |
-| Charging | R4 | Panel connected in sun, battery fuse in | Controller shows charging; battery voltage rises |
-| Condensate path | R6, R7 | Pour 0.5 L of clean water on the plate at the high edge | All of it reaches the bottle; none stands on the plate or touches wood |
-| Sumps clear of the water path | R7 | Pour 50 mL into one sump with the deck in place | No water reaches the plate or gutter |
-| Bed and touch temperatures | R3, R13 | Probes logged on a clear day, flaps shut | Bed 75 °C or more by midday; glazing outer skin 60 °C or less |
-| Box mass | R9 | Weigh the box with and without the trays and deck | Within 2 kg of 35.2 and 23.4 kg |
-| Anchors and stand | R10 | Pull up on each anchor strap; push the box corners by hand | No movement of anchors or joints |
-| Daily operation | R8 | Time opening both flaps at dusk and closing them at dawn | 5 minutes or less in all |
-| Logging | R12 | Run the logger for 24 hours | Every channel recorded every 5 minutes |
-
+| Box sealed by day | PR-001, PR-002 | Lid and flaps shut; smoke pencil round the lid seal, flaps and hood with a little fan suction | No smoke drawn in anywhere except at the fan |
+| Air passes through the beds | PR-001, PR-002 | Flaps open, fan on from the bench at 12 V; smoke at the inlet | Smoke is drawn in at the inlet and leaves at the fan; none rises past the deck edge |
+| Fan supply | PR-004 | Measure the fan current at 12.8 V | About 0.15 A (2 W) or less |
+| Charging | PR-004 | Panel connected in sun, battery fuse in | Controller shows charging; battery voltage rises |
+| Condensate path | PR-006, PR-007 | Pour 0.5 L of clean water on the plate at the high edge | All of it reaches the bottle; none stands on the plate or touches wood |
+| Sumps clear of the water path | PR-007 | Pour 50 mL into one sump with the deck in place | No water reaches the plate or gutter |
+| Bed and touch temperatures | PR-003, PR-013 | Probes logged on a clear day, flaps shut | Bed 75 °C or more by midday; glazing outer skin 60 °C or less |
+| Box mass | PR-009 | Weigh the box with and without the trays and deck | Within 2 kg of 36.1 and 23.4 kg |
+| Anchors and stand | PR-010 | Pull up on each anchor strap; push the box corners by hand | No movement of anchors or joints |
+| Daily operation | PR-008 | Time opening both flaps at dusk and closing them at dawn | 5 minutes or less in all |
+| Logging | PR-012 | Run the logger for 24 hours | Every channel recorded every 5 minutes |
+| Fan humidity cut-out | PR-007 | With the logger's fan rule loaded, put the air RH sensor in a closed jar over saturated salt solution (about 75 % RH), then back in room air below 60 % RH | The fan stops once the reading passes 65 % RH and restarts only below 60 % RH (DWD-DEC-001 item 3) |
 ## 6. Safety stops
 
 Stop at each point. Carry on only when everything listed is true.
 
 - **S1. Before mixing the sorbent.** Gloves and eye protection on; a plastic or stainless tub; water to rinse eyes and skin within reach; the salt added to water, never water to dry salt in a closed container.
 - **S2. Before drying the sorbent.** An oven or collector that cannot pass 160 °C; nothing combustible touching the beads; ventilation.
-- **S3. Before the lid is first closed in sun.** The glazing sheet's rating is 130 °C or more (confirmed from the supplier), or a 120 °C sheet is backed by the supplier's data and its inner skin is logged at the first stagnation test; "Hot surface" labels on the glazing; the trays sit on the deck with no brine visible.
-- **S4. Before the box goes on the stand.** Every stand bolt tight; both anchors in and strapped (or about 40 kg of ballast on the cross members); two people for the lift; the trays and deck out of the box, and the "Empty before lifting" label on the box.
+- **S3. Before the lid is first closed in sun.** Every tray has its absorber plate lying flat on the bed; the glazing sheet's rating is 130 °C or more (confirmed from the supplier), or a 120 °C sheet is backed by the supplier's data and its inner skin is logged at the first stagnation test; "Hot surface" labels on the glazing; the trays sit on the deck with no brine visible.
+- **S4. Before the box goes on the stand.** Every stand bolt tight; both anchors in and strapped (or about 96 kg of ballast on the cross members); two people for the lift; the trays and deck out of the box, and the "Empty before lifting" label on the box.
 - **S5. Before the battery fuse goes in.** Wiring checked against Figure 39 with a meter, not by wire colour; the controller set to LiFePO4; the battery undamaged, above 0 °C and in the shade of the collector.
 - **S6. Before anyone drinks the water.** A laboratory test of the collected water (chloride, metals, bacteria); until then, boil or disinfect it and treat it as a supplement only.
 - **S7. Before emptying the sumps.** The box cool; gloves and eye protection; the deck lifted out and tipped over a bucket, away from the water bottle.
@@ -690,16 +712,18 @@ Stop at each point. Carry on only when everything listed is true.
 
 **Skills.** No certified trade is needed. Basic woodworking (cutting, gluing and screwing panels square), thin sheet-metal work (marking out, snipping, folding, drilling and riveting), drilling and bolting steel angle, and low-voltage DC wiring. All circuits are extra-low voltage: 12.8 V at the battery and about 22 V open circuit at the panel.
 
+**Bought-in service.** A coating shop for the black PTFE coating of the trays, floor bars, absorber plates and drip screens (PR-014: no special tooling in the workshop itself).
+
 **Workspace.** A flat bench about 2.4 x 1.2 m for the box and deck; a metalwork area kept apart from the electronics; a ventilated outdoor place for mixing and drying the sorbent; level ground at the site with room to walk round the unit.
 
 **Personal protective equipment.** Safety glasses for cutting, drilling and riveting; chemical splash goggles and nitrile gloves for the sorbent and sumps; cut-resistant gloves for sheet and angle; hearing protection for the saws and grinder; heat-resistant gloves for anything that has been in sun.
 
 ## 8. Where the numbers come from
 
-- Model and constructability checks: `cad/src/model.py` (`python cad/src/model.py --check`, 91 checks); STEP and STL exports in `cad/step/` and `cad/stl/`.
+- Model and constructability checks: `cad/src/model.py` (`python cad/src/model.py --check`, 96 checks); kit 1.9 detail check and per-part STEP files: `python .kit/cad_check.py --export` (`cad/fidelity.json`, `cad/step/A/`, `cad/step/A-assembly.step`); STL in `cad/stl/`.
 - Pictures: `cad/src/build_plan_media.py`, using `.kit/build_views.py`; written to `docs/05-build-plan/` and `cad/drawings/DWD-DWG-101` to `DWD-DWG-122`.
-- General arrangement: `cad/drawings/DWD-DWG-001.pdf`, Rev P5.
-- Calculations: `docs/04-calcs/01-sizing.md` (DWD-CAL-001 v0.5) and `docs/04-calcs/sizing.py`; mass [G1], [G2], fan duty [F3], wind [H1] to [H4], sorbent and bed [A5], salt containment [E1] to [E6].
+- General arrangement: `cad/drawings/DWD-DWG-001.pdf`, Rev P6.
+- Calculations: `docs/04-calcs/01-sizing.md` (DWD-CAL-001 v0.8) and `docs/04-calcs/sizing.py`; mass [G1], [G2], fan duty [F3], wind [H1] to [H4], sorbent and bed [A5], salt containment [E1] to [E6], absorber [C11], tray floor [C5]; STEM check `docs/01b-stem-check.md` (DWD-STM-001).
 - Bill of materials: `bom/bom.csv`.
-- Decisions: `docs/decisions/0003-design-for-construction.md` (DWD-DDR-003), with DWD-DDR-001 and DWD-DDR-002.
-- Requirements: `docs/03-requirements.md` (DWD-REQ-001 v0.7).
+- Decisions: `docs/decisions/0003-design-for-construction.md` (DWD-DDR-003) and `docs/decisions/0005-stem-check-fixes.md` (DWD-DDR-005), with DWD-DDR-001 and DWD-DDR-002.
+- Requirements: `docs/03-requirements.md` (DWD-PRS-001 v1.0).

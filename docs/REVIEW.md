@@ -388,3 +388,104 @@ None.
 ## 2026-10-02: photoreal renders redone on the constructable design
 
 Rendered with Blender Cycles on Amish's Mac from the updated appearance model; captioned with `.kit/photo_caption.py`; `media/card.png` and `media/social-preview.png` regenerated with `.kit/cards.py`. Views: hero, exploded, detail. image_qc passes. Appearance deviations are those logged above as proposed, awaiting Amish.
+
+## Session 2026-10-24: kit 1.9.1 upgrade
+
+Run on 2026-10-24 and 2026-10-25 under the kit 1.9.1 rollout brief (Amish, 2026-10-24: "Kit 1.9.1 rollout - proceed to rollout across the other repos"; "I want detailed TRL3 CAD"; "Detail every option"), in two parts after Amish paused and resumed the rollout. `/upgrade-1.8` and `/upgrade-1.9` in full, on the existing TRL 3 design; stage set to P3.
+
+### What was added
+
+- STEM check: `docs/01b-stem-check.md` (DWD-STM-001) and `docs/04-calcs/stem_check.py`, which reads the tagged results that `sizing.py` now writes to `docs/04-calcs/sizing_out.json` and checks them against independent first-order estimates; `docs/04-calcs/stem_results.csv`.
+- Concept options: `docs/02a-concept-options.md` (DWD-OPT-001), `docs/decisions/0004-concept-selection.md` (DWD-DDR-004); options B and C modelled at D3 in `cad/src/dwd_options.py`.
+- Requirements: `docs/03a-user-requirements.md` (DWD-URS-001, 12 URs), `docs/03-requirements.md` migrated from DWD-REQ-001 to DWD-PRS-001 (14 PRs, old R numbers kept under "Was"; PR-014 new, for local build and repair), `docs/03b-traceability.md` (generated, 0 gaps); users-and-needs and stakeholder tables in `docs/01-problem.md`.
+- Pipeline documents: `docs/07-regulatory.md` (REG), `docs/08-feasibility.md` (FEA), `docs/09-risk.md` (RSK with hazard analysis and design FMEA), `docs/10-market.md` (MKT), `docs/11-plan.md` (PLN with the reference list).
+- STEM check fixes: `docs/decisions/0005-stem-check-fixes.md` (DWD-DDR-005), D16 to D20 in `docs/06-design-decisions.md`; model, calculation (DWD-CAL-001 v0.8), BOM, build plan (DWD-BLD-001 v0.5), precis (DWD-PRC-001 v1.0) and drawing DWD-DWG-001 Rev P6 updated.
+- CAD (kit 1.9): `cad/src/model.py` gains `TITLE`, `OPTIONS`, `PRINCIPLES`, `CHOSEN = "A"`, `OPTION_VIEWS`, `ALLOWED_CONTACTS` and `components(option)`; option A is built from the existing `build_components()` (kept, so `sizing.py`, `sheets.py`, `build_plan_media.py` and `concept_media.py` keep working) with every screw, bolt, nut, washer, insert and rivet as its own ISO part (helpers in `cad/src/dwd_parts.py`), twin-wall glazing with its ribs, a bladed fan, an electronics enclosure with battery, controller, logger PCB, ESP32 module, standoffs, terminal block, fuse holder and glands, and a seven-plate radiation shield. `cad/fidelity.json`, `cad/step/A/` (122 part files), `cad/step/A-assembly.step`, `B-assembly.step`, `C-assembly.step`; the old group STEP files are removed. STL of the chosen design's made and bought parts at 0.2 mm. `cad/src/product_model.py` rebuilt from `components(CHOSEN)` plus a mud-brick yard wall (site) and a mannequin (scale); `RENDER_VIEWS`: hero (outdoor, sand, sun 55,-65), studio, exploded, detail.
+- Media regenerated: build plan pictures and making sketches, concept media (hero, blueprint, exploded, flow, cutaway, `model.glb` from the detailed model), and an interim `media/options.png`.
+- README in the house structure, with STEM check and concept options sections.
+
+### STEM verdicts and fixes
+
+Option A has 27 claims: 17 within known science and 10 plausible (S16, S22 and S26 closed by calculation; S8, S11, S18, S21, S23, S24 and S27 open to TRL 4). `stem_check: open`. Options B and C are within known science (B1 to C3). Five details failed and were fixed under Amish's standing instruction of 2026-10-23:
+
+| Fix | What failed | What changed |
+| --- | --- | --- |
+| D16 | The sun fell on white sorbent beads (absorptance about 0.3), not the black surface DWD-CAL-001 had taken; 0.01 L per day as drawn | Black PTFE-coated perforated aluminium absorber plate on each bed (R3 T6) |
+| D17 | Bare aluminium and a stainless mesh in hot CaCl₂ brine (pitting, chloride stress corrosion cracking) | Black PTFE coatings on brine-wetted faces; PTFE-coated glass-fibre mesh |
+| D18 | Bare aluminium fins counted as an emissivity 0.85 radiator | Fins and plate underside painted |
+| D19 (review) | Tray floor passed about 25 % of the bed area to the vapour, not 60 %; 0.36 L per day as drawn | Coarser mesh on seven 6 x 1.5 mm bars, 59 % open; 0.44 L per day |
+| D20 (review) | Anchors at 100 N had a 6 % margin at 20 m/s | Anchors rated 250 N or more (234 N needed at 25 m/s) |
+
+Independent review: a separate Claude session (the `claude` command line in a folder holding only the STEM check, DWD-CAL-001, DWD-PRS-001 and `sizing.py`; the kit's subagent tool was not available in this session) recomputed the results. It refuted the tray-floor open share, weakened the PR-001 margin, the stagnation case, the wind margin, the condenser correlation, the salt cut-out margin and the efficiency, and upheld the rest. Its findings are recorded in DWD-STM-001 and in DWD-CAL-001 section N, and led to D19, D20, C13, D6 and H5. The first run timed out with no output and was rerun.
+
+### Option scores and CAD
+
+| Option | Score (of 170) | Parts in the model | Made or bought | Fasteners | Welds | Mass in `cad/fidelity.json` |
+| --- | --- | --- | --- | --- | --- | --- |
+| A, solar desiccant box | 117 | 427 | 122 | 305 | 0 | 77.8 kg (61.1 kg in DWD-CAL-001 G1) |
+| B, radiative dew condenser | 120 | 102 | 27 | 67 | 8 | 44.1 kg |
+| C, liquid-desiccant glazed still | 90 | 169 | 49 | 112 | 8 | 71.4 kg |
+
+All three pass D3 (bare share 8 %, 0 % and 0 %; no interferences). The fidelity masses use the parts library's standard densities (PIR as 120 kg/m³, the sorbent bed as polyethylene, the floor mesh as canvas), so they overstate option A; DWD-CAL-001 G1 is the reference mass. B and C are within known science, but B makes no water at the design point and C makes 0.2 to 0.5 L per day depending on cloth temperature.
+
+### Key results and requirements not met
+
+- **PR-001 not met:** 0.44 L per day at 40 % night RH against 0.5 L (0.37 to 0.41 L under the sensitivities C9, C12, C13). The v0.7 figure of 0.57 L rested on the two errors fixed by D16 and D19.
+- PR-002 met (0.31 L per day at 25 % RH); PR-005 met on the correlation (11.9 K) but at risk; PR-006 and PR-010 not verifiable at TRL 3.
+- PR-011: estimated $695 against the $520 value-engineering target, $175 over; about $0.87 per litre over 5 years. Box 36.1 kg, 23.4 kg with the trays and deck out; 61.1 kg in all.
+- Peak-day stagnation: dry bed about 133 °C, glazing inner skin about 106 °C, inside the 130 °C rating.
+
+### Decisions proposed, awaiting Amish
+
+1. Concept selection (DWD-DDR-004): B 120 and A 117, within 10 %, so no pick; B makes no water at the design point. A stays the design of record.
+2. How to recover PR-001 (DWD-DEC-001, open item 2): restate the target, a larger box, low-emissivity screens with a thermostatic vent, or decide after measurement. Recommended: decide after measuring, and study the low-emissivity screens with a vent on paper.
+3. Fan humidity cut-out from 70 % to 65 % RH (open item 3).
+4. Design wind speed: a 25 m/s gust until the site value is known (open item 4).
+
+### Safety concerns
+
+Unchanged in kind: untreated water, a hot interior (133 °C dry bed on a peak day), CaCl₂ handling, a fused LiFePO4 battery and wind. New: the PTFE coatings must be intact, because damaged coating exposes aluminium to hot brine (design FMEA F2), and the hot-material ratings are to be confirmed (item 12).
+
+### Deviations and notes
+
+- `media/options.png` is an interim shaded preview of the D3 models, made with `.kit/concept.py` in the options layout, because `.kit/options.py` renders with Blender on Amish's Mac and `render.py --check` requires the file. Replace it with `python .kit/options.py` there.
+- The photoreal renders (`media/render-*.png`), cards and the social preview are from the previous session and show the design before the absorber plates and the open floor. They should be re-rendered from the new `product_model.py` on Amish's Mac (`RENDER_VIEWS`: hero, studio, exploded, detail); `render-studio.png` does not exist yet.
+- Fastener lengths in the build plan now match the model (M6 x 25 box-to-rail bolts, M5 x 25 plate screws, 4 mm fin rivets at 140 pitch); the plan had M6 x 40, M5 x 30 and 3.2 mm rivets at an impossible 150 pitch.
+- The making sketches keep revision P1 (their kit script sets it); the GA moved to Rev P6.
+
+### Kit bugs met
+
+- `.kit/cad_check.py` and `.kit/cad_parts.py`: `break_edges()` on a solid taken from a fused compound (`shape.solids()`) fillets the whole parent compound, because the edges keep their parent; the repo works round it by rebuilding each solid (`dwd_parts.solids()`).
+- `.kit/options.py` has no mode that writes `media/options.png` without Blender, while `render.py --check` fails without the file.
+- Not a kit bug, but worth knowing: one run of `concept_media.py` was killed for memory (exit 137) on a 7 GB machine while three model jobs ran at once; `concept_media.py` now renders the concept media and exports the web model (`--web`) in separate runs.
+
+### Recommended next step
+
+Amish's decisions on items 1 and 2 above. Then, on his Mac, the Cycles options picture and product renders. TRL 4 work stays on hold; when the cap lifts, measure the composite's isotherms, the absorber's absorptance and the mesh's open share first.
+
+## Session 2026-10-25: decisions
+
+Amish, 2026-10-25 10:19 CT, after a report listing each repo's proposed decisions and recommendations: "i concur with your recommendations". Every decision that carried a recommendation is recorded as decided with the option recommended; every decision without a pick stays open.
+
+### Decided by Amish, 2026-10-25
+
+- **Open item 3, fan humidity cut-out:** 70 % to **65 % RH, restart below 60 %** (`FAN_RH_OFF`, new `FAN_RH_ON` in `docs/04-calcs/sizing.py`; E5 unchanged at 54 % pore fill after three humid nights). STEM S16 from Plausible to Within known science (6 points below the 71 % RH pore-filling humidity); option A now 18 within, 9 plausible. Fan rule in DWD-PRC-001; new first check in DWD-BLD-001 (sensor over saturated salt solution, about 75 % RH); RSK H4, F5; CAL assumptions.
+- **Open item 4, design wind speed:** a **25 m/s gust** until the site value is known (was 20 m/s). `sizing.py` section H now runs at 25 m/s: normal force 495 N (was 317), overturning 424 N·m against 248 N·m restoring, **234 N per anchor** (specified 250 N, D20, so no part changes) or **96 kg of ballast** (was 39 kg); without restraint it would also slide (margin -102 N). PR-010 target 20 to 25 m/s (status still not verifiable at TRL 3); STEM S18; build plan safety stop S4 (96 kg); RSK H6, F11; REG G12; PRC wind row and safety note; README safety note.
+- Documents: DWD-DEC-001 v0.6, DWD-PRS-001 v1.1, DWD-PRC-001 v1.1, DWD-CAL-001 v0.9, DWD-STM-001 v0.2, DWD-BLD-001 v0.6, DWD-RSK-001 v0.2, DWD-REG-001 v0.2, DWD-PLN-001 v0.2, README. No part, dimension or BOM line changed; `budget_usd` unchanged (USD 695 against USD 520).
+
+### Still open (no recommendation to concur with)
+
+- **Open item 1, concept selection:** B (120) and A (117) within 10 %, sent without a pick; `concept_chosen` stays "A (proposed)".
+- **Open item 2, recovering PR-001** (0.44 L per day against 0.5): the recommendation was to decide after the TRL 4 measurements ((d)), with the low-emissivity screens studied on paper; PR-001 stays not met.
+
+### Checks
+
+Run in this order on 2026-10-25 (no edit to `cad/src/` or `bom/bom.csv` this session):
+
+- `python3 docs/04-calcs/sizing.py`: runs; H1 495 N, H2 96 kg ballast, H4 234 N per anchor at 25 m/s; collected 0.44 L per day unchanged.
+- `python3 docs/04-calcs/stem_check.py`: open, 23 within, 9 plausible, 0 fail.
+- `python3 .kit/trace.py`: RTM regenerated, 0 gaps.
+- `python3 .kit/cad_check.py --export`: PASS at D3.
+- `python3 .kit/render.py` and `python3 .kit/render.py --check`: pass, no FAIL.
+- `python3 -m reuse lint`: compliant.
+- Em and en dash scan outside `.kit/` and `LICENSES/`: none.

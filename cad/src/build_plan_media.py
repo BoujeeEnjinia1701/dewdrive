@@ -119,7 +119,7 @@ def made():
         ("deck", part("Tray deck frame", S("deck_frame"), COL["deck"])),
         ("baffle", part("Sealing baffle", S("baffle"), COL["baffle"])),
         ("screens", part("Drip screens (4)", S("screens"), COL["screens"])),
-        ("trays", part("Sorbent trays (4) with floors", S("trays", "mesh"), COL["tray"])),
+        ("trays", part("Sorbent trays (4) with floors and absorber plates", S("trays", "floor_bars", "mesh", "absorbers"), COL["tray"])),
         ("bed", part("Composite sorbent", S("bed"), COL["bed"])),
         ("lidf", part("Lid frame", S("lid_frame"), COL["lidf"])),
         ("pc", part("Polycarbonate sheet", S("glazing"), COL["pc"])),
@@ -273,14 +273,15 @@ def sheets(which):
               "DewDrive condenser fin (make 21): making sketch", "Aluminium sheet 1 mm",
               ["Blank 920 x 110 x 1 mm. Fold a 10 mm foot along one long edge at 90",
                "  degrees; the fin is then 100 deep below the plate.",
-               "Drill 3.3 mm through the foot at 150 pitch, 5 mm from the fold",
-               "  (seven holes, the first 20 from each end).",
+               "Drill 4.1 mm through the foot at 140 pitch, 5 mm from the fold",
+               "  (seven holes, the first 40 from each end).",
                "Fit: the foot lies flat on the underside of the plate. Fins at 50",
                "  pitch, the outer ones 40 from the east and west plate edges, 30",
                "  from the north and south edges. Feet point toward the centre line.",
                "Bond each foot with high-temperature epoxy (rated 120 C or more),",
-               "  then rivet through the plate with 3.2 mm closed-end aluminium",
-               "  rivets, heads on the top (wetted) face.",
+               "  then rivet through the plate with 4 mm closed-end aluminium",
+               "  rivets, heads on the top (wetted) face. Paint the fins and the",
+               "  plate underside matt with a high-emissivity exterior paint.",
                "Check: the fin stands square to the plate within 2 degrees."],
               view_shape=_origin(_rotz(fin, 90)), inset=(-30, -60))
         # 105 gutter
@@ -362,23 +363,26 @@ def sheets(which):
                "  with a 422 x 29 tab up its outer wall. End plate at the high end:",
                "  472 x 24 with a 422 x 17 tab. Channels rest on the straps; rivet.",
                "Fit: the two tabs rivet to the faces of the deck bars at each end.",
-               "Paint matt black (high-temperature). Check: channel ends overhang",
-               "  the sump."],
+               "Coat all over with black PTFE at a coating shop (it resists hot",
+               "  brine). Check: channel ends overhang the sump."],
               view_shape=_origin(sc), inset=(30, -55))
         # 110 tray
-        tr = win(flat(S("trays", "mesh")), xc - 246, xc + 246, yc - 216, yc + 216, 100, 140)
+        tr = win(flat(S("trays", "floor_bars", "mesh", "absorbers")), xc - 246, xc + 246, yc - 216, yc + 216, 100, 140)
         sheet(110, loc * tr, "Tray", [part("baffle", S("baffle"), "#ccc"), part("deck", S("deck_frame"), "#ccc")],
               "DewDrive sorbent tray (make 4): making sketch",
-              "Aluminium sheet 1 mm; perforated aluminium 1 mm; stainless woven mesh",
+              "Aluminium sheet 1 mm; flat bar 6 x 1.5; perforated aluminium 1 mm; PTFE-coated glass-fibre mesh; black PTFE",
               ["Pan 490 x 430 x 25 deep from 1 mm sheet: blank 540 x 480 with the",
                "  centre cut out to leave an 8 mm rim (inner 474 x 414). Fold the",
                "  four sides up 25 at the 490 x 430 lines; the rim becomes an inward",
                "  bottom lip. Notch and rivet the corners; seal them with silicone.",
-               "Floor: 1 mm perforated aluminium (about 50 % open), 488 x 428, laid",
-               "  on the lip, with a stainless woven mesh (1 mm aperture) of the same",
-               "  size on top. The sorbent holds them down.",
-               "Paint the inside and the top edge matt black (high-temperature);",
-               "  leave the underside bare.",
+               "Floor: seven aluminium flat bars 6 x 1.5, 428 long, on edge at 60",
+               "  pitch, resting on the lip; a PTFE-coated glass-fibre mesh (about",
+               "  1.8 mm aperture), 488 x 428, on top. The sorbent holds it down.",
+               "Coat the pan inside and the bars with black PTFE at a coating shop;",
+               "  leave the pan underside bare.",
+               "Absorber plate: 1 mm perforated aluminium, 3 mm holes at 6 mm",
+               "  staggered pitch, 484 x 424, two 25 mm finger holes 25 in from the",
+               "  short ends; black PTFE both faces. It rests on the levelled bed.",
                "EPDM gasket tape under the lip, all round.",
                "Fit: the lip sits on the baffle gasket over its opening; 13 to 23 mm",
                "  from the walls, 14 mm between trays.",
@@ -825,16 +829,16 @@ def steps(group):
            "deck into the box", "Lower it level onto the two ledges; the lip seal closes the gap to the walls",
            elev=50, azim=-65, label_done=False)
         box3 = box2 + [Lp("Deck", ["deck_frame", "baffle", "screens"], COL["deck"])]
-        st(9, box3, [Lp("Trays, filled with sorbent", ["trays", "mesh", "bed"], "#4B5563", (0, 0, 250))],
+        st(9, box3, [Lp("Trays, filled with sorbent, absorber plates on top", ["trays", "floor_bars", "mesh", "bed", "absorbers"], "#4B5563", (0, 0, 250))],
            "trays onto the deck", "Each tray lip on the gasket round its opening; handle filled trays cool, with gloves",
            elev=50, azim=-65, label_done=False)
-        box4 = box3 + [Lp("Trays", ["trays", "mesh", "bed"], COL["tray"])]
+        box4 = box3 + [Lp("Trays", ["trays", "floor_bars", "mesh", "bed", "absorbers"], COL["tray"])]
         st(10, box4, [Lp("Lid (frame, sheet, hinges, latches)", ["lid_frame", "glazing", "lid_hinges", "lid_latches"], COL["pc"], (0, 0, 280))],
            "the lid", "Seal on the wall tops; hinge leaves into the north top batten; latch bodies on the south wall",
            elev=35, azim=-60, label_done=False)
     else:
         box5 = [Lp("Box", walls + ["plate", "fins", "corner_screws", "plate_screws", "inserts", "gutter", "drain_fit", "ledges",
-                                   "deck_frame", "baffle", "screens", "trays", "mesh", "bed", "lid_frame", "glazing",
+                                   "deck_frame", "baffle", "screens", "trays", "floor_bars", "mesh", "bed", "absorbers", "lid_frame", "glazing",
                                    "lid_hinges", "lid_latches"], COL["wall"])]
         st(11, box5, [Lp("Inlet flap with its hinge and latches", ["flap", "flap_hw"], COL["flap"], (0, -450, 0))],
            "inlet flap on the south wall", "Piano hinge into the top batten; latch bodies into the sill batten below the opening",
